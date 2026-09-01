@@ -10841,7 +10841,7 @@ function handleMCP(req, res) {
       trackToolUsage(name);
       executeMcpTool(name, args || {})
         .then((result) => {
-          jsonResponse(res, 200, normalizeResponse({ jsonrpc: "2.0", id, result }, "http"));
+          jsonResponse(res, 200, { jsonrpc: "2.0", id, result });
           log("INFO", "REQUEST", {
             method: "POST",
             url: "/mcp",
@@ -10953,11 +10953,11 @@ function handleUdsMcpMessage(socket, message) {
     executeMcpTool(name, args || {})
       .then((result) => {
         socket.write(
-          JSON.stringify(normalizeResponse({
+          JSON.stringify({
             jsonrpc: "2.0",
             id,
-            result: { ...result },
-          }, "uds")) + "\n",
+            result,
+          }) + "\n",
         );
       })
       .catch((error) => {
@@ -12322,11 +12322,15 @@ const server = http.createServer(async (req, res) => {
 
     // ─── GET /v1/models ──────────────────────────────────────
     if (url === "/v1/models" && method === "GET") {
+      // Default context window — deepseek-r1:1.5b = 32K, but we proxy
+      // through agent aliases; 262144 is the safe upper bound.
+      const DEFAULT_CTX = 262144;
       const agentModels = AGENTS.map((a) => ({
         id: a.id, // ← Agent ID (code-guru, bug-hunter, etc.)
         object: "model",
         created: Math.floor(Date.now() / 1000),
         owned_by: "mission-barisal",
+        context_length: DEFAULT_CTX,
       }));
 
       // Add "mission" as a special model
@@ -12335,6 +12339,7 @@ const server = http.createServer(async (req, res) => {
         object: "model",
         created: Math.floor(Date.now() / 1000),
         owned_by: "mission-barisal",
+        context_length: DEFAULT_CTX,
       });
 
       log("INFO", "REQUEST", {
