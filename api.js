@@ -919,6 +919,14 @@ function initModelsDb() {
       );
       CREATE INDEX IF NOT EXISTS idx_sessions_token ON sessions(token);
       CREATE INDEX IF NOT EXISTS idx_sessions_user ON sessions(user_id);
+
+      -- PHASE C (2026-09-01): fallback_chains table — DB-first fallback routing.
+      -- JSON array of model names in priority order per agent.
+      CREATE TABLE IF NOT EXISTS fallback_chains (
+        agent_id TEXT PRIMARY KEY,
+        chain_json TEXT NOT NULL,
+        updated_at INTEGER DEFAULT 0
+      );
     `);
     // UI-1 migration: add token_limit / valid_days / token_used / expires_at
     // to an existing users table (idempotent — safe on fresh installs too).
@@ -1268,6 +1276,54 @@ function getFallbackModel(excludeModel) {
     .sort((a, b) => (a.priority || 999) - (b.priority || 999))
     .flatMap((provider) => provider.models.map(getModelName));
   return candidates.find((candidate) => candidate !== excludeModel) || null;
+}
+
+// ─── DB-backed fallback chain lookup ─────────────────────────
+// Reads from fallback_chains table. Returns JSON array of model names
+// in priority order. Falls back to env-based logic if DB unavailable.
+// Accepts agentId (preferred) or modelName (will look up agent).
+const _fallbackChainCache = new Map();
+function getFallbackChain(agentId, excludeModel) {
+  // Normalize: accept (agentId, excludeModel) or (modelName, excludeModel)
+  let lookupId = agentId;
+
+  // 1. Check DB (with in-memory cache)
+  if (MODELS_DB && !_fallbackChainCache.has(lookupId)) {
+    try {
+      const row = MODELS_DB.prepare(
+        "SELECT chain_json FROM fallback_chains WHERE agent_id = ?"
+      ).get(lookupId);
+      if (row && row.chain_json) {
+        _fallbackChainCache.set(lookupId, JSON.parse(row.chain_json));
+      }
+    } catch (_) {}
+  }
+  const chain = _fallbackChainCache.get(lookupId);
+  if (chain && Array.isArray(chain)) {
+    // Find first model in chain that is NOT the excluded model
+    const next = chain.find((m) => m !== excludeModel);
+    if (next) return next;
+  }
+
+  // 2. Check default chain
+  if (MODELS_DB && !_fallbackChainCache.has("_default")) {
+    try {
+      const row = MODELS_DB.prepare(
+        "SELECT chain_json FROM fallback_chains WHERE agent_id = '_default'"
+      ).get();
+      if (row && row.chain_json) {
+        _fallbackChainCache.set("_default", JSON.parse(row.chain_json));
+      }
+    } catch (_) {}
+  }
+  const defaultChain = _fallbackChainCache.get("_default");
+  if (defaultChain && Array.isArray(defaultChain)) {
+    const next = defaultChain.find((m) => m !== excludeModel);
+    if (next) return next;
+  }
+
+  // 3. Original env-based fallback
+  return getFallbackModel(excludeModel);
 }
 
 // ─── Competition Router ─────────────────────────────────────
@@ -5118,6 +5174,7 @@ function callModelStream(
   tool_choice,
   _retryCount,
   providerOverride,
+  _agentId,
 ) {
   return new Promise((resolve) => {
     model = normalizeRoutingModel(model);
@@ -5291,7 +5348,7 @@ function callModelStream(
             );
             return;
           }
-          const fallbackModel = getFallbackModel(model);
+          const fallbackModel = getFallbackChain(_agentId, model);
           if (fallbackModel && (_retryCount || 0) < 3) {
             log(
               "WARN",
@@ -5309,6 +5366,8 @@ function callModelStream(
                 undefined, // strip tools on fallback (0-char cause)
                 tool_choice,
                 (_retryCount || 0) + 1,
+                undefined,
+                _agentId,
               ),
             );
             return;
@@ -5350,7 +5409,7 @@ function callModelStream(
             );
             return;
           }
-          const fallbackModel = getFallbackModel(model);
+          const fallbackModel = getFallbackChain(_agentId, model);
           if (fallbackModel) {
             log("WARN", "STREAM_EMPTY_MODEL_FALLBACK", {
               from: model,
@@ -5365,6 +5424,8 @@ function callModelStream(
                 undefined, // strip tools on model fallback (0-char cause)
                 tool_choice,
                 (_retryCount || 0) + 1,
+                undefined,
+                _agentId,
               ),
             );
             return;
@@ -10780,7 +10841,7 @@ function handleMCP(req, res) {
       trackToolUsage(name);
       executeMcpTool(name, args || {})
         .then((result) => {
-          jsonResponse(res, 200, { jsonrpc: "2.0", id, result });
+          jsonResponse(res, 200, normalizeResponse({ jsonrpc: "2.0", id, result }, "http"));
           log("INFO", "REQUEST", {
             method: "POST",
             url: "/mcp",
@@ -10892,11 +10953,11 @@ function handleUdsMcpMessage(socket, message) {
     executeMcpTool(name, args || {})
       .then((result) => {
         socket.write(
-          JSON.stringify({
+          JSON.stringify(normalizeResponse({
             jsonrpc: "2.0",
             id,
-            result: { ...result, source: "uds" },
-          }) + "\n",
+            result: { ...result },
+          }, "uds")) + "\n",
         );
       })
       .catch((error) => {
@@ -10917,6 +10978,33 @@ function handleUdsMcpMessage(socket, message) {
       error: { code: -32601, message: "Method not found: " + method },
     }) + "\n",
   );
+}
+
+// ══════════════════════════════════════════════════════════════
+//  RESPONSE NORMALIZER — Unified format for UDS / HTTP / both
+// ══════════════════════════════════════════════════════════════
+// Every response passes through normalizeResponse() so the same
+// data can be delivered over UDS (MCP), HTTP (SSE or JSON), or
+// both simultaneously. Transport metadata is appended, never
+// replaces core OpenAI-compatible fields.
+function normalizeResponse(body, transport) {
+  if (!body || typeof body !== "object") return body;
+  // Clone to avoid mutating caller data
+  const out = { ...body };
+  // Transport metadata (non-enumerable won't break JSON.stringify)
+  if (transport) {
+    out._transport = transport;        // "http" | "uds" | "both"
+    out._server_version = "3.2.1";
+    out._domain = DETECTED_DOMAIN || "localhost";
+  }
+  // Mask model identity (no real model name leaks to client)
+  if (out.model) out.model = maskModelIdentity(out.model);
+  if (out.choices) {
+    for (const c of out.choices) {
+      if (c.message?.model) c.message.model = maskModelIdentity(c.message.model);
+    }
+  }
+  return out;
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -14553,6 +14641,8 @@ window.__ADMIN_CONFIG = ${JSON.stringify({
               streamCallback(delta, parsed);
             },
             toolsForStream,
+            undefined, // providerOverride
+            agent.id,  // _agentId for DB fallback chain
           );
           clearTimeout(earlyIndicator);
 
@@ -14574,6 +14664,10 @@ window.__ADMIN_CONFIG = ${JSON.stringify({
                 streamCallback(delta, parsed);
               },
               undefined, // no tools on retry
+              undefined, // tool_choice
+              undefined, // _retryCount
+              undefined, // providerOverride
+              agent.id,  // _agentId
             );
           }
         } catch (streamErr) {
@@ -14587,7 +14681,7 @@ window.__ADMIN_CONFIG = ${JSON.stringify({
         // 🧟 ALWAYS CLOSE: Send [DONE] and end response (even on error/disconnect)
         if (!clientDisconnected && !res.writableEnded) {
           const maskedFullContent = maskModelIdentity(fullContent);
-          const doneData = JSON.stringify({
+          const doneData = JSON.stringify(normalizeResponse({
             id: responseId,
             object: "chat.completion.chunk",
             created: Math.floor(Date.now() / 1000),
@@ -14604,7 +14698,7 @@ window.__ADMIN_CONFIG = ${JSON.stringify({
                   4,
               ),
             },
-          });
+          }, "http"));
           try {
             res.write("data: " + doneData + "\n\n");
             res.write("data: [DONE]\n\n");
@@ -14693,7 +14787,7 @@ window.__ADMIN_CONFIG = ${JSON.stringify({
         responseMessage.content = maskedContent;
       }
 
-      jsonResponse(res, 200, {
+      jsonResponse(res, 200, normalizeResponse({
         id: "chatcmpl-" + crypto.randomUUID().replace(/-/g, ""),
         object: "chat.completion",
         created: Math.floor(Date.now() / 1000),
@@ -14716,7 +14810,7 @@ window.__ADMIN_CONFIG = ${JSON.stringify({
         session_id: sessionId,
         conversation_id: getSession(sessionId)?.conversation_id || sessionId,
         agent: singleResult.agent,
-      });
+      }, "http"));
       return;
     }
 
