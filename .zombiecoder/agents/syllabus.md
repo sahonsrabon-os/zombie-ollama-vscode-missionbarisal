@@ -98,6 +98,25 @@ req.on("close", () => {
 if (clientDisconnected) return;
 ```
 
+### ✅ ৬. Extension Tool Call Arguments Type Safety Fix
+**সমস্যা:** `e.arguments.substring is not a function` error in VS Code extension
+**কারণ:** Some inference servers return `tool_calls[].function.arguments` as an object instead of a JSON string. The extension called `.substring()` on non-string values.
+**সমাধান:**
+```javascript
+// chatRequestHandler.js — resolveToolCallArgs()
+const rawArgs = typeof toolCall.arguments === 'string'
+    ? toolCall.arguments
+    : (toolCall.arguments != null ? JSON.stringify(toolCall.arguments) : '');
+
+// toolCallAccumulator.js — applyDelta(), applyLegacy(), applyComplete()
+arguments: typeof tc.function?.arguments === 'string'
+    ? tc.function.arguments
+    : (tc.function?.arguments != null ? JSON.stringify(tc.function.arguments) : ''),
+```
+**প্রমাণ:** Extension files modified:
+- `out/provider/chatRequestHandler.js` line 627
+- `out/api/toolCallAccumulator.js` lines 40, 47, 66, 73, 96
+
 ---
 
 ## 🔴 নতুন স্টেপ: কোড কুটনা মাতারি (Microsoft/Copilot Monopoly)
@@ -268,5 +287,5 @@ Auto-detected from the active workspace:
 
 ---
 
-*Last Updated: 2026-09-01*
-*Status: ✅ All tasks completed*
+*Last Updated: 2026-09-01 (v2)*
+*Status: ✅ All tasks completed + Extension type safety fix applied*
