@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  # Ollama - CPU only, isolated network + localhost-only port 5010
+  ollama:
+    build: .
+    container_name: ollama-cpu-isolated
+    networks:
+      - ollama-internal
+    ports:
+      - "127.0.0.1:5010:11434"  # Only accessible from host, not external
+    volumes:
+      - ollama-data:/root/.ollama
+    environment:
+      - OLLAMA_KEEP_ALIVE=24h          # মডেল RAM-এ 24 ঘণ্টা থাকবে
+      - OLLAMA_NUM_PARALLEL=2          # একই সাথে 2টি request handle
+      - OLLAMA_MAX_LOADED_MODELS=2     # RAM-এ সর্বোচ্চ 2টি মডেল
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 8G
+    restart: unless-stopped
+
+  # Web App on port 5000 - the ONLY way to access Ollama
+  webapp:
+    build:
+      context: .
+      dockerfile: Dockerfile.webapp
+    container_name: ollama-webapp
+    ports:
+      - "5000:5000"
+    networks:
+      - ollama-internal
+    depends_on:
+      - ollama
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /tmp:/tmp
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+      - OLLAMA_SOCK=/tmp/ollama.sock
+    restart: unless-stopped
+
+networks:
+  ollama-internal:
+    driver: bridge  # Ollama has NO host ports - only webapp on 5000 is accessible
+
+volumes:
+  ollama-data:
+    driver: local

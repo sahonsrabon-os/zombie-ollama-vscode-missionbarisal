@@ -1,0 +1,31 @@
+{
+  "version": "1.0",
+  "global": {
+    "serverUrl": "http://localhost:9999",
+    "udsPath": "/tmp/zombiecoder/mcp.sock",
+    "agentMode": "mission",
+    "autoConnect": true
+  },
+  "editors": {
+    "vscode": {
+      "transport": [
+        "http",
+        "uds",
+        "ws"
+      ]
+    },
+    "jetbrains": {
+      "transport": [
+        "http",
+        "uds"
+      ]
+    },
+    "cursor": {
+      "transport": [
+        "http",
+        "ws"
+      ]
+    }
+  },
+  "lastUpdated": "2026-09-01T03:05:10.437Z"
+}

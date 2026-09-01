@@ -1,0 +1,12 @@
+{
+  "session_id": "ctx_20260831_006",
+  "created_at": "2026-08-31T16:55:58.985Z",
+  "message_count": 2,
+  "summary": "Agent bug-hunter (inline-stream): Let me check what's in the .zombiecoder directory and also see the settings.json to understand the p",
+  "key_points": [],
+  "decisions": [],
+  "files_changed": [],
+  "tags": [],
+  "prev_session": null,
+  "next_session": null
+}

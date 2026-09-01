@@ -1,0 +1,12 @@
+{
+  "session_id": "ctx_20260831_013",
+  "created_at": "2026-08-31T17:00:23.350Z",
+  "message_count": 2,
+  "summary": "Agent bug-hunter (inline-stream): The command seems to have been cut off. Let me run it again to create the complete Dockerfile.webapp",
+  "key_points": [],
+  "decisions": [],
+  "files_changed": [],
+  "tags": [],
+  "prev_session": null,
+  "next_session": null
+}

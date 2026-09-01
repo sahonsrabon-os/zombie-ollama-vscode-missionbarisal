@@ -1,0 +1,12 @@
+{
+  "session_id": "ctx_20260831_008",
+  "created_at": "2026-08-31T16:56:50.407Z",
+  "message_count": 2,
+  "summary": "Agent bug-hunter (inline-stream): Now I understand the project context. The user wants:\n1. Docker setup for Ollama (CPU only)\n2. Compl",
+  "key_points": [],
+  "decisions": [],
+  "files_changed": [],
+  "tags": [],
+  "prev_session": null,
+  "next_session": null
+}

@@ -1,0 +1,9 @@
+{
+  "editor": "jetbrains",
+  "settings": {
+    "mission-barisal.serverUrl": "http://localhost:9999",
+    "mission-barisal.udsPath": "/tmp/zombiecoder/mcp.sock",
+    "mission-barisal.agentMode": "mission"
+  },
+  "lastUpdated": "2026-09-01T03:05:10.436Z"
+}

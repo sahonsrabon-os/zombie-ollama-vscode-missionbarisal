@@ -1,0 +1,12 @@
+{
+  "session_id": "ctx_20260831_021",
+  "created_at": "2026-08-31T17:06:45.767Z",
+  "message_count": 2,
+  "summary": "Agent bug-hunter (inline-stream): The command was cut off again. Let me try using printf instead to create the docker-compose.yml file",
+  "key_points": [],
+  "decisions": [],
+  "files_changed": [],
+  "tags": [],
+  "prev_session": null,
+  "next_session": null
+}

@@ -1,0 +1,12 @@
+{
+  "session_id": "ctx_20260831_020",
+  "created_at": "2026-08-31T17:06:17.547Z",
+  "message_count": 2,
+  "summary": "Agent bug-hunter (inline-stream): The docker-compose.yml file is missing! It seems the earlier command didn't create it properly. Let ",
+  "key_points": [],
+  "decisions": [],
+  "files_changed": [],
+  "tags": [],
+  "prev_session": null,
+  "next_session": null
+}

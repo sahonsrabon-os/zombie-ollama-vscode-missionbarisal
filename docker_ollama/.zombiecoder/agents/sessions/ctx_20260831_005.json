@@ -1,0 +1,12 @@
+{
+  "session_id": "ctx_20260831_005",
+  "created_at": "2026-08-31T16:54:46.360Z",
+  "message_count": 2,
+  "summary": "Agent bug-hunter (inline-stream): The user wants me to:\n1. Use Docker to download/run Ollama\n2. Only for CPU (no GPU)\n3. Complete isol",
+  "key_points": [],
+  "decisions": [],
+  "files_changed": [],
+  "tags": [],
+  "prev_session": null,
+  "next_session": null
+}

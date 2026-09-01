@@ -1,0 +1,131 @@
+{
+  "tool": "tool-test.js v2",
+  "timestamp": "2026-08-20T12:41:29.968Z",
+  "question": "What is 2 + 3?",
+  "expected_answer": 5,
+  "ram": {
+    "before": {
+      "total": 16620838912,
+      "used": 8451833856,
+      "free": 881557504,
+      "buff_cache": 7287447552,
+      "available": 7500980224
+    },
+    "after": {
+      "total": 16620838912,
+      "used": 8429735936,
+      "free": 914997248,
+      "buff_cache": 7276105728,
+      "available": 7534571520
+    },
+    "delta": {
+      "used_bytes": -22097920,
+      "used": "-21MiB",
+      "free_before": "841MiB",
+      "free_after": "873MiB"
+    }
+  },
+  "models": [
+    {
+      "model": "qwen2.5:1.5b",
+      "question": "What is 2 + 3?",
+      "load": {
+        "status": 200,
+        "load_ms": 4508,
+        "load_sec": "4.51",
+        "load_duration": "0.26s",
+        "eval_duration": "3.49s",
+        "eval_count": 38,
+        "ram_footprint_bytes": 26525696,
+        "ram_footprint": "25MiB",
+        "error": null
+      },
+      "tool_test": {
+        "status": 200,
+        "time_ms": 9192,
+        "time_sec": "9.19",
+        "error": null,
+        "tool_calls": [
+          {
+            "id": "call_9crs17lx",
+            "index": 0,
+            "type": "function",
+            "function": {
+              "name": "add",
+              "arguments": "{\"b\":3,\"a\":2}"
+            }
+          }
+        ],
+        "content": "",
+        "accuracy": {
+          "tool_called": "add",
+          "arguments_raw": "{\"b\":3,\"a\":2}",
+          "arguments_parsed": {
+            "b": 3,
+            "a": 2
+          },
+          "computed_sum": 5,
+          "expected": 5,
+          "accurate": true
+        }
+      },
+      "ram_after_test": {
+        "total": 16620838912,
+        "used": 8466231296,
+        "free": 899670016,
+        "buff_cache": 7254937600,
+        "available": 7519195136
+      }
+    },
+    {
+      "model": "deepseek-coder:latest",
+      "question": "What is 2 + 3?",
+      "load": {
+        "status": 200,
+        "load_ms": 3724,
+        "load_sec": "3.72",
+        "load_duration": "0.05s",
+        "eval_duration": "3.56s",
+        "eval_count": 43,
+        "ram_footprint_bytes": -16662528,
+        "ram_footprint": "-16MiB",
+        "error": null
+      },
+      "tool_test": {
+        "status": 400,
+        "time_ms": 31,
+        "time_sec": "0.03",
+        "error": "registry.ollama.ai/library/deepseek-coder:latest does not support tools",
+        "tool_calls": [],
+        "content": "",
+        "accuracy": {
+          "tool_called": null,
+          "content_preview": null,
+          "expected": 5,
+          "accurate": false
+        }
+      },
+      "ram_after_test": {
+        "total": 16620838912,
+        "used": 8444329984,
+        "free": 915255296,
+        "buff_cache": 7261253632,
+        "available": 7534829568
+      }
+    }
+  ],
+  "ollama_loaded": [
+    {
+      "name": "deepseek-coder:latest",
+      "size": "1471MiB",
+      "size_vram": 0,
+      "expires_at": "2026-08-20T18:51:47.422772286+06:00"
+    },
+    {
+      "name": "qwen2.5:1.5b",
+      "size": "1047MiB",
+      "size_vram": 0,
+      "expires_at": "2026-08-20T18:51:43.690716757+06:00"
+    }
+  ]
+}
