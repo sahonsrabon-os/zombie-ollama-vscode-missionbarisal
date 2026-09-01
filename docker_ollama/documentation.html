@@ -1,0 +1,1126 @@
+<!doctype html>
+<html lang="bn">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Ollama Webapp - Developer Integration Guide</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-gradient(135deg,#0a0e27 0%,#1a1f3a 100%);color:#e4e9f7;line-height:1.6}
+    .container{max-width:1400px;margin:0 auto;padding:20px}
+    header{background:rgba(15,23,42,0.8);backdrop-filter:blur(10px);padding:30px;border-radius:15px;margin-bottom:30px;border:1px solid rgba(56,189,248,0.2)}
+    h1{font-size:32px;background:linear-gradient(135deg,#38bdf8,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:10px}
+    .subtitle{color:#94a3b8;font-size:14px}
+    h2{color:#818cf8;margin-bottom:20px;font-size:22px}
+    h3{color:#10b981;margin-bottom:15px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(350px,1fr));gap:20px;margin-bottom:30px}
+    .card{background:rgba(30,41,59,0.6);backdrop-filter:blur(10px);border:1px solid rgba(148,163,184,0.1);border-radius:12px;padding:20px;transition:all 0.3s}
+    .card:hover{border-color:rgba(56,189,248,0.4);transform:translateY(-2px);box-shadow:0 10px 30px rgba(56,189,248,0.1)}
+    .card h2{font-size:18px;color:#38bdf8;margin-bottom:15px;display:flex;align-items:center;gap:8px}
+    .endpoint{background:rgba(15,23,42,0.8);padding:12px;border-radius:8px;margin:8px 0;border-left:3px solid #38bdf8}
+    .method{display:inline-block;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:700;margin-right:8px;min-width:60px;text-align:center}
+    .method.get{background:#10b981;color:#fff}
+    .method.post{background:#3b82f6;color:#fff}
+    .method.delete{background:#ef4444;color:#fff}
+    .url{font-family:'Courier New',monospace;color:#94a3b8;font-size:13px}
+    .desc{color:#64748b;font-size:12px;margin-top:4px}
+    .copy-btn{background:#38bdf8;color:#0f172a;border:none;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:600;transition:all 0.2s;float:right}
+    .copy-btn:hover{background:#0ea5e9;transform:scale(1.05)}
+    .code-block{background:#0f172a;border:1px solid rgba(56,189,248,0.2);border-radius:8px;padding:15px;margin:15px 0;position:relative;overflow-x:auto}
+    .code-block pre{color:#e2e8f0;font-family:'Courier New',monospace;font-size:13px;margin:0;white-space:pre-wrap}
+    .tag{display:inline-block;padding:3px 8px;background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);border-radius:4px;font-size:11px;color:#38bdf8;margin:2px}
+    .status{padding:20px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:10px;margin-bottom:20px}
+    .status h3{color:#10b981;margin-bottom:10px}
+    .warning{background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:20px;margin-bottom:20px;color:#fbbf24}
+    .warning strong{display:block;margin-bottom:8px}
+    .section{margin-bottom:40px}
+    table{width:100%;border-collapse:collapse;margin:15px 0}
+    th,td{padding:12px;text-align:left;border-bottom:1px solid rgba(148,163,184,0.1)}
+    th{background:rgba(56,189,248,0.1);color:#38bdf8;font-weight:600}
+    td{color:#cbd5e1}
+    .footer{text-align:center;padding:30px;color:#64748b;border-top:1px solid rgba(148,163,184,0.1);margin-top:40px}
+    .tabs{display:flex;gap:5px;margin-bottom:20px;flex-wrap:wrap}
+    .tab{padding:10px 20px;border-radius:8px;border:1px solid rgba(148,163,184,0.2);background:rgba(15,23,42,0.5);color:#94a3b8;cursor:pointer;font-size:13px;font-weight:600;transition:all 0.2s}
+    .tab:hover,.tab.active{background:rgba(56,189,248,0.2);color:#38bdf8;border-color:rgba(56,189,248,0.4)}
+    .tab-content{display:none}.tab-content.active{display:block}
+    .test-cmd{background:#0a0a15;border-left:3px solid #10b981;padding:10px 15px;border-radius:0 8px 8px 0;margin:8px 0;font-family:'Courier New',monospace;font-size:13px;color:#4ade80;cursor:pointer}
+    .test-cmd:hover{background:#0f1f15}
+    .test-cmd::before{content:'$ ';color:#64748b}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Ollama Webapp - Developer Integration Guide</h1>
+      <p class="subtitle">Docker ভিত্তিক Ollama সার্ভার | OpenAI-Compatible API | Unix Domain Socket (UDS)</p>
+    </header>
+
+    <!-- ========== STATUS ========== -->
+    <div class="status">
+      <h3>System Status</h3>
+      <table>
+        <tr><td><strong>HTTP API</strong></td><td><code>http://localhost:5000</code></td></tr>
+        <tr><td><strong>UDS Socket</strong></td><td><code>/tmp/ollama.sock</code></td></tr>
+        <tr><td><strong>Ollama (internal)</strong></td><td><code>127.0.0.1:5010</code> (localhost only)</td></tr>
+        <tr><td><strong>Admin Panel</strong></td><td><a href="http://localhost:5000/admin" style="color:#38bdf8">http://localhost:5000/admin</a></td></tr>
+        <tr><td><strong>Public URL</strong></td><td><a href="https://o.zombiecoder.my.id/admin" style="color:#38bdf8">https://o.zombiecoder.my.id/admin</a></td></tr>
+        <tr><td><strong>Default Model</strong></td><td><code>deepseek-r1:1.5b</code> (1.1GB)</td></tr>
+        <tr><td><strong>Keep Alive</strong></td><td>24 hours (heartbeat every 5 min)</td></tr>
+      </table>
+    </div>
+
+    <!-- ========== QUICK TEST ========== -->
+    <div class="section">
+      <h2>Quick Test (Copy-Paste Terminal)</h2>
+      <div class="warning">
+        <strong>UDS ব্যবহার করুন (দ্রুততম)!</strong>
+        UDS হলো Unix Domain Socket - এটি TCP এর চেয়ে 10x দ্রুত। সব কমান্ড নিচে দেওয়া আছে।
+      </div>
+      
+      <h3 style="margin-top:15px">1. Health Check</h3>
+      <div class="test-cmd" onclick="copyCmd(this)">curl -s http://localhost:5000/api/status | python3 -m json.tool</div>
+      <div class="test-cmd" onclick="copyCmd(this)">curl -s --unix-socket "/tmp/ollama.sock" http://localhost/api/status | python3 -m json.tool</div>
+
+      <h3 style="margin-top:15px">2. List Models</h3>
+      <div class="test-cmd" onclick="copyCmd(this)">curl -s http://localhost:5000/api/tags | python3 -m json.tool</div>
+      <div class="test-cmd" onclick="copyCmd(this)">curl -s --unix-socket "/tmp/ollama.sock" http://localhost/api/tags | python3 -c "import sys,json; [print(f'  {m[\"name\"]} ({m[\"size\"]/1e9:.1f}GB)') for m in json.load(sys.stdin)['models']]"</div>
+
+      <h3 style="margin-top:15px">3. Generate (Non-Stream)</h3>
+      <div class="test-cmd" onclick="copyCmd(this)">curl -s -X POST http://localhost:5000/api/generate -H "Content-Type: application/json" -d '{"model":"deepseek-r1:1.5b","prompt":"What is 2+2?","stream":false}' | python3 -c "import sys,json; print(json.load(sys.stdin)['response'])"</div>
+      <div class="test-cmd" onclick="copyCmd(this)">curl -s --unix-socket "/tmp/ollama.sock" -X POST http://localhost/api/generate -H "Content-Type: application/json" -d '{"model":"deepseek-r1:1.5b","prompt":"What is 2+2?","stream":false}' | python3 -c "import sys,json; print(json.load(sys.stdin)['response'])"</div>
+
+      <h3 style="margin-top:15px">4. Chat (Non-Stream)</h3>
+      <div class="test-cmd" onclick="copyCmd(this)">curl -s -X POST http://localhost:5000/api/chat -H "Content-Type: application/json" -d '{"model":"deepseek-r1:1.5b","messages":[{"role":"user","content":"Hello!"}],"stream":false}' | python3 -c "import sys,json; print(json.load(sys.stdin)['message']['content'])"</div>
+
+      <h3 style="margin-top:15px">5. OpenAI Completions</h3>
+      <div class="test-cmd" onclick="copyCmd(this)">curl -s -X POST http://localhost:5000/v1/completions -H "Content-Type: application/json" -d '{"model":"deepseek-r1:1.5b","prompt":"The capital of Bangladesh is","max_tokens":30}' | python3 -c "import sys,json; print(json.load(sys.stdin)['choices'][0]['text'])"</div>
+
+      <h3 style="margin-top:15px">6. OpenAI Chat Completions</h3>
+      <div class="test-cmd" onclick="copyCmd(this)">curl -s -X POST http://localhost:5000/v1/chat/completions -H "Content-Type: application/json" -d '{"model":"deepseek-r1:1.5b","messages":[{"role":"user","content":"Say OK"}],"max_tokens":10}' | python3 -c "import sys,json; print(json.load(sys.stdin)['choices'][0]['message']['content'])"</div>
+
+      <h3 style="margin-top:15px">7. OpenAI Models</h3>
+      <div class="test-cmd" onclick="copyCmd(this)">curl -s http://localhost:5000/v1/models | python3 -m json.tool</div>
+
+      <h3 style="margin-top:15px">8. Embeddings</h3>
+      <div class="test-cmd" onclick="copyCmd(this)">curl -s -X POST http://localhost:5000/v1/embeddings -H "Content-Type: application/json" -d '{"model":"deepseek-r1:1.5b","input":"Hello world"}' | python3 -c "import sys,json; d=json.load(sys.stdin); print(f'Embedding dims: {len(d[\"data\"][0][\"embedding\"])}')"</div>
+
+      <h3 style="margin-top:15px">9. System Info</h3>
+      <div class="test-cmd" onclick="copyCmd(this)">curl -s http://localhost:5000/api/system | python3 -m json.tool</div>
+
+      <h3 style="margin-top:15px">10. Running Models</h3>
+      <div class="test-cmd" onclick="copyCmd(this)">curl -s http://localhost:5000/api/ps | python3 -m json.tool</div>
+
+      <h3 style="margin-top:15px">11. Logs</h3>
+      <div class="test-cmd" onclick="copyCmd(this)">curl -s http://localhost:5000/api/logs | python3 -c "import sys,json; [print(l) for l in json.load(sys.stdin)['logs'][-10:]]"</div>
+    </div>
+
+    <!-- ========== API ENDPOINTS ========== -->
+    <div class="section">
+      <h2>All API Endpoints</h2>
+      
+      <div class="tabs">
+        <div class="tab active" onclick="showTab('ollama')">Ollama Native</div>
+        <div class="tab" onclick="showTab('openai')">OpenAI Compatible</div>
+        <div class="tab" onclick="showTab('admin')">Admin / System</div>
+        <div class="tab" onclick="showTab('uds')">UDS Commands</div>
+      </div>
+
+      <!-- Ollama Native -->
+      <div class="tab-content active" id="tab-ollama">
+        <div class="grid">
+          <div class="card">
+            <h2>Generate</h2>
+            <div class="endpoint">
+              <span class="method post">POST</span>
+              <span class="url">/api/generate</span>
+              <button class="copy-btn" onclick="copyUrl('/api/generate')">Copy</button>
+              <div class="desc">Raw text generation (prompt → response)</div>
+            </div>
+            <div class="code-block"><pre>{
+  "model": "deepseek-r1:1.5b",
+  "prompt": "What is AI?",
+  "stream": false,
+  "keep_alive": "24h",
+  "options": {
+    "temperature": 0.7,
+    "num_predict": 500
+  }
+}</pre><button class="copy-btn" onclick="copyCode(this.previousElementSibling)">Copy</button></div>
+            <div class="test-cmd" onclick="copyCmd(this)">curl -s -X POST http://localhost:5000/api/generate -H "Content-Type: application/json" -d '{"model":"deepseek-r1:1.5b","prompt":"What is AI?","stream":false}'</div>
+          </div>
+
+          <div class="card">
+            <h2>Chat</h2>
+            <div class="endpoint">
+              <span class="method post">POST</span>
+              <span class="url">/api/chat</span>
+              <button class="copy-btn" onclick="copyUrl('/api/chat')">Copy</button>
+              <div class="desc">Multi-turn chat with message history</div>
+            </div>
+            <div class="code-block"><pre>{
+  "model": "deepseek-r1:1.5b",
+  "messages": [
+    {"role": "user", "content": "Hello!"},
+    {"role": "assistant", "content": "Hi!"},
+    {"role": "user", "content": "How are you?"}
+  ],
+  "stream": false,
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "get_weather",
+        "description": "Get weather for a city",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "city": {"type": "string"}
+          }
+        }
+      }
+    }
+  ]
+}</pre><button class="copy-btn" onclick="copyCode(this.previousElementSibling)">Copy</button></div>
+            <div class="test-cmd" onclick="copyCmd(this)">curl -s -X POST http://localhost:5000/api/chat -H "Content-Type: application/json" -d '{"model":"deepseek-r1:1.5b","messages":[{"role":"user","content":"What is Python?"}],"stream":false}'</div>
+          </div>
+
+          <div class="card">
+            <h2>Models</h2>
+            <div class="endpoint">
+              <span class="method get">GET</span>
+              <span class="url">/api/tags</span>
+              <button class="copy-btn" onclick="copyUrl('/api/tags')">Copy</button>
+              <div class="desc">List all available models</div>
+            </div>
+            <div class="test-cmd" onclick="copyCmd(this)">curl -s http://localhost:5000/api/tags</div>
+          </div>
+
+          <div class="card">
+            <h2>Pull Model</h2>
+            <div class="endpoint">
+              <span class="method post">POST</span>
+              <span class="url">/api/pull</span>
+              <button class="copy-btn" onclick="copyUrl('/api/pull')">Copy</button>
+              <div class="desc">Download a model from registry</div>
+            </div>
+            <div class="code-block"><pre>{
+  "name": "deepseek-r1:1.5b",
+  "stream": false
+}</pre><button class="copy-btn" onclick="copyCode(this.previousElementSibling)">Copy</button></div>
+            <div class="test-cmd" onclick="copyCmd(this)">curl -s -X POST http://localhost:5000/api/pull -H "Content-Type: application/json" -d '{"name":"deepseek-r1:1.5b","stream":false}'</div>
+          </div>
+
+          <div class="card">
+            <h2>Delete Model</h2>
+            <div class="endpoint">
+              <span class="method post">POST</span>
+              <span class="url">/api/delete</span>
+              <button class="copy-btn" onclick="copyUrl('/api/delete')">Copy</button>
+              <div class="desc">Delete a model from disk</div>
+            </div>
+            <div class="code-block"><pre>{"name": "deepseek-r1:1.5b"}</pre><button class="copy-btn" onclick="copyCode(this.previousElementSibling)">Copy</button></div>
+            <div class="test-cmd" onclick="copyCmd(this)">curl -s -X POST http://localhost:5000/api/delete -H "Content-Type: application/json" -d '{"name":"deepseek-r1:1.5b"}'</div>
+          </div>
+
+          <div class="card">
+            <h2>Running Models</h2>
+            <div class="endpoint">
+              <span class="method get">GET</span>
+              <span class="url">/api/ps</span>
+              <button class="copy-btn" onclick="copyUrl('/api/ps')">Copy</button>
+              <div class="desc">List models currently loaded in memory</div>
+            </div>
+            <div class="test-cmd" onclick="copyCmd(this)">curl -s http://localhost:5000/api/ps</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- OpenAI Compatible -->
+      <div class="tab-content" id="tab-openai">
+        <div class="grid">
+          <div class="card">
+            <h2>Chat Completions</h2>
+            <div class="endpoint">
+              <span class="method post">POST</span>
+              <span class="url">/v1/chat/completions</span>
+              <button class="copy-btn" onclick="copyUrl('/v1/chat/completions')">Copy</button>
+              <div class="desc">OpenAI-compatible chat (stream + non-stream)</div>
+            </div>
+            <div class="code-block"><pre>{
+  "model": "deepseek-r1:1.5b",
+  "messages": [
+    {"role": "user", "content": "Hello!"}
+  ],
+  "max_tokens": 256,
+  "temperature": 0.7,
+  "stream": true
+}</pre><button class="copy-btn" onclick="copyCode(this.previousElementSibling)">Copy</button></div>
+            <div class="test-cmd" onclick="copyCmd(this)">curl -s -X POST http://localhost:5000/v1/chat/completions -H "Content-Type: application/json" -d '{"model":"deepseek-r1:1.5b","messages":[{"role":"user","content":"Hello"}],"max_tokens":50}'</div>
+          </div>
+
+          <div class="card">
+            <h2>Text Completions</h2>
+            <div class="endpoint">
+              <span class="method post">POST</span>
+              <span class="url">/v1/completions</span>
+              <button class="copy-btn" onclick="copyUrl('/v1/completions')">Copy</button>
+              <div class="desc">OpenAI-compatible text completion (prompt → text)</div>
+            </div>
+            <div class="code-block"><pre>{
+  "model": "deepseek-r1:1.5b",
+  "prompt": "def fibonacci(",
+  "max_tokens": 100,
+  "temperature": 0.5,
+  "stream": false,
+  "echo": false,
+  "stop": ["\n"]
+}</pre><button class="copy-btn" onclick="copyCode(this.previousElementSibling)">Copy</button></div>
+            <div class="test-cmd" onclick="copyCmd(this)">curl -s -X POST http://localhost:5000/v1/completions -H "Content-Type: application/json" -d '{"model":"deepseek-r1:1.5b","prompt":"The capital of Bangladesh is","max_tokens":30}'</div>
+          </div>
+
+          <div class="card">
+            <h2>Models (OpenAI)</h2>
+            <div class="endpoint">
+              <span class="method get">GET</span>
+              <span class="url">/v1/models</span>
+              <button class="copy-btn" onclick="copyUrl('/v1/models')">Copy</button>
+              <div class="desc">List models in OpenAI format</div>
+            </div>
+            <div class="test-cmd" onclick="copyCmd(this)">curl -s http://localhost:5000/v1/models</div>
+          </div>
+
+          <div class="card">
+            <h2>Embeddings</h2>
+            <div class="endpoint">
+              <span class="method post">POST</span>
+              <span class="url">/v1/embeddings</span>
+              <button class="copy-btn" onclick="copyUrl('/v1/embeddings')">Copy</button>
+              <div class="desc">Text embeddings (if model supports)</div>
+            </div>
+            <div class="code-block"><pre>{
+  "model": "deepseek-r1:1.5b",
+  "input": "Hello world"
+}</pre><button class="copy-btn" onclick="copyCode(this.previousElementSibling)">Copy</button></div>
+            <div class="test-cmd" onclick="copyCmd(this)">curl -s -X POST http://localhost:5000/v1/embeddings -H "Content-Type: application/json" -d '{"model":"deepseek-r1:1.5b","input":"Hello"}'</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin / System -->
+      <div class="tab-content" id="tab-admin">
+        <div class="grid">
+          <div class="card">
+            <h2>Status</h2>
+            <div class="endpoint">
+              <span class="method get">GET</span>
+              <span class="url">/api/status</span>
+              <button class="copy-btn" onclick="copyUrl('/api/status')">Copy</button>
+              <div class="desc">Health check + model status</div>
+            </div>
+            <div class="test-cmd" onclick="copyCmd(this)">curl -s http://localhost:5000/api/status</div>
+          </div>
+
+          <div class="card">
+            <h2>System Info</h2>
+            <div class="endpoint">
+              <span class="method get">GET</span>
+              <span class="url">/api/system</span>
+              <button class="copy-btn" onclick="copyUrl('/api/system')">Copy</button>
+              <div class="desc">CPU, Memory, GPU info</div>
+            </div>
+            <div class="test-cmd" onclick="copyCmd(this)">curl -s http://localhost:5000/api/system</div>
+          </div>
+
+          <div class="card">
+            <h2>Logs</h2>
+            <div class="endpoint">
+              <span class="method get">GET</span>
+              <span class="url">/api/logs</span>
+              <button class="copy-btn" onclick="copyUrl('/api/logs')">Copy</button>
+              <div class="desc">Docker container logs (last 200 lines)</div>
+            </div>
+            <div class="test-cmd" onclick="copyCmd(this)">curl -s http://localhost:5000/api/logs</div>
+          </div>
+
+          <div class="card">
+            <h2>Admin Panel</h2>
+            <div class="endpoint">
+              <span class="method get">GET</span>
+              <span class="url">/admin</span>
+              <button class="copy-btn" onclick="copyUrl('/admin')">Copy</button>
+              <div class="desc">Web-based admin dashboard</div>
+            </div>
+            <div class="test-cmd" onclick="copyCmd(this)">xdg-open http://localhost:5000/admin</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- UDS Commands -->
+      <div class="tab-content" id="tab-uds">
+        <div class="card" style="max-width:100%">
+          <h2>Unix Domain Socket (UDS)</h2>
+          <p style="color:#94a3b8;margin-bottom:15px">
+            UDS হলো সবচেয়ে দ্রুত পদ্ধতি। TCP এর চেয়ে ~10x দ্রুত। 
+            Socket পাথ: <code>/tmp/ollama.sock</code>
+          </p>
+          
+          <h3 style="margin-top:20px">Curl Commands (UDS)</h3>
+          
+          <div class="code-block"><pre># ============================================
+# UDS দিয়ে সব টেস্ট কমান্ড
+# Socket: /tmp/ollama.sock
+# ============================================
+
+SOCK="/tmp/ollama.sock"
+
+# 1. Status
+curl -s --unix-socket "$SOCK" http://localhost/api/status
+
+# 2. Models
+curl -s --unix-socket "$SOCK" http://localhost/api/tags
+
+# 3. Generate
+curl -s --unix-socket "$SOCK" -X POST http://localhost/api/generate \
+  -H "Content-Type: application/json" \
+  -d '{"model":"deepseek-r1:1.5b","prompt":"Hello","stream":false}'
+
+# 4. Chat
+curl -s --unix-socket "$SOCK" -X POST http://localhost/api/chat \
+  -H "Content-Type: application/json" \
+  -d '{"model":"deepseek-r1:1.5b","messages":[{"role":"user","content":"Hi"}],"stream":false}'
+
+# 5. Completions
+curl -s --unix-socket "$SOCK" -X POST http://localhost/v1/completions \
+  -H "Content-Type: application/json" \
+  -d '{"model":"deepseek-r1:1.5b","prompt":"The sky is","max_tokens":20}'
+
+# 6. Chat Completions
+curl -s --unix-socket "$SOCK" -X POST http://localhost/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{"model":"deepseek-r1:1.5b","messages":[{"role":"user","content":"OK"}],"max_tokens":10}'
+
+# 7. Embeddings
+curl -s --unix-socket "$SOCK" -X POST http://localhost/v1/embeddings \
+  -H "Content-Type: application/json" \
+  -d '{"model":"deepseek-r1:1.5b","input":"Hello"}'
+
+# 8. Running models
+curl -s --unix-socket "$SOCK" http://localhost/api/ps
+
+# 9. System
+curl -s --unix-socket "$SOCK" http://localhost/api/system
+
+# 10. Logs
+curl -s --unix-socket "$SOCK" http://localhost/api/logs
+
+# 11. OpenAI Models
+curl -s --unix-socket "$SOCK" http://localhost/v1/models
+
+# ============================================
+# Quick all-in-one test (copy paste this)
+# ============================================
+SOCK="/tmp/ollama.sock"
+echo "=== Status ===" && curl -s --unix-socket "$SOCK" http://localhost/api/status | python3 -m json.tool
+echo "=== Models ===" && curl -s --unix-socket "$SOCK" http://localhost/api/tags | python3 -c "import sys,json; [print(f'  {m[\"name\"]}') for m in json.load(sys.stdin)['models']]"
+echo "=== Generate ===" && curl -s --unix-socket "$SOCK" -X POST http://localhost/api/generate -H "Content-Type: application/json" -d '{"model":"deepseek-r1:1.5b","prompt":"Say OK","stream":false}' | python3 -c "import sys,json; print(json.load(sys.stdin)['response'])"
+echo "=== Done ==="</pre><button class="copy-btn" onclick="copyCode(this.previousElementSibling)">Copy</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== OllamaClient Python ========== -->
+    <div class="section">
+      <h2>OllamaClient - Python Integration</h2>
+      <div class="card" style="max-width:100%">
+        <h3>Installation</h3>
+        <div class="test-cmd" onclick="copyCmd(this)">pip install requests requests-unixsocket2 psutil</div>
+        
+        <h3 style="margin-top:20px">Full Example (UDS + TCP)</h3>
+        <div class="code-block"><pre>import os
+import json
+import requests
+import requests_unixsocket
+
+# ============================================
+# METHOD 1: UDS (Fastest - localhost only)
+# ============================================
+SOCK = '/tmp/ollama.sock'
+session = requests_unixsocket.Session()
+encoded = SOCK.replace('/', '%2F')
+base = f'http+unix://{encoded}'
+
+# Status
+r = session.get(f'{base}/api/status')
+print(f"Status: {r.json()['status']}")
+
+# Models
+r = session.get(f'{base}/api/tags')
+models = [m['name'] for m in r.json()['models']]
+print(f"Models: {models}")
+
+# Generate
+r = session.post(f'{base}/api/generate', json={
+    'model': 'deepseek-r1:1.5b',
+    'prompt': 'What is AI?',
+    'stream': False
+})
+print(f"Response: {r.json()['response']}")
+
+# Chat
+r = session.post(f'{base}/api/chat', json={
+    'model': 'deepseek-r1:1.5b',
+    'messages': [{'role': 'user', 'content': 'Hello!'}],
+    'stream': False
+})
+print(f"Chat: {r.json()['message']['content']}")
+
+# OpenAI Completions
+r = session.post(f'{base}/v1/completions', json={
+    'model': 'deepseek-r1:1.5b',
+    'prompt': 'def fibonacci(',
+    'max_tokens': 50
+})
+print(f"Completions: {r.json()['choices'][0]['text']}")
+
+# OpenAI Chat Completions
+r = session.post(f'{base}/v1/chat/completions', json={
+    'model': 'deepseek-r1:1.5b',
+    'messages': [{'role': 'user', 'content': 'What is Python?'}],
+    'max_tokens': 50
+})
+print(f"Chat Completions: {r.json()['choices'][0]['message']['content']}")
+
+# Embeddings
+r = session.post(f'{base}/v1/embeddings', json={
+    'model': 'deepseek-r1:1.5b',
+    'input': 'Hello world'
+})
+dims = len(r.json()['data'][0]['embedding'])
+print(f"Embedding dims: {dims}")
+
+# System
+r = session.get(f'{base}/api/system')
+info = r.json()
+print(f"CPU: {info['cpu_count']} | Memory: {info['mem_usage']}")
+
+
+# ============================================
+# METHOD 2: TCP (Remote access)
+# ============================================
+session = requests.Session()
+base = 'http://localhost:5000'
+
+# Status
+r = session.get(f'{base}/api/status')
+print(f"Status: {r.json()['status']}")
+
+# Generate
+r = session.post(f'{base}/api/generate', json={
+    'model': 'deepseek-r1:1.5b',
+    'prompt': 'Hello!',
+    'stream': False
+})
+print(f"Response: {r.json()['response']}")
+
+
+# ============================================
+# METHOD 3: OllamaClient Class (Built-in)
+# ============================================
+# This class is defined in app.py
+# Usage:
+#   client = OllamaClient(socket_path="/tmp/ollama.sock")
+#   client = OllamaClient(host="http://localhost:5000")
+#   client = OllamaClient()  # auto-detect
+#
+# Methods:
+#   client.status()              -> dict
+#   client.models()              -> list[str]
+#   client.generate("prompt")    -> dict
+#   client.chat("message")       -> dict
+#   client.complete("prompt")    -> dict
+#   client.chat_completion(msg)  -> dict
+#   client.embeddings("text")    -> dict
+#   client.system_info()         -> dict
+#   client.running()             -> dict
+#   client.pull("model")         -> dict
+#   client.delete("model")       -> dict
+
+# Install OllamaClient from app.py
+import sys
+sys.path.insert(0, '/home/sahon/docker ollama')
+
+# Option A: Copy the class to your project (recommended)
+# Copy the OllamaClient class from app.py to your project
+
+# Option B: Import from running app (if app.py is in PYTHONPATH)
+# from app import OllamaClient
+# client = OllamaClient()
+# print(client.models())</pre><button class="copy-btn" onclick="copyCode(this.previousElementSibling)">Copy</button></div>
+      </div>
+    </div>
+
+    <!-- ========== src/extension.ts ========== -->
+    <div class="section">
+      <h2>VS Code Extension (src/extension.ts)</h2>
+      <div class="card" style="max-width:100%">
+        <h3>TypeScript Extension</h3>
+        <div class="code-block"><pre>import * as vscode from 'vscode';
+import axios from 'axios';
+
+// ============================================
+// Configuration
+// ============================================
+const HTTP_BASE = 'http://localhost:5000';
+const UDS_PATH = '/tmp/ollama.sock';
+const DEFAULT_MODEL = 'deepseek-r1:1.5b';
+
+// Use UDS if available (faster), fallback to TCP
+let useUDS = false;
+let baseUrl = HTTP_BASE;
+
+// For UDS: use requests_unixsocket equivalent in Node.js
+// In VS Code extension, prefer TCP for simplicity
+// For UDS, use: socat UNIX-CONNECT:$UDS_PATH TCP:localhost:80
+
+// ============================================
+// API Functions
+// ============================================
+async function getStatus() {
+  const res = await axios.get(`${baseUrl}/api/status`);
+  return res.data;
+}
+
+async function getModels() {
+  const res = await axios.get(`${baseUrl}/api/tags`);
+  return res.data.models.map((m: any) => m.name);
+}
+
+async function getRunningModels() {
+  const res = await axios.get(`${baseUrl}/api/ps`);
+  return res.data.models || [];
+}
+
+async function generate(model: string, prompt: string, stream = false) {
+  const res = await axios.post(`${baseUrl}/api/generate`, {
+    model, prompt, stream
+  });
+  return res.data.response;
+}
+
+async function chat(model: string, messages: any[], stream = false) {
+  const res = await axios.post(`${baseUrl}/api/chat`, {
+    model, messages, stream
+  });
+  return res.data.message.content;
+}
+
+async function openaiChatCompletion(model: string, messages: any[], maxTokens = 256) {
+  const res = await axios.post(`${baseUrl}/v1/chat/completions`, {
+    model, messages, max_tokens: maxTokens
+  });
+  return res.data.choices[0].message.content;
+}
+
+async function openaiCompletion(model: string, prompt: string, maxTokens = 50) {
+  const res = await axios.post(`${baseUrl}/v1/completions`, {
+    model, prompt, max_tokens: maxTokens
+  });
+  return res.data.choices[0].text;
+}
+
+async function getSystemInfo() {
+  const res = await axios.get(`${baseUrl}/api/system`);
+  return res.data;
+}
+
+// ============================================
+// VS Code Commands
+// ============================================
+export function activate(context: vscode.ExtensionContext) {
+  
+  // Command: Check Status
+  context.subscriptions.push(
+    vscode.commands.registerCommand('ollama.status', async () => {
+      try {
+        const status = await getStatus();
+        vscode.window.showInformationMessage(
+          `Status: ${status.status} | Model: ${status.model} | Ollama: ${status.ollama_status}`
+        );
+      } catch (e: any) {
+        vscode.window.showErrorMessage(`Error: ${e.message}`);
+      }
+    })
+  );
+
+  // Command: List Models
+  context.subscriptions.push(
+    vscode.commands.registerCommand('ollama.listModels', async () => {
+      try {
+        const models = await getModels();
+        const selected = await vscode.window.showQuickPick(models, {
+          placeHolder: 'Select a model'
+        });
+        if (selected) {
+          vscode.window.showInformationMessage(`Selected: ${selected}`);
+        }
+      } catch (e: any) {
+        vscode.window.showErrorMessage(`Error: ${e.message}`);
+      }
+    })
+  );
+
+  // Command: Generate Text (replace selection)
+  context.subscriptions.push(
+    vscode.commands.registerCommand('ollama.generate', async () => {
+      const editor = vscode.window.activeTextEditor;
+      if (!editor) {
+        vscode.window.showWarningMessage('No active editor');
+        return;
+      }
+
+      const selection = editor.selection;
+      const selectedText = editor.document.getText(selection);
+      const prompt = selectedText || await vscode.window.showInputBox({
+        prompt: 'Enter your prompt'
+      });
+
+      if (!prompt) return;
+
+      await vscode.window.withProgress({
+        location: vscode.ProgressLocation.Notification,
+        title: 'Generating...',
+        cancellable: false
+      }, async () => {
+        try {
+          const result = await generate(DEFAULT_MODEL, prompt);
+          await editor.edit(editBuilder => {
+            editBuilder.replace(selection, result);
+          });
+        } catch (e: any) {
+          vscode.window.showErrorMessage(`Error: ${e.message}`);
+        }
+      });
+    })
+  );
+
+  // Command: Chat (new panel)
+  context.subscriptions.push(
+    vscode.commands.registerCommand('ollama.chat', async () => {
+      const input = await vscode.window.showInputBox({
+        prompt: 'Enter your message'
+      });
+      if (!input) return;
+
+      await vscode.window.withProgress({
+        location: vscode.ProgressLocation.Notification,
+        title: 'Thinking...',
+        cancellable: false
+      }, async () => {
+        try {
+          const response = await chat(DEFAULT_MODEL, [
+            { role: 'user', content: input }
+          ]);
+          vscode.window.showInformationMessage(response);
+        } catch (e: any) {
+          vscode.window.showErrorMessage(`Error: ${e.message}`);
+        }
+      });
+    })
+  );
+
+  // Command: Open Admin Panel
+  context.subscriptions.push(
+    vscode.commands.registerCommand('ollama.admin', () => {
+      vscode.env.openExternal(vscode.Uri.parse(`${baseUrl}/admin`));
+    })
+  );
+}
+
+export function deactivate() {}</pre><button class="copy-btn" onclick="copyCode(this.previousElementSibling)">Copy</button></div>
+      </div>
+    </div>
+
+    <!-- ========== package.json ========== -->
+    <div class="section">
+      <h2>VS Code Extension (package.json)</h2>
+      <div class="card" style="max-width:100%">
+        <h3>Extension Manifest</h3>
+        <div class="code-block"><pre>{
+  "name": "ollama-webapp",
+  "displayName": "Ollama Webapp Integration",
+  "description": "Local Ollama AI integration with UDS + TCP support",
+  "version": "1.0.0",
+  "engines": { "vscode": "^1.85.0" },
+  "categories": ["AI", "Machine Learning"],
+  "activationEvents": ["onStartupFinished"],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "Ollama Webapp",
+      "properties": {
+        "ollama.httpUrl": {
+          "type": "string",
+          "default": "http://localhost:5000",
+          "description": "HTTP API URL"
+        },
+        "ollama.socketPath": {
+          "type": "string",
+          "default": "/tmp/ollama.sock",
+          "description": "Unix Domain Socket path (UDS)"
+        },
+        "ollama.defaultModel": {
+          "type": "string",
+          "default": "deepseek-r1:1.5b",
+          "description": "Default model name"
+        },
+        "ollama.preferUDS": {
+          "type": "boolean",
+          "default": true,
+          "description": "Prefer UDS over TCP when available"
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "ollama.status",
+        "title": "Ollama: Check Status"
+      },
+      {
+        "command": "ollama.listModels",
+        "title": "Ollama: List Models"
+      },
+      {
+        "command": "ollama.generate",
+        "title": "Ollama: Generate Text"
+      },
+      {
+        "command": "ollama.chat",
+        "title": "Ollama: Chat"
+      },
+      {
+        "command": "ollama.admin",
+        "title": "Ollama: Open Admin Panel"
+      }
+    ]
+  },
+  "dependencies": {
+    "axios": "^1.6.0"
+  }
+}</pre><button class="copy-btn" onclick="copyCode(this.previousElementSibling)">Copy</button></div>
+      </div>
+    </div>
+
+    <!-- ========== Ollama-style Integration ========== -->
+    <div class="section">
+      <h2>Ollama-Style Integration (Any Language)</h2>
+      <div class="card" style="max-width:100%">
+        <h3>Python (requests)</h3>
+        <div class="code-block"><pre>import requests
+
+# TCP (works everywhere)
+BASE = "http://localhost:5000"
+
+# List models
+models = requests.get(f"{BASE}/api/tags").json()
+
+# Generate
+response = requests.post(f"{BASE}/api/generate", json={
+    "model": "deepseek-r1:1.5b",
+    "prompt": "What is AI?",
+    "stream": False
+}).json()
+
+print(response["response"])
+
+# Chat
+response = requests.post(f"{BASE}/api/chat", json={
+    "model": "deepseek-r1:1.5b",
+    "messages": [
+        {"role": "user", "content": "Hello!"}
+    ],
+    "stream": False
+}).json()
+
+print(response["message"]["content"])</pre><button class="copy-btn" onclick="copyCode(this.previousElementSibling)">Copy</button></div>
+
+        <h3 style="margin-top:20px">Python (UDS - Fastest)</h3>
+        <div class="code-block"><pre>import requests_unixsocket
+
+SOCK = '/tmp/ollama.sock'
+session = requests_unixsocket.Session()
+encoded = SOCK.replace('/', '%2F')
+base = f'http+unix://{encoded}'
+
+# List models
+models = session.get(f'{base}/api/tags').json()
+
+# Generate
+response = session.post(f'{base}/api/generate', json={
+    "model": "deepseek-r1:1.5b",
+    "prompt": "Hello!",
+    "stream": False
+}).json()
+
+print(response["response"])
+
+# Chat
+response = session.post(f'{base}/api/chat', json={
+    "model": "deepseek-r1:1.5b",
+    "messages": [{"role": "user", "content": "Hi!"}],
+    "stream": False
+}).json()
+
+print(response["message"]["content"])
+
+# OpenAI Completions
+response = session.post(f'{base}/v1/completions', json={
+    "model": "deepseek-r1:1.5b",
+    "prompt": "The sky is",
+    "max_tokens": 20
+}).json()
+
+print(response["choices"][0]["text"])
+
+# OpenAI Chat Completions
+response = session.post(f'{base}/v1/chat/completions', json={
+    "model": "deepseek-r1:1.5b",
+    "messages": [{"role": "user", "content": "Hello"}],
+    "max_tokens": 20
+}).json()
+
+print(response["choices"][0]["message"]["content"])</pre><button class="copy-btn" onclick="copyCode(this.previousElementSibling)">Copy</button></div>
+
+        <h3 style="margin-top:20px">JavaScript / Node.js</h3>
+        <div class="code-block"><pre>const axios = require('axios');
+
+const BASE = 'http://localhost:5000';
+
+// List models
+const models = await axios.get(`${BASE}/api/tags`);
+console.log(models.data.models);
+
+// Generate
+const gen = await axios.post(`${BASE}/api/generate`, {
+  model: 'deepseek-r1:1.5b',
+  prompt: 'Hello!',
+  stream: false
+});
+console.log(gen.data.response);
+
+// Chat
+const chat = await axios.post(`${BASE}/api/chat`, {
+  model: 'deepseek-r1:1.5b',
+  messages: [{ role: 'user', content: 'Hi!' }],
+  stream: false
+});
+console.log(chat.data.message.content);
+
+// OpenAI Completions
+const comp = await axios.post(`${BASE}/v1/completions`, {
+  model: 'deepseek-r1:1.5b',
+  prompt: 'The sky is',
+  max_tokens: 20
+});
+console.log(comp.data.choices[0].text);
+
+// OpenAI Chat Completions
+const chatComp = await axios.post(`${BASE}/v1/chat/completions`, {
+  model: 'deepseek-r1:1.5b',
+  messages: [{ role: 'user', content: 'Hello' }],
+  max_tokens: 20
+});
+console.log(chatComp.data.choices[0].message.content);</pre><button class="copy-btn" onclick="copyCode(this.previousElementSibling)">Copy</button></div>
+
+        <h3 style="margin-top:20px">cURL (UDS)</h3>
+        <div class="code-block"><pre># All UDS commands
+SOCK="/tmp/ollama.sock"
+
+curl -s --unix-socket "$SOCK" http://localhost/api/status
+curl -s --unix-socket "$SOCK" http://localhost/api/tags
+curl -s --unix-socket "$SOCK" http://localhost/api/ps
+curl -s --unix-socket "$SOCK" http://localhost/api/system
+curl -s --unix-socket "$SOCK" http://localhost/api/logs
+curl -s --unix-socket "$SOCK" http://localhost/v1/models
+
+curl -s --unix-socket "$SOCK" -X POST http://localhost/api/generate \
+  -H "Content-Type: application/json" \
+  -d '{"model":"deepseek-r1:1.5b","prompt":"Hello","stream":false}'
+
+curl -s --unix-socket "$SOCK" -X POST http://localhost/api/chat \
+  -H "Content-Type: application/json" \
+  -d '{"model":"deepseek-r1:1.5b","messages":[{"role":"user","content":"Hi"}],"stream":false}'
+
+curl -s --unix-socket "$SOCK" -X POST http://localhost/v1/completions \
+  -H "Content-Type: application/json" \
+  -d '{"model":"deepseek-r1:1.5b","prompt":"The sky is","max_tokens":20}'
+
+curl -s --unix-socket "$SOCK" -X POST http://localhost/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{"model":"deepseek-r1:1.5b","messages":[{"role":"user","content":"Hello"}],"max_tokens":20}'
+
+curl -s --unix-socket "$SOCK" -X POST http://localhost/v1/embeddings \
+  -H "Content-Type: application/json" \
+  -d '{"model":"deepseek-r1:1.5b","input":"Hello world"}'</pre><button class="copy-btn" onclick="copyCode(this.previousElementSibling)">Copy</button></div>
+      </div>
+    </div>
+
+    <!-- ========== Streaming ========== -->
+    <div class="section">
+      <h2>Streaming Examples</h2>
+      <div class="card" style="max-width:100%">
+        <h3>Generate Stream (UDS)</h3>
+        <div class="code-block"><pre>SOCK="/tmp/ollama.sock"
+
+# Ollama native stream
+curl -s --unix-socket "$SOCK" -X POST http://localhost/api/generate \
+  -H "Content-Type: application/json" \
+  -d '{"model":"deepseek-r1:1.5b","prompt":"Write a poem","stream":true}' | \
+  while read line; do echo -n "$line" | python3 -c "import sys,json; print(json.loads(sys.stdin.readline()).get('response',''),end='',flush=True)" 2>/dev/null; done
+
+echo ""
+
+# OpenAI chat completions stream
+curl -s --unix-socket "$SOCK" -X POST http://localhost/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{"model":"deepseek-r1:1.5b","messages":[{"role":"user","content":"Tell me a joke"}],"max_tokens":100,"stream":true}' | \
+  while read line; do echo -n "$line" | python3 -c "import sys,json; d=json.loads(sys.stdin.readline()); print(d.get('choices',[{}])[0].get('delta',{}).get('content',''),end='',flush=True)" 2>/dev/null; done</pre><button class="copy-btn" onclick="copyCode(this.previousElementSibling)">Copy</button></div>
+
+        <h3 style="margin-top:20px">Python Stream</h3>
+        <div class="code-block"><pre>import requests_unixsocket
+
+SOCK = '/tmp/ollama.sock'
+session = requests_unixsocket.Session()
+encoded = SOCK.replace('/', '%2F')
+base = f'http+unix://{encoded}'
+
+# Stream generate
+r = session.post(f'{base}/api/generate', json={
+    'model': 'deepseek-r1:1.5b',
+    'prompt': 'Write a haiku about coding',
+    'stream': True
+}, stream=True)
+
+for line in r.iter_lines():
+    if line:
+        import json
+        chunk = json.loads(line.decode('utf-8'))
+        if chunk.get('response'):
+            print(chunk['response'], end='', flush=True)
+print()</pre><button class="copy-btn" onclick="copyCode(this.previousElementSibling)">Copy</button></div>
+      </div>
+    </div>
+
+    <!-- ========== Architecture ========== -->
+    <div class="section">
+      <h2>Architecture</h2>
+      <div class="card" style="max-width:100%">
+        <div class="code-block"><pre>                    +-------------------+
+                    |     Internet      |
+                    | o.zombiecoder.my.id|
+                    +--------+----------+
+                             |
+                    +--------v----------+
+                    |  Cloudflare Tunnel |
+                    +--------+----------+
+                             |
+                    +--------v----------+
+                    |  Flask Webapp      |
+                    |  :5000 (HTTP)      |
+                    |  /tmp/ollama.sock  |
+                    |  (UDS)             |
+                    +--------+----------+
+                             |
+                    +--------v----------+
+                    |  Docker Network    |
+                    |  ollama-internal   |
+                    +--------+----------+
+                             |
+                    +--------v----------+
+                    |  Ollama Container  |
+                    |  127.0.0.1:5010    |
+                    |  (CPU-only, 4cores)|
+                    +--------+----------+
+                             |
+                    +--------v----------+
+                    |  deepseek-r1:1.5b  |
+                    |  1.1GB Q4_K_M      |
+                    +-------------------+
+
+Access Methods:
+  1. HTTP:       http://localhost:5000 (all endpoints)
+  2. UDS:        /tmp/ollama.sock (fastest)
+  3. Public:     https://o.zombiecoder.my.id (via Cloudflare)
+  4. Ollama:     127.0.0.1:5010 (localhost only, direct Ollama)</pre><button class="copy-btn" onclick="copyCode(this.previousElementSibling)">Copy</button></div>
+      </div>
+    </div>
+
+    <!-- ========== LOG ISSUE ========== -->
+    <div class="section">
+      <h2>Known Issues</h2>
+      <div class="warning">
+        <strong>System Logs Not Generated</strong>
+        <p>
+          Docker container logs থেকে সিস্টেম লগ সঠিকভাবে জেনারেট হচ্ছে না। 
+          এটি একটি পরিচিত সমস্যা যেটি এখনও সমাধান হয়নি।
+        </p>
+        <p style="margin-top:10px">
+          <strong>Workaround:</strong> Flask app এর ভিতরে logging যোগ করতে হবে।
+        </p>
+        <div class="code-block" style="margin-top:10px"><pre># app.py তে logging যোগ করুন:
+import logging
+from logging.handlers import RotatingFileHandler
+
+# File handler
+handler = RotatingFileHandler('/app/logs/app.log', maxBytes=10*1024*1024, backupCount=5)
+handler.setFormatter(logging.Formatter('%(asctime)s [%(levelname)s] %(message)s'))
+app.logger.addHandler(handler)
+app.logger.setLevel(logging.INFO)
+
+# এরপর সব জায়গায় app.logger.info() ব্যবহার করুন
+app.logger.info(f"Request: {request.method} {request.path}")</pre><button class="copy-btn" onclick="copyCode(this.previousElementSibling)">Copy</button></div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>Ollama Webapp - Developer Integration Guide v1.0</p>
+      <p style="margin-top:10px">
+        <span class="tag">Docker</span>
+        <span class="tag">Ollama</span>
+        <span class="tag">OpenAI-Compatible</span>
+        <span class="tag">Unix Domain Socket</span>
+        <span class="tag">deepseek-r1:1.5b</span>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    function copyUrl(endpoint) {
+      const full = 'http://localhost:5000' + endpoint;
+      navigator.clipboard.writeText(full);
+      alert('Copied: ' + full);
+    }
+
+    function copyCode(pre) {
+      navigator.clipboard.writeText(pre.textContent.trim());
+      alert('Code copied to clipboard!');
+    }
+
+    function copyCmd(el) {
+      // Remove the "$ " prefix for actual command
+      const cmd = el.textContent.replace(/^\$\s*/, '');
+      navigator.clipboard.writeText(cmd);
+      el.style.background = '#0f1f15';
+      setTimeout(() => { el.style.background = ''; }, 500);
+    }
+
+    function showTab(id) {
+      // Hide all
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+      // Show selected
+      document.getElementById('tab-' + id).classList.add('active');
+      event.target.classList.add('active');
+    }
+  </script>
+</body>
+</html>

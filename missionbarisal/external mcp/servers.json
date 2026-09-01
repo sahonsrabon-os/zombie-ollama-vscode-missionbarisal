@@ -1,0 +1,47 @@
+{
+  "_comment": "External MCP servers for Mission Barisal. Auto-started by start.js — no manual launching needed.",
+  "servers": [
+    {
+      "name": "zombiecoder",
+      "url": "https://mozaika.design/mcp",
+      "transport": "http",
+      "enabled": true,
+      "autoConnect": true,
+      "token": "",
+      "note": "Public Mission Barisal gateway (test)."
+    },
+    {
+      "name": "ocr",
+      "url": "http://127.0.0.1:3100",
+      "transport": "http",
+      "enabled": true,
+      "autoConnect": true,
+      "token": "",
+      "local": true,
+      "script": "external mcp/ocr-mcp.js",
+      "note": "OCR tool — image text extraction via Tesseract."
+    },
+    {
+      "name": "screen-recorder",
+      "url": "http://127.0.0.1:3101",
+      "transport": "http",
+      "enabled": true,
+      "autoConnect": true,
+      "token": "",
+      "local": true,
+      "script": "external mcp/screen-recorder-mcp.js",
+      "note": "Screen recorder — screenshot + video recording via ffmpeg."
+    },
+    {
+      "name": "tts",
+      "url": "http://127.0.0.1:3102",
+      "transport": "http",
+      "enabled": true,
+      "autoConnect": true,
+      "token": "",
+      "local": true,
+      "script": "external mcp/tts-mcp.js",
+      "note": "TTS — Text to speech via Edge TTS (bn-BD-NabanitaNeural)."
+    }
+  ]
+}

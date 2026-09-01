@@ -1,0 +1,57 @@
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+*.pyo
+
+# Build artifacts
+*.vsix
+*.tar.gz
+*.zip
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Environment
+.env
+.env.local
+.env.production
+
+# Logs
+logs/
+*.log
+
+# Data (large files, don't commit)
+data/
+cache/
+models/
+*.bin
+*.gguf
+
+# Temporary
+tmp/
+temp/
+*.tmp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+docker-compose.override.yml
+
+# Test artifacts
+test-results/
+coverage/
+*.coverage
+
+# Compiled
+out/
+dist/
+build/
+*.min.js
+*.min.css

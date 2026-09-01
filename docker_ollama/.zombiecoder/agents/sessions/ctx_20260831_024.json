@@ -1,0 +1,12 @@
+{
+  "session_id": "ctx_20260831_024",
+  "created_at": "2026-08-31T17:08:06.972Z",
+  "message_count": 2,
+  "summary": "Agent bug-hunter (inline-stream): The user wants me to verify the docker-compose.yml content. Let me run the cat command to see the fi",
+  "key_points": [],
+  "decisions": [],
+  "files_changed": [],
+  "tags": [],
+  "prev_session": null,
+  "next_session": null
+}

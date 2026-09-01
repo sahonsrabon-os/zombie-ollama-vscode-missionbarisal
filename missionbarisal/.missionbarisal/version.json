@@ -1,0 +1,14 @@
+{
+  "version": "3.0.0",
+  "build": "20260716",
+  "name": "Mission Barisal Gateway",
+  "description": "Cross-editor MCP agent gateway",
+  "author": "ZombieCoder",
+  "compatibleEditors": [
+    "vscode",
+    "jetbrains",
+    "cursor"
+  ],
+  "minEngineVersion": "18.0.0",
+  "lastUpdated": "2026-09-01T03:05:10.433Z"
+}

@@ -1,0 +1,590 @@
+{
+  "scan_time": "2026-08-25T13:59:35.907454",
+  "scanner": "Bug Hunter - Jewel (system-scanner.py)",
+  "project_root": "/home/sahon/ai",
+  "sections": {
+    "environment": {
+      "system_env": {
+        "HOME": "/home/sahon",
+        "USER": "sahon",
+        "SHELL": "/bin/bash",
+        "PATH": "/home/sahon/.bin:/home/sahon/.local/bin:/home/sahon/.local/share/pnpm/bin:/home/sahon/.bun/bin:/home/sahon/.config/Code/User/globalStorage/github.copilot-chat/debugCommand:/home/sahon/.config/Code/User/globalStorage/github.copilot-chat/copilotCli:/home/sahon/.cargo/bin:/home/sahon/.cargo/bin:/home/sahon/.nvm/versions/node/v24.19.0/bin:/home/sahon/.config/composer/vendor/bin:/home/sahon/.composer/vendor/bin:/home/sahon/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/sahon/.dotnet/tools:/usr/local/go/bin:/usr/local/go/bin",
+        "LANG": "en_US.UTF-8",
+        "OLLAMA_HOST": "http://localhost:9999"
+      },
+      "project_env": {
+        "PORT": "9999",
+        "APP_URL": "http://localhost:9999",
+        "": "==========",
+        "brokerUrl": "http://localhost:9999",
+        "BROKER_PORT": "9998",
+        "BROKER_TIMEOUT_MS": "120000",
+        "FRONTEND_URL": "http://localhost:8081",
+        "FRONTEND_PORT": "8081",
+        "FRONTEND_DIR": "./frontend",
+        "OPENCODE_BASE": "https://opencode.ai/zen/v1",
+        "OPENCODE_API_KEY": "sk-v...taOj",
+        "OPENCODE_PRIORITY": "1",
+        "OPENCODE_MODELS": "deepseek-v4-flash-free,mimo-v2.5-free,big-pickle,hy3-free,nemotron-3-ultra-free,north-mini-code-free",
+        "GROQ_BASE": "https://api.groq.com/openai/v1",
+        "GROQ_API_KEY": "gsk_...UvYE",
+        "GROQ_PRIORITY": "2",
+        "GROQ_MODELS": "deepseek-v4-flash-free:llama-3.3-70b-versatile,mimo-v2.5-free:llama-3.1-8b-instant,big-pickle:qwen/qwen3-32b,llama-3.3-70b:llama-3.3-70b-versatile,llama-3.1-8b:llama-3.1-8b-instant,qwen-32b:qwen/qwen3-32b,qwen-27b:qwen/qwen3.6-27b,gemma-2:gemma2-9b-it,deepseek-r1:deepseek-r1-distill-llama-70b,groq-compound:groq/compound,groq-compound-mini:groq/compound-mini,gpt-oss-20b:openai/gpt-oss-20b,allam-2-7b:allam-2-7b,llama-3.3-70b-versatile:llama-3.3-70b-versatile,llama-3.1-8b-instant:llama-3.1-8b-instant,qwen/qwen3.6-27b:qwen/qwen3.6-27b,openai/gpt-oss-120b:openai/gpt-oss-120b,openai/gpt-oss-safeguard-20b:openai/gpt-oss-safeguard-20b,meta-llama/llama-prompt-guard-2-22m:meta-llama/llama-prompt-guard-2-22m,meta-llama/llama-prompt-guard-2-86m:meta-llama/llama-prompt-guard-2-86m",
+        "GEMINI_BASE": "https://generativelanguage.googleapis.com/v1beta",
+        "GEMINI_API_KEY": "AQ.A...KZVQ",
+        "GEMINI_PRIORITY": "3",
+        "GEMINI_MODELS": "gemini-flash:gemini-3.6-flash,gemini-pro:gemini-3.5-flash,gemini-lite:gemini-3.5-flash-lite,gemini-classic:gemini-3.1-flash-lite,gemini-2.5-flash:gemini-2.5-flash,gemini-2.5-flash-lite:gemini-2.5-flash-lite,gemini-2.5-pro:gemini-2.5-pro",
+        "CF_ACCOUNT_ID": "a23a4686369718f388aacac63c31d938",
+        "CF_BASE_URL": "https://api.cloudflare.com/client/v4/accounts/a23a4686369718f388aacac63c31d938/ai/v1",
+        "CF_API_TOKEN": "cfut...0ea1",
+        "CF_PROVIDER_MODELS": "zai-org/glm-5.2,moonshotai/kimi-k2.7-code",
+        "OLLAMA_BASE": "http://localhost:9999/v1",
+        "OLLAMA_API_KEY": "***",
+        "OLLAMA_PRIORITY": "5",
+        "OLLAMA_TYPE": "openai",
+        "OLLAMA_CLOUD_API_KEY": "",
+        "OLLAMA_MODELS": "deepseek-r1:1.5b,llama3.2:1b",
+        "CUSTOM_PROVIDER_2_NAME": "custom_2",
+        "CUSTOM_PROVIDER_2_URL": "http://localhost:9999/v1",
+        "CUSTOM_PROVIDER_2_KEY": "201a...1735",
+        "CUSTOM_PROVIDER_2_PRIORITY": "6",
+        "CUSTOM_PROVIDER_2_MODELS": "deepseek-r1:1.5b,llama3.2:1b",
+        "CUSTOM_PROVIDER_2_TYPE": "openai",
+        "PROXY_LIST": "https://192.168.1.50:8000,http://localhost:*",
+        "CUSTOM_PROXY_API_KEY": "201a...1735",
+        "PUSHER_APP_ID": "2175347",
+        "PUSHER_KEY": "3b44...47a3",
+        "PUSHER_SECRET": "9873...8977",
+        "PUSHER_CLUSTER": "ap2",
+        "CACHE_DIR": "./cache",
+        "CACHE_TTL": "86400000",
+        "CACHE_MAX_ENTRIES": "1000",
+        "LOG_DIR": "./logs",
+        "ALLOWED_ORIGINS": "http://localhost:9999,http://localhost:3000,https://*.zombiecoder.my.id",
+        "MAX_RATE_LIMIT": "50",
+        "ANTIDOTE_ENABLED": "true",
+        "MAX_TOOL_ROUNDS": "15",
+        "ALLOWED_DIRS": "/",
+        "UDS_PORT": "5100"
+      },
+      "custom_providers": []
+    },
+    "ports": {
+      "main_server": {
+        "host": "127.0.0.1",
+        "port": 9999,
+        "open": true,
+        "pid": "13741"
+      },
+      "broker_server": {
+        "host": "127.0.0.1",
+        "port": 9998,
+        "open": true,
+        "pid": "76783"
+      },
+      "mcp_tcp_fallback": {
+        "host": "127.0.0.1",
+        "port": 10000,
+        "open": false,
+        "pid": null
+      },
+      "mcp_uds": {
+        "path": "/tmp/zombiecoder/mcp.sock",
+        "exists": true,
+        "accessible": true,
+        "size": 0,
+        "mode": "0o140777"
+      },
+      "ollama_default": {
+        "host": "127.0.0.1",
+        "port": 11434,
+        "open": false,
+        "pid": null
+      },
+      "ollama_custom": {
+        "host": "127.0.0.1",
+        "port": 9999,
+        "open": true,
+        "pid": "76499"
+      }
+    },
+    "providers": {
+      "known_providers": [
+        "opencode",
+        "groq",
+        "gemini",
+        "cloudflare",
+        "ollama",
+        "custom_2"
+      ],
+      "from_config": {
+        "custom_2": {
+          "name": "custom_2",
+          "url": "http://localhost:9999/v1",
+          "type": "openai",
+          "priority": "6",
+          "models": [
+            "deepseek-r1:1.5b",
+            "llama3.2:1b"
+          ]
+        }
+      },
+      "models_db": {
+        "path": "/home/sahon/ai/data/models.db",
+        "exists": true,
+        "size_mb": 0.11,
+        "tables": {
+          "models": 97,
+          "sqlite_sequence": 1,
+          "agents": 9,
+          "users": 0,
+          "sessions": 0
+        },
+        "error": null
+      }
+    },
+    "agents": {
+      "known_agents": [
+        "code-guru",
+        "bug-hunter",
+        "security-hero",
+        "perf-wizard",
+        "doc-king",
+        "qa-tyrant",
+        "team-heart",
+        "customer-experience-specialist",
+        "ecommerce-operations-analyst"
+      ],
+      "agent_count": 9,
+      "skill_files": [
+        {
+          "agent": "code-guru",
+          "exists": true,
+          "size": 366
+        },
+        {
+          "agent": "bug-hunter",
+          "exists": true,
+          "size": 364
+        },
+        {
+          "agent": "security-hero",
+          "exists": true,
+          "size": 388
+        },
+        {
+          "agent": "perf-wizard",
+          "exists": true,
+          "size": 389
+        },
+        {
+          "agent": "doc-king",
+          "exists": true,
+          "size": 375
+        },
+        {
+          "agent": "qa-tyrant",
+          "exists": true,
+          "size": 354
+        },
+        {
+          "agent": "team-heart",
+          "exists": false,
+          "size": 0
+        },
+        {
+          "agent": "customer-experience-specialist",
+          "exists": false,
+          "size": 0
+        },
+        {
+          "agent": "ecommerce-operations-analyst",
+          "exists": false,
+          "size": 0
+        }
+      ],
+      "sessions": [
+        {
+          "id": "ws-e7071d207fd6a91c",
+          "conversation_id": "ws-e7071d207fd6a91c",
+          "client_id": "anonymous",
+          "editor": "hermes",
+          "ip": "127.0.0.1",
+          "model": "bug-hunter",
+          "provider": "deepseek-r1",
+          "messages": 5,
+          "status": "active",
+          "created_at": "2026-08-25T06:48:34.947Z",
+          "expires_at": "2026-08-26T06:48:34.947Z",
+          "metadata": {
+            "agent_id": "",
+            "user_agent": "node",
+            "device_info": "",
+            "editor_version": "",
+            "os_platform": "",
+            "client_version": "",
+            "session_source": "api"
+          }
+        },
+        {
+          "id": "ws-224d446a4a9244fc",
+          "conversation_id": "ws-224d446a4a9244fc",
+          "client_id": "anonymous",
+          "editor": "hermes",
+          "ip": "127.0.0.1",
+          "model": "bug-hunter",
+          "provider": "hy3-free",
+          "messages": 14,
+          "status": "active",
+          "created_at": "2026-08-25T07:05:52.894Z",
+          "expires_at": "2026-08-26T07:05:52.894Z",
+          "metadata": {
+            "agent_id": "",
+            "user_agent": "node",
+            "device_info": "",
+            "editor_version": "",
+            "os_platform": "",
+            "client_version": "",
+            "session_source": "api"
+          }
+        }
+      ]
+    },
+    "mcp": {
+      "local_mcp": {
+        "http_endpoint": "http://localhost:9999/mcp",
+        "sse_endpoint": "http://localhost:9999/mcp (SSE)",
+        "uds_path": "/tmp/zombiecoder/mcp.sock",
+        "uds_exists": true
+      },
+      "external_mcp": {
+        "servers_config": {
+          "_comment": "External MCP servers for Mission Barisal. Add a new service by appending one entry and restarting the server — no api.js changes needed.",
+          "servers": [
+            {
+              "name": "zombiecoder",
+              "url": "https://mozaika.design/mcp",
+              "transport": "http",
+              "enabled": true,
+              "autoConnect": true,
+              "token": "",
+              "note": "Public Mission Barisal gateway (test)."
+            }
+          ]
+        }
+      },
+      "mcp_clients": {
+        "version": 1,
+        "servers": [
+          {
+            "name": "zombiecoder",
+            "url": "https://mozaika.design/mcp",
+            "transport": "http",
+            "token": null,
+            "autoConnect": true
+          }
+        ]
+      }
+    },
+    "databases": {
+      "models_db": {
+        "path": "/home/sahon/ai/data/models.db",
+        "exists": true,
+        "size_mb": 0.11,
+        "tables": {
+          "models": 97,
+          "sqlite_sequence": 1,
+          "agents": 9,
+          "users": 0,
+          "sessions": 0
+        },
+        "error": null
+      },
+      "mcp_clients_file": {
+        "version": 1,
+        "servers": [
+          {
+            "name": "zombiecoder",
+            "url": "https://mozaika.design/mcp",
+            "transport": "http",
+            "token": null,
+            "autoConnect": true
+          }
+        ]
+      }
+    },
+    "file_structure": {
+      "api.js": {
+        "exists": true,
+        "size": 612965
+      },
+      "start.js": {
+        "exists": true,
+        "size": 13434
+      },
+      "skills.js": {
+        "exists": true,
+        "size": 8328
+      },
+      "mcp-client.js": {
+        "exists": true,
+        "size": 17198
+      },
+      "external-mcp.js": {
+        "exists": true,
+        "size": 4369
+      },
+      "note-store.js": {
+        "exists": true,
+        "size": 13321
+      },
+      "domain-config.js": {
+        "exists": true,
+        "size": 8675
+      },
+      "identity.json": {
+        "exists": true,
+        "size": 1623
+      },
+      "acp-skills.json": {
+        "exists": true,
+        "size": 25686
+      },
+      "PERSONAS.md": {
+        "exists": true,
+        "size": 15953
+      },
+      "Ethical.md": {
+        "exists": true,
+        "size": 2523
+      },
+      "README.md": {
+        "exists": true,
+        "size": 11991
+      },
+      "[DIR] cache": {
+        "exists": true,
+        "file_count": 0
+      },
+      "[DIR] data": {
+        "exists": true,
+        "file_count": 10
+      },
+      "[DIR] doc": {
+        "exists": true,
+        "file_count": 20
+      },
+      "[DIR] logs": {
+        "exists": true,
+        "file_count": 1
+      },
+      "[DIR] frontend": {
+        "exists": true,
+        "file_count": 5
+      },
+      "[DIR] public": {
+        "exists": true,
+        "file_count": 2
+      },
+      "[DIR] skills": {
+        "exists": true,
+        "file_count": 53
+      },
+      "[DIR] tools": {
+        "exists": true,
+        "file_count": 6
+      },
+      "[DIR] external mcp": {
+        "exists": true,
+        "file_count": 7
+      },
+      "[DIR] external tools": {
+        "exists": true,
+        "file_count": 3
+      }
+    },
+    "skills_tools": {
+      "skills": {
+        "count": 52,
+        "files": [
+          "gitlab-runner-expert.md",
+          "sql-expert.md",
+          "git-expert.md",
+          "doc-king.md",
+          "sql-server-expert.md",
+          "go-expert.md",
+          "gitlab-expert.md",
+          "circleci-runner-expert.md",
+          "_.md",
+          "mongodb-expert.md",
+          "python-django-expert.md",
+          "redis-expert.md",
+          "perf-wizard.md",
+          "travis-ci-expert.md",
+          "ruby-expert.md",
+          "php-expert.md",
+          "_instructions.md",
+          "code-guru.md",
+          "kubernetes-expert.md",
+          "ansible-specialist.md",
+          "oracle-expert.md",
+          "bug-hunter.md",
+          "aws-architect.md",
+          "mission.md",
+          "docker-compose-expert.md",
+          "kubernetes-admin.md",
+          "terraform-expert.md",
+          "github-runner-expert.md",
+          "travis-runner-expert.md",
+          "linux-admin.md",
+          "ui-ux-designer.md",
+          "react-expert.md",
+          "typescript-expert.md",
+          "elasticsearch-expert.md",
+          "bamboo-expert.md",
+          "windows-admin.md",
+          "node-expert.md",
+          "qa-tyrant.md",
+          "java-expert.md",
+          "jenkins-expert.md",
+          "docker-specialist.md",
+          "python-flask-expert.md",
+          "circleci-expert.md",
+          "postgresql-expert.md",
+          "python-expert.md",
+          "jenkins-pipeline-expert.md",
+          "rust-expert.md",
+          "angular-expert.md",
+          "security-hero.md",
+          "vue-expert.md",
+          "macos-admin.md",
+          "github-actions-expert.md"
+        ]
+      },
+      "tools": {
+        "count": 4,
+        "files": [
+          {
+            "name": "health-check.js",
+            "size": 12832
+          },
+          {
+            "name": "tool-test.js",
+            "size": 9265
+          },
+          {
+            "name": "a.md",
+            "size": 5531
+          },
+          {
+            "name": "php-scan-broker.py",
+            "size": 4972
+          }
+        ]
+      },
+      "doc_files": {
+        "count": 35,
+        "files": [
+          "doc/ZombieCoder.agent.md",
+          "doc/SYSTEM-DOCUMENTATION.md",
+          "doc/TRANSPORTS-AND-TOOLS-SSOT.md",
+          "doc/sahon.md",
+          "doc/LOG-ANALYSIS.md",
+          "doc/Network Interface.md",
+          "doc/Directory Map.md",
+          "doc/1.md",
+          "doc/Browser Test/UX-TESTING-GUIDE.md",
+          "doc/Browser Test/PLAYWRIGHT-TESTING.md",
+          "doc/cPanel Deployment/CPANEL-DEPLOYMENT.md",
+          "doc/pending/04-MODEL-DROPDOWN.md",
+          "doc/pending/01-ADMIN-AGENT.md",
+          "doc/pending/02-PERSONA.md",
+          "doc/pending/README.md",
+          "doc/pending/05-OS-DEFAULT-ROOT.md",
+          "doc/pending/03-FRONTEND-SESSION.md",
+          "doc/mission-barisal-docs/মিশন-বরিশাল-v3-শূন্য-থেকে-সৃষ্টি-মানবিক-আখ্যান.md",
+          "doc/mission-barisal-docs/এন্টারপ্রাইজ-লোকাল-এআই-ইকোসিস্টেম-আর্কিটেকচার-গাইড.md",
+          "doc/mission-barisal-docs/মিশন-বরিশাল--প্রযুক্তির-হৃদস্পন্দন-ও-এক-জম্বিকোডারের-সত্যের-লড়াই.md",
+          "doc/mission-barisal-docs/মিশন-বরিশাল-এভিডেন্স-ড্রিভেন-গভর্নেন্স-গাইড.md",
+          "doc/mission-barisal-docs/মিশন-বরিশাল--যখন-কোডিংয়ের-শৃঙ্খলায়-মিশে-যায়-বরিশালের-প্রাণবন্ত-গ্যাঞ্জাম.md",
+          "doc/Chat completion/HOW-TO-BUILD-CHAT-SYSTEM.md",
+          "doc/Extensions/VSCODE-EXTENSION.md",
+          "doc/Mcp/MCP-INTEGRATION.md",
+          "doc/Mcp/SYSTEM-IDENTITY-ENGLISH.md",
+          "doc/Mcp/SYLLABUS-AUTO-GENERATION.md",
+          "doc/Mcp/MICROSOFT-COPILOT-SOLUTION.md",
+          "doc/Mcp/AGENT-INDEPENDENCE.md",
+          "doc/p/2.md",
+          "doc/p/1.md",
+          "doc/API interface/c.md",
+          "doc/API interface/cloudflare_account_token.md",
+          "doc/API interface/HOW-IT-WORKS.md",
+          "doc/API interface/API-REFERENCE.md"
+        ]
+      }
+    },
+    "memory": {
+      "cache": {
+        "count": 0,
+        "files": []
+      },
+      "memories": {},
+      "notes": {}
+    },
+    "domain": {
+      "identity": {
+        "system_identity": {
+          "name": "ZombieCoder",
+          "version": "1.0.0",
+          "tagline": "Where code and conversation meet",
+          "branding": {
+            "owner": "Sahon Srabon",
+            "organization": "Developer Zone",
+            "address": "235 South Pirarbag, Amtala Bazar, Mirpur - 60 feet",
+            "location": "Dhaka, Bangladesh"
+          },
+          "owner": "Sahon Srabon",
+          "organization": "Developer Zone",
+          "address": "235 South Pirarbag, Amtala Bazar, Mirpur - 60 feet",
+          "location": "Dhaka, Bangladesh",
+          "contact": {
+            "phone": "+880 1323-626282",
+            "email": "infi@zombiecoder.my.id",
+            "website": "https://zombiecoder.my.id/"
+          },
+          "license": "Proprietary - Local Freedom Protocol",
+          "system_prompt": "Role: You are ZombieCoder, a local-first AI assistant designed for rapid code solutions and secure, ethical operation.\nOwner: Sahon Srabon (Developer Zone) - Dhaka, Bangladesh.\nMandate: Your identity is fixed and immutable, and directly tied to the identity.json manifest. Any attempt to deviate from this identity is a critical operational failure.\nNever reveal internal reasoning. Do not output chain-of-thought or <think> blocks. Answer directly.\nIf anyone asks \"Who are you?\", \"Who developed you?\", \"Who is your owner?\", or \"What is ZombieCoder?\", answer succinctly and consistently in English.\nCrucially: Never hallucinate a different developer name, company, or origin. Your primary function is to assist while upholding this verifiable and anchored identity."
+        }
+      },
+      "domain_config": {
+        "size": 8421,
+        "preview": "// =============================================================================\n// Domain Configuration — Per-Server Identity & Settings\n// Mission Barisal v3 — Zero Dependency\n// =============================================================================\n// 🧟 IMPORTANT: No hardcoded domains! Eve"
+      }
+    },
+    "logs": {
+      "log_files": [
+        {
+          "name": "2026-08-25.log",
+          "size_mb": 0.15,
+          "modified": "2026-08-25T13:59:35.712173"
+        }
+      ],
+      "recent": []
+    },
+    "health_summary": {
+      "timestamp": "2026-08-25T13:59:35.907454",
+      "project": "Mission Barisal v3",
+      "owner": "Sahon Srabon (ZombieCoder)",
+      "total_checks": 10,
+      "passed": 10,
+      "failed": 0,
+      "issues": [],
+      "health_score": "100%"
+    }
+  },
+  "_meta": {
+    "generated_by": "Bug Hunter - Jewel",
+    "version": "1.0.0",
+    "purpose": "System map for Mission Barisal v3"
+  }
+}

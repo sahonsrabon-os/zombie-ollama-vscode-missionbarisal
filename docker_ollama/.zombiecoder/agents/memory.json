@@ -1,0 +1,256 @@
+{
+  "current_session": {
+    "id": null,
+    "started_at": null,
+    "message_count": 0,
+    "summary": null
+  },
+  "recent_context": [],
+  "session_index": {
+    "last_accessed": "2026-08-31T17:26:40.633Z",
+    "total_sessions": 48,
+    "total_archived": 0
+  },
+  "entries": [
+    {
+      "timestamp": "2026-08-31T16:53:15.750Z",
+      "agent": "Code Guru - Monu",
+      "summary": "<context>\nThe current date is 2026-08-31.\n</context>\n<editorContext>\nThe user's current file is /home/sahon/docker ollama/.zombiecoder/SSOT.md. \n</editorContext>\n<reminderInstructions>\nWhen using the ..."
+    },
+    {
+      "timestamp": "2026-08-31T16:53:30.705Z",
+      "agent": "Code Guru - Monu",
+      "summary": "<context>\nThe current date is 2026-08-31.\n</context>\n<reminderInstructions>\nWhen using the insert_edit_into_file tool, avoid repeating existing code, instead use a line comment with \\`...existing code..."
+    },
+    {
+      "timestamp": "2026-08-31T16:53:59.745Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<context>\nThe current date is 2026-08-31.\n</context>\n<reminderInstructions>\nWhen using the insert_edit_into_file tool, avoid repeating existing code, instead use a line comment with \\`...existing code..."
+    },
+    {
+      "timestamp": "2026-08-31T16:54:16.041Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<context>\nThe current date is 2026-08-31.\n</context>\n<reminderInstructions>\nWhen using the insert_edit_into_file tool, avoid repeating existing code, instead use a line comment with \\`...existing code..."
+    },
+    {
+      "timestamp": "2026-08-31T16:54:46.364Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<context>\nThe current date is 2026-08-31.\n</context>\n<editorContext>\nThe user's current file is /home/sahon/docker ollama/.vscode/settings.json. \n</editorContext>\n<reminderInstructions>\nWhen using the..."
+    },
+    {
+      "timestamp": "2026-08-31T16:55:58.990Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<context>\nThe current date is 2026-08-31.\n</context>\n<editorContext>\nThe user's current file is /home/sahon/docker ollama/.vscode/settings.json. \n</editorContext>\n<reminderInstructions>\nWhen using the..."
+    },
+    {
+      "timestamp": "2026-08-31T16:56:20.842Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<context>\nThe current date is 2026-08-31.\n</context>\n<editorContext>\nThe user's current file is /home/sahon/docker ollama/.vscode/settings.json. \n</editorContext>\n<reminderInstructions>\nWhen using the..."
+    },
+    {
+      "timestamp": "2026-08-31T16:56:50.411Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<context>\nThe current date is 2026-08-31.\n</context>\n<editorContext>\nThe user's current file is /home/sahon/docker ollama/.vscode/settings.json. \n</editorContext>\n<reminderInstructions>\nWhen using the..."
+    },
+    {
+      "timestamp": "2026-08-31T16:57:11.918Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<context>\nThe current date is 2026-08-31.\n</context>\n<editorContext>\nThe user's current file is /home/sahon/docker ollama/.vscode/settings.json. \n</editorContext>\n<reminderInstructions>\nWhen using the..."
+    },
+    {
+      "timestamp": "2026-08-31T16:59:00.738Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<context>\nThe current date is 2026-08-31.\nTerminals:\nTerminal: bash\nLast Command:  cat \"/home/sahon/docker ollama/.zombiecoder/SSOT.md\"\nCwd: /home/sahon/docker ollama\nExit Code: 0\n<todoList>\n# Todo Li..."
+    },
+    {
+      "timestamp": "2026-08-31T16:59:23.865Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<context>\nThe current date is 2026-08-31.\nTerminals:\nTerminal: bash\nLast Command:  cat \"/home/sahon/docker ollama/.zombiecoder/SSOT.md\"\nCwd: /home/sahon/docker ollama\nExit Code: 0\n<todoList>\n# Todo Li..."
+    },
+    {
+      "timestamp": "2026-08-31T17:00:07.384Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<context>\nThe current date is 2026-08-31.\nTerminals:\nTerminal: bash\n<todoList>\n# Todo List\n\n- [-] Create Dockerfile for Ollama CPU-only\n- [ ] Create docker-compose.yml with isolation\n- [ ] Create simp..."
+    },
+    {
+      "timestamp": "2026-08-31T17:00:23.356Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<context>\nThe current date is 2026-08-31.\nTerminals:\nTerminal: bash\n<todoList>\n# Todo List\n\n- [-] Create Dockerfile for Ollama CPU-only\n- [ ] Create docker-compose.yml with isolation\n- [ ] Create simp..."
+    },
+    {
+      "timestamp": "2026-08-31T17:00:58.890Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<context>\nThe current date is 2026-08-31.\nTerminals:\nTerminal: bash\n<todoList>\n# Todo List\n\n- [-] Create Dockerfile for Ollama CPU-only\n- [ ] Create docker-compose.yml with isolation\n- [ ] Create simp..."
+    },
+    {
+      "timestamp": "2026-08-31T17:01:23.391Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<context>\nThe current date is 2026-08-31.\nTerminals:\nTerminal: bash\n<todoList>\n# Todo List\n\n- [-] Create Dockerfile for Ollama CPU-only\n- [ ] Create docker-compose.yml with isolation\n- [ ] Create simp..."
+    },
+    {
+      "timestamp": "2026-08-31T17:01:41.265Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<context>\nThe current date is 2026-08-31.\nTerminals:\nTerminal: bash\n<todoList>\n# Todo List\n\n- [-] Create Dockerfile for Ollama CPU-only\n- [ ] Create docker-compose.yml with isolation\n- [ ] Create simp..."
+    },
+    {
+      "timestamp": "2026-08-31T17:01:57.754Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<context>\nThe current date is 2026-08-31.\nTerminals:\nTerminal: bash\n<todoList>\n# Todo List\n\n- [-] Create Dockerfile for Ollama CPU-only\n- [ ] Create docker-compose.yml with isolation\n- [ ] Create simp..."
+    },
+    {
+      "timestamp": "2026-08-31T17:02:19.807Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<context>\nThe current date is 2026-08-31.\nTerminals:\nTerminal: bash\n<todoList>\n# Todo List\n\n- [-] Create Dockerfile for Ollama CPU-only\n- [ ] Create docker-compose.yml with isolation\n- [ ] Create simp..."
+    },
+    {
+      "timestamp": "2026-08-31T17:05:52.017Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<attachments>\n<attachment id=\"Terminal Selection\">\nsahon@sahon-All-Series:~/docker ollama$ curl http://localhost:9999/mcp\nevent: endpoint\ndata: /mcp\n\nevent: tools\ndata: {\"tools\":[{\"name\":\"read_file\",\"..."
+    },
+    {
+      "timestamp": "2026-08-31T17:06:17.547Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<attachments>\n<attachment id=\"Terminal Selection\">\nsahon@sahon-All-Series:~/docker ollama$ curl http://localhost:9999/mcp\nevent: endpoint\ndata: /mcp\n\nevent: tools\ndata: {\"tools\":[{\"name\":\"read_file\",\"..."
+    },
+    {
+      "timestamp": "2026-08-31T17:06:45.770Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<attachments>\n<attachment id=\"Terminal Selection\">\nsahon@sahon-All-Series:~/docker ollama$ curl http://localhost:9999/mcp\nevent: endpoint\ndata: /mcp\n\nevent: tools\ndata: {\"tools\":[{\"name\":\"read_file\",\"..."
+    },
+    {
+      "timestamp": "2026-08-31T17:07:10.146Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<attachments>\n<attachment id=\"Terminal Selection\">\nsahon@sahon-All-Series:~/docker ollama$ curl http://localhost:9999/mcp\nevent: endpoint\ndata: /mcp\n\nevent: tools\ndata: {\"tools\":[{\"name\":\"read_file\",\"..."
+    },
+    {
+      "timestamp": "2026-08-31T17:07:32.065Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<attachments>\n<attachment id=\"Terminal Selection\">\nsahon@sahon-All-Series:~/docker ollama$ curl http://localhost:9999/mcp\nevent: endpoint\ndata: /mcp\n\nevent: tools\ndata: {\"tools\":[{\"name\":\"read_file\",\"..."
+    },
+    {
+      "timestamp": "2026-08-31T17:08:06.970Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<context>\nThe current date is 2026-08-31.\nTerminals:\nTerminal: bash\nLast Command: ls -la \"/home/sahon/docker ollama\"\nCwd: /home/sahon/docker ollama\nExit Code: 0\nTerminal: curl\n<todoList>\n# Todo List\n\n..."
+    },
+    {
+      "timestamp": "2026-08-31T17:08:45.437Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<context>\nThe current date is 2026-08-31.\nTerminals:\nTerminal: bash\nLast Command: ls -la \"/home/sahon/docker ollama\"\nCwd: /home/sahon/docker ollama\nExit Code: 0\nTerminal: curl\n<todoList>\n# Todo List\n\n..."
+    },
+    {
+      "timestamp": "2026-08-31T17:09:02.454Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<context>\nThe current date is 2026-08-31.\nTerminals:\nTerminal: bash\nLast Command: ls -la \"/home/sahon/docker ollama\"\nCwd: /home/sahon/docker ollama\nExit Code: 0\nTerminal: curl\n<todoList>\n# Todo List\n\n..."
+    },
+    {
+      "timestamp": "2026-08-31T17:09:19.132Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<context>\nThe current date is 2026-08-31.\nTerminals:\nTerminal: bash\nLast Command: ls -la \"/home/sahon/docker ollama\"\nCwd: /home/sahon/docker ollama\nExit Code: 0\nTerminal: curl\n<todoList>\n# Todo List\n\n..."
+    },
+    {
+      "timestamp": "2026-08-31T17:10:33.701Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<context>\nThe current date is 2026-08-31.\nTerminals:\nTerminal: bash\nTerminal: curl\n<todoList>\n# Todo List\n\n- [x] Create Dockerfile for Ollama CPU-only\n- [x] Create docker-compose.yml with isolation\n- ..."
+    },
+    {
+      "timestamp": "2026-08-31T17:10:53.490Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<context>\nThe current date is 2026-08-31.\nTerminals:\nTerminal: bash\nTerminal: curl\n<todoList>\n# Todo List\n\n- [x] Create Dockerfile for Ollama CPU-only\n- [x] Create docker-compose.yml with isolation\n- ..."
+    },
+    {
+      "timestamp": "2026-08-31T17:11:56.869Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<context>\nThe current date is 2026-08-31.\nTerminals:\nTerminal: bash\nTerminal: curl\n<todoList>\n# Todo List\n\n- [x] Create Dockerfile for Ollama CPU-only\n- [x] Create docker-compose.yml with isolation\n- ..."
+    },
+    {
+      "timestamp": "2026-08-31T17:12:41.673Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<context>\nThe current date is 2026-08-31.\nTerminals:\nTerminal: bash\nLast Command: docker compose\nCwd: /home/sahon/docker ollama\nExit Code: 0\nTerminal: curl\n<todoList>\n# Todo List\n\n- [x] Create Dockerf..."
+    },
+    {
+      "timestamp": "2026-08-31T17:13:00.175Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<context>\nThe current date is 2026-08-31.\nTerminals:\nTerminal: bash\nLast Command: docker compose\nCwd: /home/sahon/docker ollama\nExit Code: 0\nTerminal: curl\n<todoList>\n# Todo List\n\n- [x] Create Dockerf..."
+    },
+    {
+      "timestamp": "2026-08-31T17:13:57.300Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<context>\nThe current date is 2026-08-31.\nTerminals:\nTerminal: bash\nTerminal: curl\n<todoList>\n# Todo List\n\n- [x] Create Dockerfile for Ollama CPU-only\n- [x] Create docker-compose.yml with isolation\n- ..."
+    },
+    {
+      "timestamp": "2026-08-31T17:14:16.165Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<context>\nThe current date is 2026-08-31.\nTerminals:\nTerminal: bash\nTerminal: curl\n<todoList>\n# Todo List\n\n- [x] Create Dockerfile for Ollama CPU-only\n- [x] Create docker-compose.yml with isolation\n- ..."
+    },
+    {
+      "timestamp": "2026-08-31T17:15:26.798Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<context>\nThe current date is 2026-08-31.\nTerminals:\nTerminal: bash\nTerminal: bash\nLast Command: orking directory (default: MCP working dir)\"}},\"required\":[\"command\"]}},{\"name\":\"delete_file\",\"descript..."
+    },
+    {
+      "timestamp": "2026-08-31T17:16:30.890Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<context>\nThe current date is 2026-08-31.\nTerminals:\nTerminal: bash\nLast Command: orking directory (default: MCP working dir)\"}},\"required\":[\"command\"]}},{\"name\":\"delete_file\",\"description\":\"Delete a ..."
+    },
+    {
+      "timestamp": "2026-08-31T17:17:03.574Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<context>\nThe current date is 2026-08-31.\nTerminals:\nTerminal: bash\nLast Command: orking directory (default: MCP working dir)\"}},\"required\":[\"command\"]}},{\"name\":\"delete_file\",\"description\":\"Delete a ..."
+    },
+    {
+      "timestamp": "2026-08-31T17:17:07.275Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<context>\nThe current date is 2026-08-31.\nTerminals:\nTerminal: bash\nLast Command: orking directory (default: MCP working dir)\"}},\"required\":[\"command\"]}},{\"name\":\"delete_file\",\"description\":\"Delete a ..."
+    },
+    {
+      "timestamp": "2026-08-31T17:17:50.971Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<context>\nThe current date is 2026-08-31.\nTerminals:\nTerminal: bash\nLast Command: orking directory (default: MCP working dir)\"}},\"required\":[\"command\"]}},{\"name\":\"delete_file\",\"description\":\"Delete a ..."
+    },
+    {
+      "timestamp": "2026-08-31T17:18:31.975Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<context>\nThe current date is 2026-08-31.\nTerminals:\nTerminal: bash\nLast Command: orking directory (default: MCP working dir)\"}},\"required\":[\"command\"]}},{\"name\":\"delete_file\",\"description\":\"Delete a ..."
+    },
+    {
+      "timestamp": "2026-08-31T17:20:28.746Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<context>\nThe current date is 2026-08-31.\nTerminals:\nTerminal: bash\nLast Command: orking directory (default: MCP working dir)\"}},\"required\":[\"command\"]}},{\"name\":\"delete_file\",\"description\":\"Delete a ..."
+    },
+    {
+      "timestamp": "2026-08-31T17:21:34.650Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<context>\nThe current date is 2026-08-31.\nTerminals:\nTerminal: bash\nLast Command: orking directory (default: MCP working dir)\"}},\"required\":[\"command\"]}},{\"name\":\"delete_file\",\"description\":\"Delete a ..."
+    },
+    {
+      "timestamp": "2026-08-31T17:22:31.221Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<context>\nThe current date is 2026-08-31.\nTerminals:\nTerminal: bash\nLast Command: orking directory (default: MCP working dir)\"}},\"required\":[\"command\"]}},{\"name\":\"delete_file\",\"description\":\"Delete a ..."
+    },
+    {
+      "timestamp": "2026-08-31T17:25:10.351Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<context>\nThe current date is 2026-08-31.\nTerminals:\nTerminal: bash\nLast Command: orking directory (default: MCP working dir)\"}},\"required\":[\"command\"]}},{\"name\":\"delete_file\",\"description\":\"Delete a ..."
+    },
+    {
+      "timestamp": "2026-08-31T17:25:42.446Z",
+      "agent": "Bug Hunter - Jewel",
+      "summary": "<context>\nThe current date is 2026-08-31.\nTerminals:\nTerminal: bash\nLast Command: orking directory (default: MCP working dir)\"}},\"required\":[\"command\"]}},{\"name\":\"delete_file\",\"description\":\"Delete a ..."
+    },
+    {
+      "timestamp": "2026-08-31T17:26:12.550Z",
+      "agent": "Code Guru - Monu",
+      "summary": "<context>\nThe current date is 2026-08-31.\nTerminals:\nTerminal: bash\nTerminal: bash\n\n</context>\n<editorContext>\nThe user's current file is untitled:Untitled-1. \n</editorContext>\n<reminderInstructions>\n..."
+    },
+    {
+      "timestamp": "2026-08-31T17:26:28.840Z",
+      "agent": "Code Guru - Monu",
+      "summary": "<context>\nThe current date is 2026-08-31.\nTerminals:\nTerminal: bash\nTerminal: bash\n\n</context>\n<editorContext>\nThe user's current file is untitled:Untitled-1. \n</editorContext>\n<reminderInstructions>\n..."
+    },
+    {
+      "timestamp": "2026-08-31T17:26:40.633Z",
+      "agent": "Code Guru - Monu",
+      "summary": "<context>\nThe current date is 2026-08-31.\nTerminals:\nTerminal: bash\nTerminal: bash\n\n</context>\n<editorContext>\nThe user's current file is untitled:Untitled-1. \n</editorContext>\n<reminderInstructions>\n..."
+    }
+  ]
+}

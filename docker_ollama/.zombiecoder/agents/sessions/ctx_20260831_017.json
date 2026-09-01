@@ -1,0 +1,12 @@
+{
+  "session_id": "ctx_20260831_017",
+  "created_at": "2026-08-31T17:01:57.752Z",
+  "message_count": 2,
+  "summary": "Agent bug-hunter (inline-stream): The Dockerfile for Ollama is missing. Let me create it.The main Dockerfile for Ollama is missing. Le",
+  "key_points": [],
+  "decisions": [],
+  "files_changed": [],
+  "tags": [],
+  "prev_session": null,
+  "next_session": null
+}

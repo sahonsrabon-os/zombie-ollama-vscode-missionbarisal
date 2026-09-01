@@ -1,0 +1,12 @@
+{
+  "session_id": "ctx_20260901_006",
+  "created_at": "2026-09-01T03:42:35.208Z",
+  "message_count": 2,
+  "summary": "Agent code-guru (inline-stream): The user is asking a simple math question: 2+2\n\nThe answer is 4.\n\nThis is straightforward. I don't n",
+  "key_points": [],
+  "decisions": [],
+  "files_changed": [],
+  "tags": [],
+  "prev_session": null,
+  "next_session": null
+}

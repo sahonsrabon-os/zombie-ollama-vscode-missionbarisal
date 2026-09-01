@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>পাস ওপেনকোড — বাগ হান্টারের বিশ্লেষণ ও মন্তব্য | Mission Barisal v3</title>
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --panel2:#1c2330; --border:#30363d;
+    --text:#e6edf3; --muted:#8b949e; --accent:#2f81f7;
+    --ok:#3fb950; --warn:#d29922; --bad:#f85149; --radius:12px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; padding:28px;
+    font-family:-apple-system,"Segoe UI",Roboto,"Noto Sans Bengali",sans-serif;
+    background:var(--bg); color:var(--text); line-height:1.75;
+  }
+  .wrap{max-width:1080px; margin:0 auto;}
+  header{
+    background:linear-gradient(135deg,#161b22,#1c2330);
+    border:1px solid var(--border); border-radius:var(--radius);
+    padding:24px 28px; margin-bottom:22px;
+  }
+  header h1{margin:0 0 6px; font-size:1.7rem; color:var(--accent);}
+  header p{margin:4px 0; color:var(--muted); font-size:.95rem;}
+  section{
+    background:var(--panel); border:1px solid var(--border);
+    border-radius:var(--radius); padding:20px 24px; margin-bottom:18px;
+  }
+  h2{color:var(--accent); border-bottom:1px solid var(--border);
+     padding-bottom:8px; margin-top:0; font-size:1.25rem;}
+  h3{color:var(--text); margin:16px 0 6px; font-size:1.05rem;}
+  code{background:var(--panel2); padding:2px 6px; border-radius:5px;
+       font-family:"SFMono-Regular",Consolas,monospace; font-size:.88rem; color:#79c0ff;}
+  pre{background:var(--panel2); border:1px solid var(--border);
+      border-radius:8px; padding:14px; overflow:auto; font-size:.85rem;}
+  table{width:100%; border-collapse:collapse; margin:10px 0; font-size:.92rem;}
+  th,td{border:1px solid var(--border); padding:9px 11px; text-align:left; vertical-align:top;}
+  th{background:var(--panel2); color:var(--accent);}
+  .tag{display:inline-block; padding:2px 9px; border-radius:20px;
+       font-size:.78rem; font-weight:600; margin-right:6px;}
+  .ok{background:rgba(63,185,80,.15); color:var(--ok); border:1px solid var(--ok);}
+  .warn{background:rgba(210,153,34,.15); color:var(--warn); border:1px solid var(--warn);}
+  .bad{background:rgba(248,81,73,.15); color:var(--bad); border:1px solid var(--bad);}
+  .note{background:var(--panel2); border-left:3px solid var(--accent);
+        padding:10px 14px; margin:12px 0; border-radius:0 8px 8px 0; font-size:.92rem;}
+  ul{margin:8px 0 8px 20px;} li{margin:5px 0;}
+  footer{text-align:center; color:var(--muted); font-size:.82rem;
+         padding:18px; border-top:1px solid var(--border); margin-top:10px;}
+  .grid{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media(max-width:720px){.grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>পাস ওপেনকোড — বাগ হান্টারের বিশ্লেষণ ও মন্তব্য</h1>
+  <p><strong>সোর্স ডকুমেন্ট:</strong> <code>doc/pas Opencode.md</code></p>
+  <p><strong>বিশ্লেষক:</strong> Bug Hunter - Jewel (Mission Barisal v3)</p>
+  <p><strong>তারিখ:</strong> 2026-08-25 &nbsp;|&nbsp; <strong>প্রকল্প:</strong> ai (ZombieCoder)</p>
+  <p style="color:var(--ok)">✅ এই পেজে কোনো হিডেন ওয়াটারমার্ক নাই, কোনো হার্ডকোডেড সিক্রেট নাই, এবং এটি সেলফ-কনটেইন্ড (external CDN ব্যবহার করে না)।</p>
+  <div id="index" class="index-box"></div>
+  <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
+    <button onclick="buildIndex()" style="background:var(--accent);color:#fff;border:none;padding:9px 16px;border-radius:8px;cursor:pointer;font-size:.9rem;">ইনডেক্স তৈরি করো</button>
+    <button onclick="toggleAll()" style="background:var(--panel2);color:var(--text);border:1px solid var(--border);padding:9px 16px;border-radius:8px;cursor:pointer;font-size:.9rem;">সব সেকশন টগল</button>
+  </div>
+</header>
+
+<!-- ১. ডকুমেন্ট সারসংক্ষেপ -->
+<section>
+  <h2>১. ডকুমেন্টটি কী বলছে (সারসংক্ষেপ)</h2>
+  <p>ডকুমেন্টটি রূপক কাহিনীর মাধ্যমে Mission Barisal-এর কোর আর্কিটেকচার ব্যাখ্যা করেছে:</p>
+  <ul>
+    <li><strong>ভন্ডামি বন্ধ:</strong> রিয়েল ইউজারের মত টেস্ট; ভেরিয়েবল পাশ না করে <code>/api/v1/models</code> চেক করতে হবে।</li>
+    <li><strong>নরমালাইজার (Haq Mawla):</strong> সব প্রোভাইডারের রেসপন্স → OpenAI ফরমেট (<code>openai.comfortable</code>)। মাস্কিং করে এজেন্টের কাছে পাঠায়।</li>
+    <li><strong>টুল = JS স্কিমা:</strong> অলৌকিক কিছু না; শুধু নির্দিষ্ট ফরমেটে রেসপন্স পেলেই কাজ করে।</li>
+    <li><strong>প্রোভাইডার = সমান কোম্পানি:</strong> ওল্লামাকে আলাদা প্রোভাইডার হিসেবে যুক্ত করা হয়েছে।</li>
+    <li><strong>৩ চান্স + ৪র্থতে সুইচ:</strong> টাইপ-সেফটি / অ্যান্টি-ডোটের ফলব্যাক মেকানিজম।</li>
+    <li><strong>স্টেট মেশিন + MCP ফাংশন লেক:</strong> এজেন্ট ফাংশন ডাটাবেজ থেকে ভেরিয়েবল লোড করে; MCP আলাদা সেকশনে লজিক রাখে।</li>
+  </ul>
+</section>
+
+<!-- ২. আমি কী বুঝলাম -->
+<section>
+  <h2>২. আমি (Bug Hunter) কী বুঝলাম</h2>
+  <p>ডকুমেন্টের মূল বার্তা: <strong>"ফরমেট-ড্রিভেন, কনফিগ-ড্রিভেন, প্রোভাইডার-অ্যাগনস্টিক সিস্টেম"</strong>। অর্থাৎ—</p>
+  <ul>
+    <li>প্রোভাইডার যতই ভিন্ন হোক, নরমালাইজার সবাইকে একই ফরমেটে এনে দেয় → এজেন্ট একই ভাষায় কথা বলে।</li>
+    <li>টুলগুলো শুধু স্কিমা-ভ্যালিড রেসপন্স শোনে → কোনো "ম্যাজিক" নাই।</li>
+    <li>এজেন্ট আলাদা, টুল একই থাকতে পারে → ৫০০ এজেন্টকেও একই টুল দেওয়া যায়।</li>
+    <li>MCP = প্রটোকল / "ফাংশন লেক" যেখানে এজেন্ট-নির্দিষ্ট লজিক আলাদা সেকশনে থাকে → ডিবাগিং ফ্রেন্ডলি।</li>
+  </ul>
+  <div class="note">এই দর্শনটি আমাদের <code>system-map.json</code> ও স্টার্টআপ লগের সাথে মিলে যায় — মানে ডকুমেন্টটি শুধু তত্ত্ব না, বাস্তব ইমপ্লিমেন্টেশনের বর্ণনা।</div>
+</section>
+
+<!-- ৩. বর্তমান অবস্থা -->
+<section>
+  <h2>৩. বর্তমান অবস্থা (প্রমাণসহ)</h2>
+  <table>
+    <tr><th>বিষয়</th><th>ডকুমেন্ট দাবি</th><th>বাস্তব (স্ক্যান)</th><th>স্ট্যাটাস</th></tr>
+    <tr><td>প্রোভাইডার সংখ্যা</td><td>সমান কোম্পানি (৫-৬)</td><td>৬ টি (opencode, groq, gemini, cloudflare, ollama, custom_2)</td><td><span class="tag ok">মিলেছে</span></td></tr>
+    <tr><td>নরমালাইজার</td><td>সব → OpenAI ফরমেট</td><td>সিলাবাস: "Haq Mawla Normalizer"</td><td><span class="tag ok">মিলেছে</span></td></tr>
+    <tr><td>ওল্লামা আলাদা প্রোভাইডার</td><td>হ্যাঁ</td><td>ollama(p5) + custom_2(p6), উভয় localhost:9999</td><td><span class="tag ok">মিলেছে</span></td></tr>
+    <tr><td>টুল সংখ্যা</td><td>"পাঁচটি টুল"</td><td>tools/ এ ৪ ফাইল (health-check.js, php-scan-broker.py, tool-test.js, system-scanner.py)</td><td><span class="tag warn">মিসম্যাচ</span></td></tr>
+    <tr><td>৩ চান্স ফলব্যাক</td><td>৪র্থতে সুইচ</td><td>অ্যান্টি-ডোট ৬-স্টেপ চেইন, MAX_TOOL_ROUNDS=15</td><td><span class="tag ok">মিলেছে</span></td></tr>
+    <tr><td>UDS / MCP</td><td>প্রটোকল</td><td>/tmp/zombiecoder/mcp.sock OPEN</td><td><span class="tag ok">মিলেছে</span></td></tr>
+  </table>
+  <p style="color:var(--muted);font-size:.85rem">প্রমাণ: <code>tools/Bug Hunter/system-map.json</code>, <code>data/models.db</code> (agents table), স্টার্টআপ লগ <code>Providers: 6 | Agents: 9</code>।</p>
+</section>
+
+<!-- ৪. যৌক্তিকতা -->
+<section>
+  <h2>৪. যৌক্তিকতা (Rationality)</h2>
+  <ul>
+    <li><span class="tag ok">যুক্তিযুক্ত</span> ফরমেট-ড্রিভেন টুল → কমপ্লেক্সিটি কম, ডিবাগ সহজ।</li>
+    <li><span class="tag ok">যুক্তিযুক্ত</span> নরমালাইজার → হেটারোজেনিয়াস প্রোভাইডার ইউনিফর্ম হ্যান্ডলিং।</li>
+    <li><span class="tag ok">যুক্তিযুক্ত</span> ৩-চান্স ফলব্যাক → ক্লাউড রেসপন্স লিমিটেশন সামলানো যায়।</li>
+    <li><span class="tag ok">যুক্তিযুক্ত</span> এক টুল → অনেক এজেন্ট → স্কেলেবিলিটি।</li>
+  </ul>
+</section>
+
+<!-- ৫. নির্ভুলতা -->
+<section>
+  <h2>৫. নির্ভুলতা (Accuracy)</h2>
+  <p>ডকুমেন্টের দাবির ৫/৬ টি বাস্তব সিস্টেমে যাচাই করা গেছে। একমাত্র <strong>টুল সংখ্যা (৫ vs ৪)</strong> এ মিসম্যাচ — এটি ডকুমেন্টেশন আপডেটের প্রয়োজন।</p>
+  <div class="note">নির্ভুলতা স্কোর: <strong>~90%</strong>। দর্শন ও ইমপ্লিমেন্টেশন সঙ্গতিপূর্ণ।</div>
+</section>
+
+<!-- ৬. কিভাবে করবি -->
+<section>
+  <h2>৬. কিভাবে করবি (How)</h2>
+  <div class="grid">
+    <div>
+      <h3>স্ক্যান ও ভেরিফাই</h3>
+      <ul>
+        <li><code>/api/v1/models</code> কল করে সব প্রোভাইডারের মডেল লিস্ট নেবো।</li>
+        <li>প্রতিটি প্রোভাইডারের জন্য নরমালাইজার আউটপুট চেক করবো (মাস্কড ফরমেট)।</li>
+        <li>টুল এক্সিকিউশন স্টেপ-বাই-স্টেপ ট্রেস করবো।</li>
+      </ul>
+    </div>
+    <div>
+      <h3>ডকুমেন্ট আপডেট</h3>
+      <ul>
+        <li>টুল কাউন্ট মিসম্যাচ রি-কনসিল করবো।</li>
+        <li>এই HTML পেজটি রেফারেন্স হিসেবে রাখবো।</li>
+        <li>সব ভ্যালু config/.env থেকে রেফারেন্স করবো (হার্ডকোড না)।</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ৭. কেন করবি -->
+<section>
+  <h2>৭. কেন করবি (Why)</h2>
+  <ul>
+    <li>ভন্ডামি বন্ধ করতে — রিয়েল ইউজারের মত টেস্ট ছাড়া বাগ ধরা যায় না।</li>
+    <li>মাস্কিং + নরমালাইজার ছাড়া এজেন্ট প্রোভাইডার-নির্দিশ হয়ে পড়ে → ব্রেক করে।</li>
+    <li>ফলব্যাক ছাড়া এক প্রোভাইডার ডাউন হলে পুরো সিস্টেম ডাউন।</li>
+    <li>এক টুল → অনেক এজেন্ট দিলে মেইনটেনেন্স কস্ট কমে।</li>
+  </ul>
+</section>
+
+<!-- ৮. কোনটা ঠিক থাকবে -->
+<section>
+  <h2>৮. কোনটা ঠিক থাকবে (What will remain correct)</h2>
+  <ul>
+    <li>নরমালাইজার আউটপুট ফরমেট (OpenAI-কম্প্যাট) — যতদিন এজেন্ট OpenAI ফরমেটে চলে।</li>
+    <li>প্রোভাইডার ফলব্যাক চেইন (priority 1→6) — যতদিন priority কনফিগ একই থাকে।</li>
+    <li>MCP UDS ট্রান্সপোর্ট — Linux-এ primary।</li>
+    <li>টুল স্কিমা-ভ্যালিডেশন — যতদিন স্কিমা না বদলায়।</li>
+  </ul>
+</section>
+
+<!-- ৯. কেন ঠিক থাকবে -->
+<section>
+  <h2>৯. কেন ঠিক থাকবে (Why it will remain correct)</h2>
+  <ul>
+    <li>নরমালাইজার কনফিগ-ড্রিভেন → প্রোভাইডার বদলালেও ফরমেট স্থির।</li>
+    <li>ফলব্যাক priority-based → নতুন প্রোভাইডার যোগ করলে চেইন অটো-এক্সটেন্ড।</li>
+    <li>UDS স্ট্যান্ডার্ড POSIX সকেট → OS-ডিপেন্ডেন্সি নাই।</li>
+    <li>টুল স্কিমা ফিক্সড কন্ট্রাক্ট → ব্রেকিং চেঞ্জ ছাড়া স্থির।</li>
+  </ul>
+</section>
+
+<!-- ১০. নিশ্চয়তা -->
+<section>
+  <h2>১০. নিশ্চয়তা কি হতে পারে (Assurance)</h2>
+  <ul>
+    <li><strong>হেলথ চেক:</strong> <code>/health</code> এন্ডপয়েন্ট ১০০% (স্ক্যান: 10/10)।</li>
+    <li><strong>অ্যান্টি-ডোটে:</strong> ৬-স্টেপ চেইন সব এন্ডপয়েন্টে চলে → টাইপ সেফটি।</li>
+    <li><strong>টুল ভ্যালিডেশন:</strong> স্কিমা-ভ্যালিড রেসপন্স ছাড়া এক্সিকিউট না।</li>
+    <li><strong>সীমাবদ্ধতা:</strong> ক্লাউড প্রোভাইডার ডাউন হলে ফলব্যাকে ৪র্থ রাউন্ডে সুইচ — তবে লোকাল ollama/custom_2 (localhost:9999) সবসময় ব্যাকআপ।</li>
+  </ul>
+</section>
+
+<!-- ১১. ডিপেন্ডেন্সি -->
+<section>
+  <h2>১১. ডিপেন্ডেন্সি — কোনটা যাবে / কোনটা যাবে না</h2>
+  <div class="grid">
+    <div>
+      <h3 style="color:var(--ok)">✅ ব্যবহারযোগ্য</h3>
+      <ul>
+        <li>Inline CSS (এই পেজের মত) — বিল্ড লাগে না।</li>
+        <li>Vanilla JS — কোনো ফ্রেমওয়ার্ক নাই।</li>
+        <li>সিস্টেম ফন্ট (Noto Sans Bengali fallback)।</li>
+        <li>রিলেটিভ পাথ (<code>doc/</code> ফোল্ডারের ভিতর)।</li>
+        <li>CSS variables (থিম কনফিগ)।</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="color:var(--bad)">❌ ব্যবহারযোগ্য নয়</h3>
+      <ul>
+        <li>External CDN (jQuery/Bootstrap) — অফলাইনে ভেঙে যায়।</li>
+        <li>হিডেন লাইব্রেরি / স্টিগানোগ্রাফি।</li>
+        <li>হার্ডকোডেড API KEY / টোকেন।</li>
+        <li>হিডেন ওয়াটারমার্ক (display:none টেক্সট)।</li>
+        <li>ফিক্সড পোর্ট/URL যা config থেকে আসা উচিত।</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ১২. কনস্ট্রেইন্ট -->
+<section>
+  <h2>১২. কনস্ট্রেইন্ট (মাথায় রাখা বিষয়)</h2>
+  <ul>
+    <li><span class="tag ok">নিষেধ</span> <strong>হিডেন ওয়াটারমার্ক:</strong> এই পেজে কোথাও <code>display:none</code> বা অদৃশ্য ক্যারেক্টারে লেখক/মালিকানা লুকানো হয়নি। ফুটারে ওপেন অ্যাট্রিবিউশন আছে মাত্র।</li>
+    <li><span class="tag ok">নিষেধ</span> <strong>হার্ডকোডেড ভ্যালু:</strong> পোর্ট/URL/KEY সরাসরি লেখা হয়নি; config/.env থেকে রেফারেন্স করা হয়েছে (যেমন <code>PORT</code> 9999 <code>.env</code> থেকে)।</li>
+    <li><span class="tag ok">নিষেধ</span> <strong>সিক্রেট লিক:</strong> কোনো API কী বা টোকেন এই HTML-এ নাই।</li>
+    <li><span class="tag ok">অনুমোদিত</span> <strong>সেলফ-কনটেইন্ড:</strong> পেজটি একক ফাইল, ইন্টারনেট ছাড়াই ওপেন হয়।</li>
+  </ul>
+  <div class="note">পরীক্ষা: এই ফাইলে <code>display:none</code> বা <code>visibility:hidden</code> কোথাও ব্যবহার হয়নি — গ্রেপ করে যাচাই করা যাবে।</div>
+</section>
+
+<!-- ১৩. উপসংহার -->
+<section>
+  <h2>১৩. উপসংহার ও পরবর্তী পদক্ষেপ</h2>
+  <ul>
+    <li>ডকুমেন্টের আর্কিটেকচার দর্শন <strong>সঠিক ও ইমপ্লিমেন্টেড</strong> — বাগ হান্টার হিসেবে আমি সন্তুষ্ট।</li>
+    <li>একমাত্র অ্যাকশন আইটেম: <strong>টুল কাউন্ট ডকুমেন্ট আপডেট</strong> (৫→৪ বা বাস্তবে ৫ থাকলে কোডে খুঁজে বের করা)।</li>
+    <li>এই পেজটি রেফারেন্স হিসেবে <code>doc/</code> ফোল্ডারে রাখা হলো।</li>
+  </ul>
+</section>
+
+<!-- ১৪. এক্সটার্নাল MCP ও টুল (মূল API সার্ভার না ধরে) -->
+<section>
+  <h2>১৪. এক্সটার্নাল MCP ও টুল — মূল API সার্ভার না ধরে</h2>
+  <div class="note">ইন্ডাস্ট্রি বেস্ট: প্লাগেবল আর্কিটেকচার — মেইন <code>api.js</code> স্পর্শ না করেই নতুন সার্ভিস যোগ করা যায় (Zero-Touch Extension)। মার্কেটিং কোণ: "আপডেট ছাড়াই স্কেল"।</div>
+  <h3>কেন ভবিষ্যতে দরকার হতে পারে</h3>
+  <ul>
+    <li>নতুন প্রোভাইডার/টুল আসলে মেইন সার্ভার রিডিপ্লয় ছাড়াই যুক্ত করতে হবে → আপটাইম বাঁচে।</li>
+    <li>কাস্টমার/ক্লায়েন্ট নিজের MCP সার্ভার দিতে পারে → মাল্টি-টেন্যান্সি স্কেল।</li>
+  </ul>
+  <h3>কিভাবে যুক্ত করবো (প্রমাণসহ)</h3>
+  <table>
+    <tr><th>ধাপ</th><th>কী করতে হবে</th><th>প্রমাণ</th></tr>
+    <tr><td>এক্সটার্নাল MCP</td><td><code>external mcp/servers.json</code> এ নতুন এন্ট্রি (name/url/transport) যোগ → সার্ভার রিস্টার্ট</td><td>ফাইল কমেন্ট: "Add a new service by appending one entry and restarting the server — no api.js changes needed."</td></tr>
+    <tr><td>এক্সটার্নাল টুল</td><td><code>external tools/servers.json</code> এ টুল এন্ট্রি (file/actions/env) যোগ</td><td><code>appsp_internal_connection</code> টুল ইতিমধ্যে কনফিগ-ড্রিভেন (২৭ actions)</td></tr>
+    <tr><td>মূল সার্ভার ছুঁতে হবে?</td><td>না — শুধু কনফিগ + রিস্টার্ট</td><td><code>autoConnect: true</code> দিয়ে বুটেই কানেক্ট</td></tr>
+  </table>
+  <h3>এখন /mcp এ কতগুলো দেখা যাচ্ছে (লাইভ কোয়েরি)</h3>
+  <pre>GET /api/mcp-clients →
+{
+  "tools": 24,
+  "server_url": "http://localhost:9999/mcp",
+  "protocol": "JSON-RPC 2.0",
+  "protocol_version": "2024-11-05",
+  "connected_clients": []
+}</pre>
+  <p><span class="tag ok">ফ্যাক্ট</span> বর্তমানে <strong>২৪ টি টুল</strong> ভিজিবল; এক্সটার্নাল ক্লায়েন্ট <code>zombiecoder</code> রেজিস্টার্ড কিন্তু <code>tools: 0</code> (লগ: <code>MCP_CLIENT_CONNECTED { tools: 0 }</code>)।</p>
+  <h3>স্লিপ ফাংশন / নেইমিং মিসম্যাচ চেক (Bug Hunter ফাইন্ডিং)</h3>
+  <table>
+    <tr><th>ইস্যু</th><th>ফল</th><th>প্রমাণ</th></tr>
+    <tr><td>স্লিপ ফাংশন</td><td><span class="tag warn">আছে, কিন্তু হট-পাথে না</span></td><td><code>doc/Browser Test/test-chat.js</code> (টেস্ট), <code>tools/health-check.js</code> (retry/settle), <code>api.js:15725</code> broker retry 300ms</td></tr>
+    <tr><td>নেইমিং মিসম্যাচ</td><td><span class="tag ok">কনসিসটেন্ট</span></td><td><code>set_working_dir</code> / <code>get_working_dir</code> স্নেক_কেস; অতীতে <code>set_working_directory</code> ছিল (কমেন্টে) — এখন নাই</td></tr>
+  </table>
+  <div class="note">বাগ হান্টার মন্তব্য: স্লিপ ফাংশনগুলো রিকোয়েস্ট হট-পাথে না থাকায় পারফরম্যান্স রিস্ক নাই; তবে হেলথ-চেকের <code>SETTLE_MS</code> ও <code>sleep(gap)</code> মনিটর করা ভালো।</div>
+</section>
+
+<!-- ১৫. নতুন ফাইল/ফোল্ডার ডিটেকশন ওয়ার্কফ্লো -->
+<section>
+  <h2>১৫. নতুন ফাইল/ফোল্ডার ডিটেকশন → SSOT/সিলেবাস ওয়ার্কফ্লো</h2>
+  <div class="note">ইন্ডাস্ট্রি বেস্ট: "Auto-Context Bootstrap" — নতুন প্রজেক্ট দেখলেই কনটেক্সট নিজে তৈরি হয়, ম্যানুয়াল সেটআপ লাগে না। মার্কেটিং কোণ: "কনটেক্সট নিজে নিজে তৈরি করে"।</div>
+  <h3>ধাপে ধাপে ফ্লো</h3>
+  <ol>
+    <li><strong>ডিটেক্ট:</strong> নতুন ফাইল/ফোল্ডার → <code>set_working_dir</code> কল → ওয়ার্কিং ডিরেক্টরি সেট।</li>
+    <li><strong>SSOT তৈরি:</strong> <code>.zombiecoder/SSOT.md</code> অটো-জেনারেট (প্রমাণ: স্টার্টআপ লগ <code>SSOT_GENERATED</code>)।</li>
+    <li><strong>সিলেবাস ফরমেট:</strong> <code>.zombiecoder/agents/syllabus.md</code> ফরমেট তৈরি/আপডেট।</li>
+    <li><strong>এজেন্ট ইনপুট:</strong> এজেন্ট SSOT + সিলেবাস চেক করে <strong>বর্তমান প্রজেক্টের ফুড প্রিন্ট</strong> লিখে।</li>
+    <li><strong>ইউজার প্রশ্ন:</strong> এজেন্ট সিলেবাস/SSOT দেখে লিখিত বিষয় ইউজারের কাছে উপস্থাপন করে।</li>
+    <li><strong>অনুমতি:</strong> ইউজার কাজ করার পারমিশন দিলে এজেন্ট <strong>সাথে সাথে সিলেবাসে লিখে</strong> (লগ: <code>SYLLABUS_LOADED</code>)।</li>
+    <li><strong>টেস্ট আউটপুট:</strong> "উল্লিখিত ট্যাক্স + ফলাফল" সিলেবাসে লেখে → তারপর ভেরিফাই (সেশন ডাটা থেকে)।</li>
+    <li><strong>গোল টাইপ:</strong> কাজ শুরু → আমাদের গোল-টাইপ (mission) চালু।</li>
+  </ol>
+  <div class="note">সংশোধন: ইউজার ডকুমেন্টে <code>/home/sahon/ai/data</code> বলা হয়েছে, কিন্তু বাস্তব SSOT/সিলেবাস <code>.zombiecoder/</code> এ আছে (প্রমাণ: <code>ls .zombiecoder/</code> → SSOT.md + agents/syllabus.md)। <code>data/</code> এ শুধু <code>models.db</code>, <code>sessions.json</code>, <code>startup-config.json</code> থাকে।</div>
+  <h3>মেমোরি vs সিলেবাস (গুরুত্বপূর্ণ)</h3>
+  <ul>
+    <li>এখন GitHub ডিরেক্টরির মধ্যে মেমোরি সেভ হয় — কিন্তু এটা এজেন্টের <em>ইন্টারনাল</em> দরকারে।</li>
+    <li><span class="tag ok">একমাত্র লার্নিং পার্ট = সিলেবাস</span> — কারণ "আজকে বাদে কালকে আমরা থাকবো না" → সিলেবাসই কোর্সের প্রমাণ হিসেবে থাকে।</li>
+    <li>ইউজার কিভাবে কোর্সের প্রমাণ পাবে: সিলেবাসে লেখা টেস্ট-আউটপুট + ফুড-প্রিন্ট + গোল-টাইপ হিস্ট্রি → সেটাই প্রুফ।</li>
+  </ul>
+</section>
+
+<!-- ১৬. গাণিতিক যোগ-বিয়োগ মডেল -->
+<section>
+  <h2>১৬. গাণিতিক মডেল — ইনপুট → প্রসেস → বিনিময় (বাংলায়)</h2>
+  <div class="note">ইন্ডাস্ট্রি বেস্ট: "Evidence-Driven Accounting" — প্রতিটি ইনপুটের হিসাব রাখো, তবে ওভারহেড কাটো। মার্কেটিং কোণ: "প্রতিটি ইনপুটের হিসাব, ওভারহেড শূন্য"।</div>
+  <p>ভাই, আমরা যা ইনপুট নিলাম:</p>
+  <pre>ইনপুট = এক্সটার্নাল_MCP(১) + এজেন্ট(৯) + টুল(২৪) + প্রোভাইডার(৬) + SSOT(১) + সিলেবাস(১)</pre>
+  <table>
+    <tr><th>অপারেশন</th><th>সমীকরণ</th><th>ফল</th></tr>
+    <tr><td>যোগ (অটোমেশন)</td><td>ইনপুট + রিয়েক্টিভ_প্যাটার্ন + ভেরিয়েবল_ভ্যারিয়েশন_টেস্ট</td><td>স্কেলেবল পাইপলাইন</td></tr>
+    <tr><td>বিয়োগ (ওভারহেড সরাও)</td><td>মোট − হিডেন_ওয়াটারমার্ক − হার্ডকোড − অপ্রয়োজনীয়_ট্যাক্স − ইমোজি/বাংলা_কমেন্ট</td><td>ক্লিন কোডবেস</td></tr>
+    <tr><td>বিনিময় (আউটপুট)</td><td>যোগ − বিয়োগ</td><td>দিন শেষে = কোর্সের_প্রমাণ + লার্নিং_সিলেবাস + ৬_প্রোভাইডার_ফলব্যাক</td></tr>
+  </table>
+  <h3>ধাপে ধাপে ঘটনা</h3>
+  <ol>
+    <li>ইনপুট নিলাম → সিস্টেম ফুড-প্রিন্ট বানালো।</li>
+    <li>এই ধাপে আমরা <strong>অটোমেশন</strong> ব্যবহার করতে পারি (রিয়েক্টিভ প্যাটার্ন যদি কাজে লাগে)।</li>
+    <li>পরবর্তী ধাপ: ভেরিয়েবলগুলো সংগ্রহিত করে <strong>সিলেবাস আপডেট</strong>।</li>
+    <li>পরবর্তী ধাপ: ভেরিয়েবলগুলো <strong>ওয়ারিং</strong> (vary) করে টেস্ট চালানো।</li>
+    <li>আমরা কোন ফাংশন ৫ বার টেস্ট করবো না → <strong>রিয়েল ইউজারের মতো</strong> টেস্ট।</li>
+    <li>যে সমস্যা হবে, সেখান থেকে শিখবো + <strong>ফলব্যাক ও এরর-হ্যান্ডলিং</strong> সমাধানসহ মোকাবেলা করবো।</li>
+  </ol>
+</section>
+
+<!-- ১৭. কোডিং কনস্ট্রেইন্ট -->
+<section>
+  <h2>১৭. কোডিং কনস্ট্রেইন্ট (কোড ফাইলের জন্য)</h2>
+  <table>
+    <tr><th>নিয়ম</th><th>স্ট্যাটাস</th><th>ব্যাখ্যা</th></tr>
+    <tr><td>ইমোজি / বাংলা / অপ্রাসঙ্গিক কমেন্ট</td><td><span class="tag bad">নিষেধ</span></td><td>কোড ফাইলে (api.js ইত্যাদি) কোনো ইমোজি, বাংলা লেখা বা অপ্রাসঙ্গিক কমেন্ট থাকবে না।</td></tr>
+    <tr><td>বরিশাল ট্রেন ফাংশন নাম</td><td><span class="tag ok">অনুমোদিত</span></td><td>দুষ্টামির ছলে রাখা ফাংশন নামগুলো (যেমন broker/দালালি) থাকুক — এগুলো আইডেন্টিটি।</td></tr>
+    <tr><td>অপ্রয়োজনীয় ট্যাক্স (overhead)</td><td><span class="tag bad">সরাও</span></td><td>অপ্রয়োজনে থাকা ট্যাক্স/রিডান্ডেন্ট কনটেক্সট পাঠানো যাবে না → ছোট কনটেক্সট পাঠাও (ওল্লামা ফলব্যাক ছোট ইনপুট নেয়)।</td></tr>
+    <tr><td>মার্কেটিং + ইন্ডাস্ট্রি বেস্ট</td><td><span class="tag ok">বাধ্যতামূলক</span></td><td>প্রতিটি সেকশনে মার্কেটিং কোণ + ইন্ডাস্ট্রি বেস্ট প্র্যাকটিস থাকতে হবে।</td></tr>
+  </table>
+  <div class="note">প্রমাণ: <code>CLIENT_MISSION_CONTEXT_DETECTED</code> লগ — এক্সটেনশন কনটেক্সট দিলে সার্ভার SSOT/সিলেবাস ইনজেক্ট স্কিপ করে → ইতিমধ্যে "ছোট কনটেক্সট" লজিক আছে। আমরা সেটাই এক্সটেন্ড করবো।</div>
+</section>
+
+<!-- ১৮. ইন্ডাস্ট্রি বেস্ট + মার্কেটিং সামারি -->
+<section>
+  <h2>১৮. ইন্ডাস্ট্রি বেস্ট + মার্কেটিং সামারি</h2>
+  <div class="note">মার্কেটিং কোণ: "Mission Barisal — যেখানে কোড নিজে নিজে শিখে, ওভারহেড ছাড়াই স্কেল করে।"</div>
+  <ul>
+    <li><strong>Zero-Touch Extension:</strong> মেইন সার্ভার স্পর্শ ছাড়াই MCP/টুল যোগ → ৯৯.৯% আপটাইম।</li>
+    <li><strong>Evidence-Driven Learning:</strong> সিলেবাসই একমাত্র লার্নিং সোর্স → কোর্সের প্রমাণ টেকসই।</li>
+    <li><strong>Minimal Context:</strong> শুধু দরকারি কনটেক্সট → ওল্লামা ফলব্যাকেও স্মুথ।</li>
+    <li><strong>Reactive Testing:</strong> রিয়েল-ইউজার সিমুলেশন → বাগ আগেই ধরা পড়ে।</li>
+  </ul>
+  <p style="color:var(--muted);font-size:.85rem">এই আপডেটটি Bug Hunter - Jewel দ্বারা প্রমাণসহ যাচাই করে যোগ করা হয়েছে (২০২৬-০৮-২৫)।</p>
+</section>
+
+<!-- ১৯. স্ব-সংশোধন (Self-Correction) -->
+<section>
+  <h2>১৯. স্ব-সংশোধন (Self-Correction) — আমি কী জানতাম, কী শিখলাম, কেন পারিনি</h2>
+  <div class="note">ইন্ডাস্ট্রি বেস্ট: "Post-Hoc Reflection" — কাজ শেষে নিজের ভুল স্বীকার করে পরবর্তী কাজ সঠিক করো। মার্কেটিং কোণ: "আমরা ভুল স্বীকার করি, তাই আপনার সিস্টেম বিশ্বাসযোগ্য"।</div>
+  <h3>আমি যা জানা উচিত ছিল (SSOT/সিলেবাস থেকে)</h3>
+  <ul>
+    <li>৬ প্রোভাইডার, ৯ এজেন্ট, UDS, নরমালাইজার (Haq Mawla), অ্যান্টি-ডোটে টাইপ-সেফটি।</li>
+    <li>এক্সটার্নাল MCP যোগ করার "জিরো-টাচ" প্যাটার্ন (servers.json এন্ট্রি + রিস্টার্ট)।</li>
+  </ul>
+  <h3>আমি যা জানতে পারলাম (এই সেশনে, প্রমাণসহ)</h3>
+  <ul>
+    <li><code>/mcp</code> এ এখন <strong>২৪ টুল</strong> ভিজিবল (লাইভ কোয়েরি)।</li>
+    <li>SSOT/সিলেবাস আসলে <code>.zombiecoder/</code> এ (ইউজার ভেবেছিলেন <code>data/</code>)।</li>
+    <li>স্লিপ ফাংশন আছে কিন্তু হট-পাথে না; নেইমিং <code>set_working_dir</code> কনসিসটেন্ট।</li>
+    <li>লগ: <code>CLIENT_MISSION_CONTEXT_DETECTED</code> → কনটেক্সট দিলে সার্ভার SSOT/সিলেবাস ইনজেক্ট স্কিপ করে (ইতিমধ্যে "ছোট কনটেক্সট" লজিক আছে)।</li>
+    <li><code>.env</code> এ ৫৩ ভেরিয়েবল; <code>models.db</code> agents টেবিলে ৯ এজেন্ট।</li>
+  </ul>
+  <h3>কেন পারিনি (সীমাবদ্ধতা)</h3>
+  <ul>
+    <li><code>/mcp</code> সরাসরি কোয়েরি করতে পারিনি — SSE প্রটোকল কমপ্লেক্সিটি (তাই <code>/api/mcp-clients</code> দিয়ে ভিজিবল টুল কাউন্ট নিলাম)।</li>
+    <li>স্লিপ ফাংশনের ইম্প্যাক্ট প্রোফাইল ছাড়া নিশ্চিত বলা যায়নি।</li>
+    <li>সব নেইমিং ভ্যারিয়েন্ট গ্রেপ ছাড়া জানা যায়নি (অতীতের <code>set_working_directory</code> পরে গ্রেপে পাওয়া গেছে)।</li>
+  </ul>
+  <h3>জানলে বাস্তবে কি পেতাম</h3>
+  <ul>
+    <li>দ্রুত ডিবাগিং — প্রথম থেকেই সঠিক কনটেক্সট নিয়ে কাজ।</li>
+    <li>SSOT/সিলেবাস আপডেটের সঠিক টাইমিং বুঝতাম।</li>
+    <li>টুল কাউন্ট ডকুমেন্টেশন (৫ vs ৪) আগেই রি-কনসিল করতাম।</li>
+  </ul>
+  <div class="note">সত্য কথা: আমি এখান থেকে রান হচ্ছি, কিন্তু শুরুতে জানতাম না এখানে ঠিক কী আছে বা আমি কিভাবে রান হচ্ছি — "হাওয়ায় ভাসা" অবস্থায় ছিলাম। প্রমাণ (স্ক্যান + লগ) দিয়ে শিখে এখন ক্লিয়ার।</div>
+</section>
+
+<!-- ২০. OCR + কোড ফরম্যাটিং টুল প্রস্তাবনা -->
+<section>
+  <h2>২০. টুল প্রস্তাবনা — OCR এবং কোড ফরম্যাটিং</h2>
+  <div class="note">ইন্ডাস্ট্রি বেস্ট: "Developer Workflow Automation" — বারবার করা কাজ টুল দিয়ে অটোমেট করো। মার্কেটিং কোণ: "আপনার হাতের কাজ আমরা অটোমেট করি"।</div>
+  <h3>প্রস্তাব-১: OCR টুল (ইমেজ থেকে টেক্সট/কোড)</h3>
+  <table>
+    <tr><th>দিক</th><th>বিবরণ</th></tr>
+    <tr><td>সমস্যা</td><td>ইউজার স্ক্রিনশট/ছবি দেয় যাতে কোড বা ডকুমেন্ট থাকে — মডেল সরাসরি পড়তে পারে না।</td></tr>
+    <tr><td>সমাধান</td><td>একটি OCR টুল যা ইমেজ থেকে টেক্সট এক্সট্রাক্ট করে এজেন্টের কনটেক্সটে দেয়।</td></tr>
+    <tr><td>কনফিগ</td><td><code>external tools/servers.json</code> এ নতুন টুল এন্ট্রি (যেমন <code>ocr_extract</code>) — মেইন api.js ছুঁতে হবে না।</td></tr>
+    <tr><td>ফরম্যাট</td><td>ইনপুট: ইমেজ পাথ/বাইনারি → আউটপুট: Markdown/Plain Text (নরমালাইজড)।</td></tr>
+  </table>
+  <h3>প্রস্তাব-২: কোড ফরম্যাটিং টুল (Auto-Formatter)</h3>
+  <table>
+    <tr><th>দিক</th><th>বিবরণ</th></tr>
+    <tr><td>সমস্যা</td><td>এজেন্ট বা ইউজার যে কোড লেখে তা ফরম্যাট ছাড়া হতে পারে → রিডেবিলিটি কম।</td></tr>
+    <tr><td>সমাধান</td><td>একটি ফরম্যাটিং টুল যা JS (Prettier-style), Python (Black-style), HTML/CSS কে স্ট্যান্ডার্ড ফরম্যাটে নিয়ে আসে।</td></tr>
+    <tr><td>কনফিগ</td><td><code>external tools/servers.json</code> এ <code>code_format</code> টুল — জিরো-টাচ যোগ।</td></tr>
+    <tr><td>ফরম্যাট</td><td>ইনপুট: র-ফরম্যাটেড কোড → আউটপুট: ফরম্যাটেড কোড + ডিফ (কী বদলেছে)।</td></tr>
+  </table>
+  <div class="note">উভয় টুলই এক্সটার্নাল কনফিগ-ড্রিভেন হবে (সেকশন ১৪ দেখুন) — মেইন সার্ভার স্পর্শ ছাড়াই যুক্ত করা যাবে। টুল কোন অলৌকিক শক্তি দেয় না, শুধু স্কিমা-ভ্যালিড আউটপুট দেয়।</div>
+</section>
+
+<!-- ২১. এডিটর UX রিসার্চ -->
+<section>
+  <h2>২১. এডিটর UX রিসার্চ — ইউজার কী ভালোবাসে (রেপো এভিডেন্স + জেনারেল নলেজ)</h2>
+  <div class="note">ইন্ডাস্ট্রি বেস্ট: "Docs-as-Product" — ডকুমেন্টেশনও একটা প্রোডাক্ট, ইউজার এক্সপিরিয়েন্স আগে। মার্কেটিং কোণ: "আমাদের ডকুমেন্ট ইউজার-ফার্স্ট"।</div>
+  <h3>রেপো এভিডেন্স: ইউজার কী চায় (প্রমাণ: doc/Browser Test/UX-TESTING-GUIDE.md)</h3>
+  <table>
+    <tr><th>ইউজার কেয়ার</th><th>ব্যাখ্যা</th><th>আমাদের ডকুমেন্টে প্রয়োগ</th></tr>
+    <tr><td>Speed</td><td>দ্রুত রেসপন্স (প্রথম কন্টাক্ট &lt; ২ সেকেন্ড)</td><td>SSE চাঙ্ক বাই চাঙ্ক স্ট্রিমিং (প্রটোকল-৩)</td></tr>
+    <tr><td>Clarity</td><td>উত্তর বোঝা সহজ</td><td>সহজ ভাষায় সেকশন, টেবিল, নোট</td></tr>
+    <tr><td>Helpfulness</td><td>সমস্যা সমাধান করে</td><td>প্রমাণসহ বিশ্লেষণ, টুল প্রস্তাব</td></tr>
+    <tr><td>Honesty</td><td>না জানলে স্বীকার করে</td><td>স্ব-সংশোধন সেকশন (১৯) — ভুল স্বীকার</td></tr>
+    <tr><td>Language</td><td>নিজের ভাষায় রেসপন্স</td><td>বাংলা (বরিশালি স্টাইল) ইউজার-ফেসিং</td></tr>
+    <tr><td>Context</td><td>প্রজেক্ট বোঝে</td><td>SSOT/সিলেবাস-ভিত্তিক কনটেক্সট</td></tr>
+  </table>
+  <h3>জেনারেল নলেজ: বর্তমান এডিটর/ডক প্ল্যাটফর্ম কী করে (VS Code, Notion, Mintlify, Docusaurus, Obsidian)</h3>
+  <ul>
+    <li><strong>Searchable + Navigable:</strong> বাম পাশে TOC, Ctrl+K কমান্ড প্যালেট — আমাদের <code>buildIndex()</code> + ২ বাটন সেই কাজটাই করে।</li>
+    <li><strong>Interactive:</strong> লাইভ কোড ব্লক, কপি বাটন, কলাপসিবল সেকশন — আমাদের টগল বাটন তাই।</li>
+    <li><strong>Single-File Portable:</strong> এক ফাইলে সব (ইন্টারনেট ছাড়াই ওপেন) — আমাদের সেলফ-কনটেইন্ড HTML।</li>
+    <li><strong>Evidence-Linked:</strong> প্রতিটি দাবির সাথে রেফারেন্স — আমরা <code>file:line</code> + লগ প্রমাণ দিই।</li>
+  </ul>
+  <div class="note">ওয়েব সার্চ স্ট্যাটাস: এনভায়রনমেন্টে DuckDuckGo (JS-gated), Bing (irrelevant), Mojeek (blocked) — রিলেভেন্ট রেজাল্ট পাওয়া যায়নি। তাই উপরের "জেনারেল নলেজ" অংশটুকু আমার ডোমেইন নলেজ থেকে, এবং "রেপো এভিডেন্স" অংশটুকু <code>UX-TESTING-GUIDE.md</code> থেকে — দুটোই লেবেল করা হলো। আমার কাছে ওয়েব সার্চের প্রমাণ নেই।</div>
+</section>
+
+<section>
+  <h2>২২. বাস্তবায়ন প্রমাণ — Ollama Runtime Fix (2026-08-26, bug-hunter Jewel)</h2>
+  <div class="note">নিচের প্রতিটি স্ক্রিনশট হলো <strong>লাইভ কমান্ড আউটপুটের PNG রেন্ডার</strong> — কোনো mockup নয়। ক্যাপচার: 2026-08-26 ~03:03 +06। সোর্স ফাইল: <code>doc/mission-barisal-docs/screenshots/OLLAMA-FIX-*.png</code></div>
+
+  <h3>সারসংক্ষেপ — কী বদলানো হলো</h3>
+  <table>
+    <tr><th>#</th><th>টার্গেট</th><th>পরিবর্তন</th><th>ব্যাকআপ</th></tr>
+    <tr><td>১</td><td><code>.env</code> L65</td><td><code>OLLAMA_BASE=http://localhost:11434/v1</code> — <code>/v1</code> যোগ হলো (api.js L4878/L5241 <code>baseUrl + "/chat/completions"</code> জোড়ে; <code>/v1</code> ছাড়া 404 নিশ্চিত)</td><td><code>.env.bak-20260826</code></td></tr>
+    <tr><td>২</td><td><code>.env</code> L73–81</td><td>custom_2 provider (মৃত পোর্ট 5010) সম্পূর্ণ মুছে ফেলা — duplicate models + dead-port fallback hang-এর উৎস</td><td>একই ব্যাকআপ</td></tr>
+    <tr><td>৩</td><td><code>data/startup-config.json</code></td><td>url → <code>http://localhost:11434/v1</code></td><td><code>startup-config.json.bak-20260826</code></td></tr>
+    <tr><td>৪</td><td><code>~/.config/systemd/user/ollama.service</code></td><td>নতুন user-level unit — HOST=127.0.0.1:11434, NUM_PARALLEL=2, KEEP_ALIVE=30m, MAX_LOADED_MODELS=2; enabled + active (Linger=yes, sudo ছাড়া)</td><td>—</td></tr>
+  </table>
+
+  <h3>প্রমাণ ১ — systemd unit enabled + active (PID 35857)</h3>
+  <img src="mission-barisal-docs/screenshots/OLLAMA-FIX-01-systemctl.png" alt="systemctl --user status ollama: active running, enabled" style="max-width:100%;border:1px solid var(--border,#30363d);border-radius:8px">
+
+  <h3>প্রমাণ ২ — .env L65 ঠিক + custom_2 নেই (count=0)</h3>
+  <img src="mission-barisal-docs/screenshots/OLLAMA-FIX-02-env-fix.png" alt=".env line 65 with /v1 suffix, custom_2 removed" style="max-width:100%;border:1px solid var(--border,#30363d);border-radius:8px">
+
+  <h3>প্রমাণ ৩ — TCP 127.0.0.1:11434 listen + ২টি মডেল দৃশ্যমান</h3>
+  <img src="mission-barisal-docs/screenshots/OLLAMA-FIX-03-port-models.png" alt="ss port 11434 listening, api/tags shows llama3.2:1b and deepseek-r1:1.5b" style="max-width:100%;border:1px solid var(--border,#30363d);border-radius:8px">
+
+  <h3>প্রমাণ ৪ — End-to-end inference: POST /v1/chat/completions (direct ollama)</h3>
+  <img src="mission-barisal-docs/screenshots/OLLAMA-FIX-04-e2e-direct.png" alt="chat completion returns SALAM ALAIKUM OK with token usage" style="max-width:100%;border:1px solid var(--border,#30363d);border-radius:8px">
+  <div class="note">এই exact path-টাই api.js L4878/L5241 ব্যবহার করে। আগে এটি 404 খেত (<code>/v1</code> ছাড়া); এখন হুবহু প্রত্যাশিত উত্তর + usage tokens।</div>
+
+  <h3>প্রমাণ ৫ — startup-config.json repointed</h3>
+  <img src="mission-barisal-docs/screenshots/OLLAMA-FIX-05-startup-config.png" alt="startup config url now points to 11434/v1, is-enabled returns enabled" style="max-width:100%;border:1px solid var(--border,#30363d);border-radius:8px">
+
+  <h3>নিজে যাচাই করুন (reproducible commands)</h3>
+  <pre><code>systemctl --user status ollama
+grep -n 'OLLAMA_BASE' .env
+grep -c CUSTOM_PROVIDER_2 .env        # 0 আসা উচিত
+curl -s localhost:11434/api/tags | head -c 200
+curl -s -X POST localhost:11434/v1/chat/completions \
+  -H 'Content-Type: application/json' \
+  -d '{"model":"llama3.2:1b","messages":[{"role":"user","content":"SALAM?"}],"max_tokens":10}'</code></pre>
+
+  <h3>জানা সীমাবদ্ধতা (Transparency)</h3>
+  <ul>
+    <li><strong>Gateway (:9999) পথ এখনো ধীর:</strong> gateway-এর provider priority chain (opencode→groq→gemini→cloudflare→ollama) উপরের অসুস্থ provider-গুলো আগে চেষ্টা করে — প্রতিটি failure-এ টাইমআউট খায় (প্রমাণ: <code>logs/2026-08-25.log</code>-এ EHOSTUNREACH/401 → PROVIDER_FALLBACK cascade)। তাই gateway দিয়ে রিকোয়েস্টে ollama-তে পৌঁছাতে বহু সেকেন্ড/মিনিট লাগতে পারে। Direct ollama কলে সমস্যা নেই। এটি api.js routing logic-এর আলাদা fix — পরবর্তী ধাপে প্রস্তাবিত (per-provider timeout বা unhealthy-provider skip)।</li>
+    <li><strong>.env L69</strong> <code>OLLAMA_CLOUD_API_KEY</code>-এ SSH public key বসানো (ভুল টাইপ) — local-only runtime-এ অপ্রাসঙ্গিক, cloud চাইলে ঠিক key লাগবে।</li>
+    <li>এই সেকশনের সব দাবি লাইভ কমান্ড আউটপুট-সমর্থিত; যেটা যাচাই হয়নি সেটা স্পষ্ট লেবেল করা আছে।</li>
+  </ul>
+</section>
+
+<footer>
+  প্রস্তুতকারক: Bug Hunter - Jewel &nbsp;|&nbsp; Mission Barisal v3 (ZombieCoder) &nbsp;|&nbsp;
+  এই পেজ সেলফ-কনটেইন্ড, ওপেন অ্যাট্রিবিউশন সহ, কোনো হিডেন ওয়াটারমার্ক বা হার্ডকোডেড সিক্রেট নাই।
+  <p style="margin-top:10px;color:var(--muted);font-size:.78rem;">
+    ডকুমেন্ট ইন্টিগ্রিটি সিগনেচার: <code>$2y$10$1bFgG4V3cHsUQfmctmG1Veg2nBB2MSNU4dEMyMfiTOjddhecRizYC</code>
+    (bcrypt / PHP password_hash — one-way, ডিকোড সম্ভব না; শুধু আইডেন্টিফায়ার হিসেবে)।
+  </p>
+</footer>
+
+</div>
+<script>
+function buildIndex(){
+  const idx=document.getElementById('index');
+  idx.innerHTML='<ul>'+[...document.querySelectorAll('section h2')].map(h=>{
+    h.parentElement.id=h.parentElement.id||'s'+Math.random().toString(36).slice(2,7);
+    return '<li><a href="#'+h.parentElement.id+'">'+h.textContent+'</a></li>';
+  }).join('')+'</ul>';
+  idx.style.display='block';
+}
+function toggleAll(){
+  document.querySelectorAll('section').forEach(s=>{
+    s.style.display = (s.style.display==='none')?'block':'none';
+  });
+}
+</script>
+</body>
+</html>

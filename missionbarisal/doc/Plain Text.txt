@@ -1,0 +1,35 @@
+TCP Loopback vs UDS (ঠিক): 127.0.0.1:8080 ব্যবহার করলে OS কার্নেলকে ফালতু TCP Handshake (SYN-ACK), Header Packaging আর Checksum বানাইতে হয়। UDS ইউজ করলে ডাটা নেটওয়ার্ক কার্ডে যায়ই না, সোজা Kernel IPC Buffer (Memory-to-Memory) কপি হয়। লেটেন্সি < ১ মিলি-সেকেন্ডে নামতে বাধ্য!
+
+Protobuf Binary Transport (ঠিক): JSON পার্স করতে CPU-র যে ১০০০ ওয়াট প্রেসার পড়ে, Protobuf বাইনারি স্ট্রাকচারে তা ০% হয়া যায়।
+
+Sniffer/Watchdog Blindspot (ঠিক): পোর্ট ৮০৮০ না থাকলে কোনো বাইরের স্নিফার বা ব্রাউজার ওয়াচডগ পোর্ট স্ক্যান কইরা ডাটা রিড করতে পারবে না। ফাইল পারমিশন /tmp/zombie_coder.sock যার নামে আছে, শুধু সেই প্রসেসই ডাটা রিড করতে পারবে।
+
+
+
+শুধুমাত্র md ফাইল আপডেট করবেন নাকি সরাসরি ইমপ্লিমেন্ট করবেন?"
+
+সোজা কথা—কোনো খালি ডকুমেন্টেশন (md file) দিয়া কি পেট ভরবে? আসল কাজ হলো ইমপ্লিমেন্টেশন!
+
+আপনি যেটাই চাচ্ছেন, আর্কিটেকচারাল ফ্লো একদম ক্লিয়ার:
+
+[ User Space / Frontend ]
+          │
+          │ (JSON over UDS / HTTP)
+          ▼
+
+│  Node.js (api.js - Mission Barisal Gateway)           │
+│  - REST Call Fail/429 খাইলে?                          │
+│  - জিরো-ডিলেতে JSON -> Protobuf Binary কনভার্ট করবে    │
+
+                          │
+                          │ (gRPC Binary over UDS: /tmp/zombie_coder.sock)
+                          ▼
+
+  Python (model_server.py - Local LLM Engine)           
+  - Directly reads Protobuf from Kernel Memory Buffer   
+  - Runs GPU Inference with 0% Network Latency          
+১. api.js (Node.js): এ @grpc/grpc-js আর @grpc/proto-loader  লাগাইয়া UDS সকেটের সাথে কানেক্ট করতে হবে।
+
+২. model_server.py (Python): এ grpcio আর grpcio-tools লাইব্রেরি দিয়া UDS সকেট সার্ভার (unix:///tmp/zombie_coder.sock) অন করতে হবে।
+
+৩. ফেইলওভার স্ট্র্যাটেজি: api.js প্রথমে সাধারণ REST ট্রাই করবে, রেট লিমিট (429) বা ফেল মারলেই কোনো ডিলে ছাড়া gRPC over UDS পাইপলাইনে রিকোয়েস্ট সুইচ

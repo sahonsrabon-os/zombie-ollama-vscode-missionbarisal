@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Ollama Webapp - Test Report</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Segoe UI',sans-serif;background:#0a0a1a;color:#e0e0e0;padding:20px}
+    .container{max-width:1200px;margin:0 auto}
+    h1{text-align:center;color:#00d4ff;margin-bottom:5px;font-size:28px}
+    .subtitle{text-align:center;color:#666;margin-bottom:30px;font-size:14px}
+    .summary{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:30px}
+    .stat{background:#1a1a2e;border:1px solid #2a2a4a;border-radius:10px;padding:20px;text-align:center}
+    .stat .value{font-size:32px;font-weight:bold;margin-bottom:5px}
+    .stat .label{color:#888;font-size:12px;text-transform:uppercase}
+    .stat.ok .value{color:#4ade80}
+    .stat.warn .value{color:#fbbf24}
+    .stat.info .value{color:#00d4ff}
+    .stat.time .value{color:#818cf8}
+    table{width:100%;border-collapse:collapse;margin:20px 0;background:#1a1a2e;border-radius:10px;overflow:hidden}
+    th{background:#0d0d1a;color:#00d4ff;padding:12px 15px;text-align:left;font-size:12px;text-transform:uppercase}
+    td{padding:10px 15px;border-bottom:1px solid #2a2a4a;font-size:13px}
+    tr:hover{background:#0d0d1a}
+    .pass{color:#4ade80;font-weight:bold}
+    .fail{color:#f87171;font-weight:bold}
+    .method{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700}
+    .get{background:#10b981;color:#fff}
+    .post{background:#3b82f6;color:#fff}
+    .json{color:#fbbf24}
+    .time-bar{height:4px;border-radius:2px;margin-top:4px}
+    .time-fast{background:#10b981}
+    .time-med{background:#fbbf24}
+    .time-slow{background:#ef4444}
+    .section{margin:30px 0}
+    .section h2{color:#818cf8;margin-bottom:15px;font-size:18px}
+    .response-box{background:#0a0a15;border:1px solid #2a2a4a;border-radius:8px;padding:15px;font-family:'Courier New',monospace;font-size:12px;max-height:300px;overflow:auto;white-space:pre-wrap;line-height:1.6}
+    .response-box .key{color:#818cf8}
+    .response-box .str{color:#4ade80}
+    .response-box .num{color:#fbbf24}
+    .response-box .bool{color:#f87171}
+    .chart{margin:20px 0}
+    .bar-container{display:flex;align-items:center;margin:8px 0}
+    .bar-label{min-width:250px;font-size:13px;color:#94a3b8}
+    .bar{height:24px;border-radius:4px;display:flex;align-items:center;padding:0 10px;font-size:11px;font-weight:600;color:#000;min-width:30px}
+    .bar.fast{background:linear-gradient(90deg,#10b981,#34d399)}
+    .bar.med{background:linear-gradient(90deg,#fbbf24,#f59e0b)}
+    .bar.slow{background:linear-gradient(90deg,#ef4444,#f87171)}
+    .footer{text-align:center;color:#444;margin-top:40px;padding:20px;border-top:1px solid #2a2a4a}
+    .tag{display:inline-block;padding:3px 8px;border-radius:4px;font-size:11px;margin:2px}
+    .tag-ok{background:#0a3d0a;color:#4ade80;border:1px solid #4ade80}
+    .tag-err{background:#3d0a0a;color:#f87171;border:1px solid #f87171}
+    .tag-info{background:#0a1a3d;color:#60a5fa;border:1px solid #60a5fa}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Ollama Webapp - Test Report</h1>
+    <p class="subtitle">Test Date: 2026-09-01 03:56 UTC+6 | Socket: /tmp/ollama.sock | Model: deepseek-r1:1.5b</p>
+
+    <!-- Summary -->
+    <div class="summary">
+      <div class="stat ok">
+        <div class="value">11/11</div>
+        <div class="label">Tests Passed</div>
+      </div>
+      <div class="stat time">
+        <div class="value">1,149ms</div>
+        <div class="label">Avg Response Time</div>
+      </div>
+      <div class="stat info">
+        <div class="value">11</div>
+        <div class="label">Endpoints Tested</div>
+      </div>
+      <div class="stat info">
+        <div class="value">JSON</div>
+        <div class="label">Response Format</div>
+      </div>
+    </div>
+
+    <!-- Response Time Chart -->
+    <div class="section">
+      <h2>Response Time Comparison</h2>
+      <div class="chart">
+        <div class="bar-container">
+          <span class="bar-label">GET /v1/models</span>
+          <div class="bar fast" style="width:8%">5ms</div>
+        </div>
+        <div class="bar-container">
+          <span class="bar-label">GET /api/ps</span>
+          <div class="bar fast" style="width:8%">7ms</div>
+        </div>
+        <div class="bar-container">
+          <span class="bar-label">GET /api/tags</span>
+          <div class="bar fast" style="width:8%">8ms</div>
+        </div>
+        <div class="bar-container">
+          <span class="bar-label">GET /api/status</span>
+          <div class="bar fast" style="width:8%">9ms</div>
+        </div>
+        <div class="bar-container">
+          <span class="bar-label">POST /v1/embeddings</span>
+          <div class="bar fast" style="width:8%">7ms</div>
+        </div>
+        <div class="bar-container">
+          <span class="bar-label">GET /api/logs</span>
+          <div class="bar fast" style="width:10%">25ms</div>
+        </div>
+        <div class="bar-container">
+          <span class="bar-label">GET /api/system</span>
+          <div class="bar med" style="width:20%">519ms</div>
+        </div>
+        <div class="bar-container">
+          <span class="bar-label">POST /api/chat</span>
+          <div class="bar med" style="width:35%">1,172ms</div>
+        </div>
+        <div class="bar-container">
+          <span class="bar-label">POST /v1/chat/completions</span>
+          <div class="bar med" style="width:36%">1,193ms</div>
+        </div>
+        <div class="bar-container">
+          <span class="bar-label">POST /v1/completions</span>
+          <div class="bar med" style="width:40%">1,760ms</div>
+        </div>
+        <div class="bar-container">
+          <span class="bar-label">POST /api/generate</span>
+          <div class="bar slow" style="width:100%">7,675ms</div>
+        </div>
+      </div>
+      <p style="color:#666;font-size:12px;margin-top:10px">
+        <span class="tag tag-ok">Fast &lt;100ms</span>
+        <span class="tag tag-info">Medium 100ms-2s</span>
+        <span class="tag tag-err">Slow &gt;2s</span>
+      </p>
+    </div>
+
+    <!-- Test Results Table -->
+    <div class="section">
+      <h2>Detailed Test Results</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Endpoint</th>
+            <th>Method</th>
+            <th>Status</th>
+            <th>Time</th>
+            <th>Format</th>
+            <th>Result</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td><code>/api/status</code></td>
+            <td><span class="method get">GET</span></td>
+            <td>200</td>
+            <td>9ms</td>
+            <td class="json">JSON</td>
+            <td class="pass">PASS</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td><code>/api/tags</code></td>
+            <td><span class="method get">GET</span></td>
+            <td>200</td>
+            <td>8ms</td>
+            <td class="json">JSON</td>
+            <td class="pass">PASS</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td><code>/api/ps</code></td>
+            <td><span class="method get">GET</span></td>
+            <td>200</td>
+            <td>7ms</td>
+            <td class="json">JSON</td>
+            <td class="pass">PASS</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td><code>/api/system</code></td>
+            <td><span class="method get">GET</span></td>
+            <td>200</td>
+            <td>519ms</td>
+            <td class="json">JSON</td>
+            <td class="pass">PASS</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td><code>/api/logs</code></td>
+            <td><span class="method get">GET</span></td>
+            <td>200</td>
+            <td>25ms</td>
+            <td class="json">JSON</td>
+            <td class="pass">PASS</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td><code>/api/generate</code></td>
+            <td><span class="method post">POST</span></td>
+            <td>200</td>
+            <td>7,675ms</td>
+            <td class="json">JSON</td>
+            <td class="pass">PASS</td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td><code>/api/chat</code></td>
+            <td><span class="method post">POST</span></td>
+            <td>200</td>
+            <td>1,172ms</td>
+            <td class="json">JSON</td>
+            <td class="pass">PASS</td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td><code>/v1/completions</code></td>
+            <td><span class="method post">POST</span></td>
+            <td>200</td>
+            <td>1,760ms</td>
+            <td class="json">JSON</td>
+            <td class="pass">PASS</td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td><code>/v1/chat/completions</code></td>
+            <td><span class="method post">POST</span></td>
+            <td>200</td>
+            <td>1,193ms</td>
+            <td class="json">JSON</td>
+            <td class="pass">PASS</td>
+          </tr>
+          <tr>
+            <td>10</td>
+            <td><code>/v1/models</code></td>
+            <td><span class="method get">GET</span></td>
+            <td>200</td>
+            <td>5ms</td>
+            <td class="json">JSON</td>
+            <td class="pass">PASS</td>
+          </tr>
+          <tr>
+            <td>11</td>
+            <td><code>/v1/embeddings</code></td>
+            <td><span class="method post">POST</span></td>
+            <td>200</td>
+            <td>7ms</td>
+            <td class="json">JSON</td>
+            <td class="pass">PASS</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Response Examples -->
+    <div class="section">
+      <h2>Response Format Examples</h2>
+
+      <h3 style="color:#10b981;margin-top:20px">GET /api/status</h3>
+      <div class="response-box">{
+  <span class="key">"status"</span>: <span class="str">"ok"</span>,
+  <span class="key">"ollama_status"</span>: <span class="str">"connected"</span>,
+  <span class="key">"model"</span>: <span class="str">"deepseek-r1:1.5b"</span>,
+  <span class="key">"model_loaded"</span>: <span class="bool">true</span>,
+  <span class="key">"keep_alive"</span>: <span class="str">"24h"</span>,
+  <span class="key">"timestamp"</span>: <span class="num">1788213369</span>
+}</div>
+
+      <h3 style="color:#10b981;margin-top:20px">POST /api/generate</h3>
+      <div class="response-box">{
+  <span class="key">"model"</span>: <span class="str">"deepseek-r1:1.5b"</span>,
+  <span class="key">"response"</span>: <span class="str">"**Solution:** We need to find the sum of 2 and 2...\n2 + 2 = 4\n**Answer:** \\boxed{4}"</span>,
+  <span class="key">"done"</span>: <span class="bool">true</span>,
+  <span class="key">"total_duration"</span>: <span class="num">7668402048</span>,
+  <span class="key">"eval_count"</span>: <span class="num">91</span>,
+  <span class="key">"prompt_eval_count"</span>: <span class="num">15</span>
+}</div>
+
+      <h3 style="color:#10b981;margin-top:20px">POST /api/chat</h3>
+      <div class="response-box">{
+  <span class="key">"model"</span>: <span class="str">"deepseek-r1:1.5b"</span>,
+  <span class="key">"message"</span>: {
+    <span class="key">"role"</span>: <span class="str">"assistant"</span>,
+    <span class="key">"content"</span>: <span class="str">"Sure! How can I assist you today?"</span>
+  },
+  <span class="key">"done"</span>: <span class="bool">true</span>,
+  <span class="key">"total_duration"</span>: <span class="num">1164426899</span>,
+  <span class="key">"eval_count"</span>: <span class="num">14</span>
+}</div>
+
+      <h3 style="color:#10b981;margin-top:20px">POST /v1/completions (OpenAI Format)</h3>
+      <div class="response-box">{
+  <span class="key">"id"</span>: <span class="str">"cmpl-1788213380799"</span>,
+  <span class="key">"object"</span>: <span class="str">"text_completion"</span>,
+  <span class="key">"created"</span>: <span class="num">1788213380</span>,
+  <span class="key">"model"</span>: <span class="str">"deepseek-r1:1.5b"</span>,
+  <span class="key">"choices"</span>: [{
+    <span class="key">"text"</span>: <span class="str">"The sky is the collection of visible lights scattered across the sky..."</span>,
+    <span class="key">"index"</span>: <span class="num">0</span>,
+    <span class="key">"finish_reason"</span>: <span class="str">"stop"</span>
+  }],
+  <span class="key">"usage"</span>: {
+    <span class="key">"prompt_tokens"</span>: <span class="num">6</span>,
+    <span class="key">"completion_tokens"</span>: <span class="num">20</span>,
+    <span class="key">"total_tokens"</span>: <span class="num">26</span>
+  }
+}</div>
+
+      <h3 style="color:#10b981;margin-top:20px">POST /v1/chat/completions (OpenAI Format)</h3>
+      <div class="response-box">{
+  <span class="key">"id"</span>: <span class="str">"chatcmpl-1788213381992"</span>,
+  <span class="key">"object"</span>: <span class="str">"chat.completion"</span>,
+  <span class="key">"created"</span>: <span class="num">1788213381</span>,
+  <span class="key">"model"</span>: <span class="str">"deepseek-r1:1.5b"</span>,
+  <span class="key">"choices"</span>: [{
+    <span class="key">"message"</span>: {
+      <span class="key">"role"</span>: <span class="str">"assistant"</span>,
+      <span class="key">"content"</span>: <span class="str">"Hello! How can I assist"</span>
+    },
+    <span class="key">"finish_reason"</span>: <span class="str">"stop"</span>
+  }],
+  <span class="key">"usage"</span>: {
+    <span class="key">"prompt_tokens"</span>: <span class="num">4</span>,
+    <span class="key">"completion_tokens"</span>: <span class="num">10</span>,
+    <span class="key">"total_tokens"</span>: <span class="num">14</span>
+  }
+}</div>
+
+      <h3 style="color:#10b981;margin-top:20px">GET /v1/models (OpenAI Format)</h3>
+      <div class="response-box">{
+  <span class="key">"object"</span>: <span class="str">"list"</span>,
+  <span class="key">"data"</span>: [{
+    <span class="key">"id"</span>: <span class="str">"deepseek-r1:1.5b"</span>,
+    <span class="key">"object"</span>: <span class="str">"model"</span>,
+    <span class="key">"created"</span>: <span class="num">1788208154</span>,
+    <span class="key">"owned_by"</span>: <span class="str">"ollama"</span>
+  }]
+}</div>
+
+      <h3 style="color:#10b981;margin-top:20px">GET /api/system</h3>
+      <div class="response-box">{
+  <span class="key">"cpu_count"</span>: <span class="num">4</span>,
+  <span class="key">"cpu_usage"</span>: <span class="str">"32.7%"</span>,
+  <span class="key">"total_memory"</span>: <span class="str">"16.6 GB"</span>,
+  <span class="key">"mem_usage"</span>: <span class="str">"56.2%"</span>,
+  <span class="key">"gpu"</span>: <span class="str">"CPU Only"</span>,
+  <span class="key">"models_count"</span>: <span class="num">1</span>,
+  <span class="key">"version"</span>: <span class="str">"connected"</span>
+}</div>
+    </div>
+
+    <!-- Auto-Start Info -->
+    <div class="section">
+      <h2>Auto-Start Configuration</h2>
+      <div class="response-box">Docker restart policy: <span class="str">unless-stopped</span>
+
+Computer ON  -->  Docker Engine starts  -->  Containers auto-start
+Computer OFF -->  Docker Engine stops   -->  Containers stop
+
+No manual intervention required.</div>
+    </div>
+
+    <div class="footer">
+      <p>Ollama Webapp Test Report v1.0</p>
+      <p style="margin-top:10px">
+        <span class="tag tag-ok">11/11 Passed</span>
+        <span class="tag tag-info">UDS /tmp/ollama.sock</span>
+        <span class="tag tag-info">HTTP localhost:5000</span>
+        <span class="tag tag-info">deepseek-r1:1.5b</span>
+      </p>
+    </div>
+  </div>
+</body>
+</html>

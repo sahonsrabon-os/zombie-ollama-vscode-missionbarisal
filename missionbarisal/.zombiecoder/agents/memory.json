@@ -1,0 +1,26 @@
+{
+  "current_session": {
+    "id": null,
+    "started_at": null,
+    "message_count": 0,
+    "summary": null
+  },
+  "recent_context": [],
+  "session_index": {
+    "last_accessed": "2026-09-01T03:42:35.215Z",
+    "total_sessions": 2,
+    "total_archived": 0
+  },
+  "entries": [
+    {
+      "timestamp": "2026-09-01T01:20:34.182Z",
+      "agent": "Code Guru - Monu",
+      "summary": "<context>\nThe current date is 2026-09-01.\nTerminals:\nTerminal: node\n\n</context>\n<reminderInstructions>\nWhen using the insert_edit_into_file tool, avoid repeating existing code, instead use a line comm..."
+    },
+    {
+      "timestamp": "2026-09-01T03:42:35.215Z",
+      "agent": "Code Guru - Monu",
+      "summary": "<attachments>\n<attachment id=\"file:mcp.json\">\nUser's active selection:\nExcerpt from mcp.json, lines 5 to 6:\n```jsonc\n}\n```\n</attachment>\n<attachment filePath=\"vscode-userdata:/home/sahon/.config/Code/..."
+    }
+  ]
+}

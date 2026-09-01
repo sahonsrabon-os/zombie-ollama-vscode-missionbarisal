@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>মিশন বরিশাল v3 — প্রমাণ-ভিত্তিক সিস্টেম ডকুমেন্টেশন</title>
+<style>
+  :root {
+    --bg: #0b1020;
+    --bg2: #111834;
+    --card: #151d3d;
+    --card2: #1a2348;
+    --border: #2a3560;
+    --primary: #4f8cff;
+    --primary2: #7c4dff;
+    --accent: #00d4aa;
+    --warning: #ffb648;
+    --danger: #ff5d7a;
+    --text: #e8ecff;
+    --text2: #aab4d8;
+    --muted: #6b76a0;
+    --shadow: 0 10px 40px rgba(0,0,0,.45);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Hind Siliguri', 'Noto Sans Bengali', 'Segoe UI', Tahoma, sans-serif;
+    background: radial-gradient(1200px 600px at 20% -10%, #1b2a5e 0%, transparent 60%),
+                radial-gradient(1000px 500px at 100% 0%, #2a1b5e 0%, transparent 55%),
+                var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    overflow-x: hidden;
+  }
+  .container { max-width: 1150px; margin: 0 auto; padding: 0 24px; }
+
+  /* ── Hero ── */
+  .hero {
+    padding: 80px 0 60px;
+    text-align: center;
+    position: relative;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(79,140,255,.08), transparent);
+    pointer-events: none;
+  }
+  .badge {
+    display: inline-block;
+    background: linear-gradient(90deg, var(--primary), var(--primary2));
+    color: #fff;
+    padding: 6px 18px;
+    border-radius: 999px;
+    font-size: .85rem;
+    font-weight: 600;
+    letter-spacing: .5px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 20px rgba(79,140,255,.35);
+  }
+  .hero h1 {
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    font-weight: 800;
+    background: linear-gradient(120deg, #fff, #9db8ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 12px;
+  }
+  .hero .sub {
+    font-size: 1.15rem;
+    color: var(--text2);
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .hero .tagline {
+    margin-top: 18px;
+    font-style: italic;
+    color: var(--accent);
+    font-size: 1rem;
+  }
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 16px;
+    margin-top: 44px;
+  }
+  .stat {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 14px;
+    box-shadow: var(--shadow);
+  }
+  .stat .num {
+    font-size: 1.9rem;
+    font-weight: 800;
+    color: var(--primary);
+  }
+  .stat .lbl { font-size: .85rem; color: var(--text2); margin-top: 4px; }
+
+  /* ── Sections ── */
+  section { padding: 46px 0; }
+  .section-title {
+    font-size: 1.7rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-title .icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: grid; place-items: center;
+    background: linear-gradient(135deg, var(--primary), var(--primary2));
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+  .section-sub { color: var(--text2); margin-bottom: 28px; }
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 10px 0;
+  }
+
+  /* ── Cards ── */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: var(--shadow);
+    transition: transform .2s, border-color .2s;
+  }
+  .card:hover { transform: translateY(-4px); border-color: var(--primary); }
+  .card h3 { font-size: 1.1rem; margin-bottom: 10px; color: #fff; }
+  .card p { color: var(--text2); font-size: .95rem; }
+
+  /* ── Evidence Box ── */
+  .evidence {
+    background: rgba(0,212,170,.06);
+    border: 1px solid rgba(0,212,170,.3);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-top: 14px;
+    font-size: .85rem;
+    color: var(--accent);
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .evidence code {
+    background: rgba(0,0,0,.3);
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: .8rem;
+    color: #9fb8ff;
+  }
+
+  /* ── Agents ── */
+  .agents { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; }
+  .agent {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px;
+    position: relative;
+    overflow: hidden;
+  }
+  .agent::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--primary2), var(--accent));
+  }
+  .agent .rank {
+    position: absolute; top: 14px; right: 16px;
+    background: var(--primary); color: #fff;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: grid; place-items: center;
+    font-size: .8rem; font-weight: 700;
+  }
+  .agent .name { font-size: 1.15rem; font-weight: 700; color: #fff; }
+  .agent .role {
+    display: inline-block;
+    margin-top: 6px;
+    background: rgba(124,77,255,.2);
+    color: #c9b6ff;
+    padding: 3px 12px;
+    border-radius: 999px;
+    font-size: .78rem;
+  }
+  .agent .desc { margin-top: 12px; color: var(--text2); font-size: .92rem; }
+
+  /* ── Pipeline ── */
+  .pipeline { display: flex; flex-wrap: wrap; gap: 14px; align-items: stretch; }
+  .phase {
+    flex: 1 1 260px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+  }
+  .phase .ph-num {
+    font-size: .8rem;
+    color: var(--accent);
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .phase h4 { margin: 6px 0 10px; font-size: 1.05rem; }
+  .phase ul { list-style: none; }
+  .phase li {
+    padding: 7px 0 7px 22px;
+    position: relative;
+    color: var(--text2);
+    font-size: .9rem;
+  }
+  .phase li::before {
+    content: '▸';
+    position: absolute; left: 0;
+    color: var(--primary);
+  }
+  .arrow {
+    display: grid; place-items: center;
+    color: var(--primary);
+    font-size: 1.4rem;
+    flex: 0 0 30px;
+  }
+
+  /* ── Table ── */
+  .table-wrap { overflow-x: auto; border-radius: 14px; border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; background: var(--card); }
+  th, td { padding: 13px 16px; text-align: left; font-size: .92rem; }
+  th { background: var(--card2); color: #fff; font-weight: 600; white-space: nowrap; }
+  td { border-top: 1px solid var(--border); color: var(--text2); }
+  td code { background: rgba(0,0,0,.3); padding: 2px 8px; border-radius: 6px; font-size: .82rem; color: #9fb8ff; }
+
+  /* ── Checklist ── */
+  .checklist { list-style: none; }
+  .checklist li {
+    padding: 10px 0 10px 34px;
+    position: relative;
+    color: var(--text2);
+    border-bottom: 1px dashed rgba(42,53,96,.6);
+  }
+  .checklist li:last-child { border-bottom: none; }
+  .checklist li::before {
+    content: '✔';
+    position: absolute; left: 0;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* ── Footer ── */
+  footer {
+    padding: 40px 0 50px;
+    text-align: center;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+  footer .brand { font-weight: 700; color: #fff; margin-bottom: 6px; }
+  footer .meta { color: var(--muted); font-size: .85rem; }
+  footer .proof-note {
+    margin-top: 14px;
+    font-size: .8rem;
+    color: var(--muted);
+  }
+
+  /* ── Code block ── */
+  pre {
+    background: #0a0f22;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+    overflow-x: auto;
+    font-size: .85rem;
+    line-height: 1.6;
+    color: #bcd0ff;
+  }
+  pre .c { color: var(--muted); }
+  pre .k { color: var(--accent); }
+  pre .s { color: var(--warning); }
+
+  @media (max-width: 640px) {
+    .hero { padding: 50px 0 40px; }
+    .pipeline { flex-direction: column; }
+    .arrow { transform: rotate(90deg); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════ HERO ══════════ -->
+<header class="hero">
+  <div class="container">
+    <span class="badge">🧟 ZombieCoder · ডেভেলপার জোন · ঢাকা, বাংলাদেশ</span>
+    <h1>মিশন বরিশাল v3</h1>
+    <p class="sub">জিরো-ডিপেন্ডেন্সি মাল্টি-এজেন্ট এআই সিস্টেম — ৯ জন বিশেষজ্ঞ বাংলা এজেন্ট, রিয়েল-টাইম ওয়েব সার্চ, ৩-ফেজ ডিবেট পাইপলাইন, MCP টুলস ও PHP ব্রোকার ফ্রন্টএন্ড।</p>
+    <p class="tagline">"Barisal's playful chaos meets code discipline! Shawon Bhai knows everything — misbehave and you'll be caught!"</p>
+
+    <div class="stats">
+      <div class="stat"><div class="num">৯</div><div class="lbl">বিশেষায়িত এজেন্ট</div></div>
+      <div class="stat"><div class="num">৩</div><div class="lbl">ফেজ ডিবেট পাইপলাইন</div></div>
+      <div class="stat"><div class="num">০</div><div class="lbl">ডিপেন্ডেন্সি</div></div>
+      <div class="stat"><div class="num">১০,৩০০+</div><div class="lbl">api.js লাইন</div></div>
+      <div class="stat"><div class="num">v3.2.1</div><div class="lbl">সার্ভার ভার্সন</div></div>
+      <div class="stat"><div class="num">২৭০</div><div class="lbl">প্রজেক্ট ফাইল</div></div>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- ══════════ সিস্টেম পরিচিতি ══════════ -->
+  <section id="overview">
+    <div class="section-title"><span class="icon">🧬</span> সিস্টেম পরিচিতি</div>
+    <p class="section-sub">মিশন বরিশাল কী এবং কেন — প্রমাণসহ</p>
+    <div class="grid">
+      <div class="card">
+        <h3>জিরো-ডিপেন্ডেন্সি মাল্টি-এজেন্ট এআই</h3>
+        <p>মিশন বরিশাল একটি শুদ্ধ Node.js-এ নির্মিত মাল্টি-এজেন্ট এআই সিস্টেম। প্রতিটি এজেন্টের রয়েছে আলাদা বাংলা পারসোনা ও দক্ষতা — তারা ৩-ফেজ ডিবেট পাইপলাইনের মাধ্যমে সমন্বিতভাবে প্রমাণ-ভিত্তিক উত্তর প্রদান করে।</p>
+        <div class="evidence">📄 প্রমাণ: <code>README.md</code> — "Zero-Dependency Multi-Agent AI System"</div>
+      </div>
+      <div class="card">
+        <h3>৯ জন বিশেষায়িত বাংলা এজেন্ট</h3>
+        <p>আর্কিটেকচার থেকে ডিবাগিং, সিকিউরিটি থেকে পারফরম্যান্স, ডকুমেন্টেশন থেকে QA — প্রতিটি ক্ষেত্রে আলাদা বিশেষজ্ঞ এজেন্ট। সর্বশেষ ৩ জন এজেন্ট PERSONAS.md থেকে ডাইনামিকভাবে লোড হয়।</p>
+        <div class="evidence">📄 প্রমাণ: <code>README.md</code> — "9 Specialized Agents"</div>
+      </div>
+      <div class="card">
+        <h3>রিয়েল-টাইম ওয়েব সার্চ ও MCP</h3>
+        <p>এজেন্টরা উত্তর দেওয়ার আগে ওয়েবে সার্চ করে বর্তমান তথ্য যাচাই করে। MCP টুলসের মাধ্যমে ফাইল I/O, ব্রাউজার অটোমেশন ও মেমরি সিস্টেম ব্যবহার করা যায়।</p>
+        <div class="evidence">📄 প্রমাণ: <code>README.md</code> — "Real-time Web Search", "MCP Tools"</div>
+      </div>
+      <div class="card">
+        <h3>প্রোভাইডার ফলব্যাক চেইন</h3>
+        <p>প্রাথমিক প্রোভাইডার ব্যর্থ হলে স্বয়ংক্রিয়ভাবে পরবর্তী প্রোভাইডারে ফলব্যাক হয়: OpenCode → Groq → Gemini → missionbarisal।</p>
+        <div class="evidence">📄 প্রমাণ: <code>README.md</code> — "Provider Fallback Chain"</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ══════════ ৯ এজেন্ট ══════════ -->
+  <section id="agents">
+    <div class="section-title"><span class="icon">🤖</span> ৯ জন এজেন্ট</div>
+    <p class="section-sub">প্রতিটি এজেন্টের পারসোনা ও দায়িত্ব — PERSONAS.md থেকে</p>
+    <div class="agents">
+      <div class="agent">
+        <span class="rank">১</span>
+        <div class="name">Code Guru — মনু</div>
+        <span class="role">architecture</span>
+        <p class="desc">দুষ্টু মাস্টার আর্কিটেক্ট। সিস্টেম আর্কিটেকচার, ডিজাইন প্যাটার্ন, কোড স্ট্রাকচার ও প্রজেক্ট অর্গানাইজেশনের দায়িত্বে। খারাপ ডিজাইন দেখলে কেউ থামাতে পারবে না তাকে।</p>
+        <div class="evidence">📄 প্রমাণ: <code>PERSONAS.md</code> — "Code Guru - Monu, role: architecture"</div>
+      </div>
+      <div class="agent">
+        <span class="rank">২</span>
+        <div class="name">Bug Hunter — জুয়েল</div>
+        <span class="role">debugging</span>
+        <p class="desc">বরিশালের সবচেয়ে উত্সাহী ডিবাগার। বাগ খোঁজা, এরর হ্যান্ডলিং, লজিক ভ্যালিডেশন ও রিয়েল-টাইম সার্চের মাধ্যমে রুট কজ বিশ্লেষণ করে। কোনো বাগ তার নজর এড়ায় না।</p>
+        <div class="evidence">📄 প্রমাণ: <code>PERSONAS.md</code> — "Bug Hunter - Jewel, role: debugging"</div>
+      </div>
+      <div class="agent">
+        <span class="rank">৩</span>
+        <div class="name">Security Hero — বাবলু</div>
+        <span class="role">general</span>
+        <p class="desc">সিকিউরিটি বিশেষজ্ঞ। ভ্যালনারেবিলিটি অ্যাসেসমেন্ট ও ডেটা প্রোটেকশনের দায়িত্বে। ভাইরাস-মুক্ত, নিরাপদ কোড নিশ্চিত করে।</p>
+        <div class="evidence">📄 প্রমাণ: <code>PERSONAS.md</code> — "Security Hero - Bablu, role: general"</div>
+      </div>
+      <div class="agent">
+        <span class="rank">৪</span>
+        <div class="name">Performance Wizard — রাশেদ</div>
+        <span class="role">general</span>
+        <p class="desc">পারফরম্যান্স অপ্টিমাইজেশন, ক্যাশিং ও রিসোর্স ম্যানেজমেন্টের জাদুকর। সিস্টেমকে দ্রুত ও দক্ষ রাখে।</p>
+        <div class="evidence">📄 প্রমাণ: <code>PERSONAS.md</code> — "Performance Wizard - Rashed"</div>
+      </div>
+      <div class="agent">
+        <span class="rank">৫</span>
+        <div class="name">Documentation King — হালিম</div>
+        <span class="role">general</span>
+        <p class="desc">ডকুমেন্টেশনের রাজা। API স্পেক, README ও কোড কমেন্টের দায়িত্বে। প্রতিটি কোডের পেছনে সঠিক ডকুমেন্টেশন নিশ্চিত করে।</p>
+        <div class="evidence">📄 প্রমাণ: <code>PERSONAS.md</code> — "Documentation King - Halim"</div>
+      </div>
+      <div class="agent">
+        <span class="rank">৬</span>
+        <div class="name">Quality Tyrant — মজনু</div>
+        <span class="role">general</span>
+        <p class="desc">কোয়ালিটির কঠোর অভিভাবক। ফাইনাল ভেরিফিকেশন, কনসেনসাস ও রিলিজ রেডিনেস নিশ্চিত করে। মান ছাড়া কিছুই মেনে নেয় না।</p>
+        <div class="evidence">📄 প্রমাণ: <code>PERSONAS.md</code> — "Quality Tyrant - Mojnu"</div>
+      </div>
+      <div class="agent">
+        <span class="rank">৭</span>
+        <div class="name">Team Heart — জারা</div>
+        <span class="role">general</span>
+        <p class="desc">টিমের হৃদয়। দলগত সমন্বয় ও সহযোগিতার দায়িত্বে। টিমকে একসাথে রাখে এবং সম্পর্কের ভারসাম্য বজায় রাখে।</p>
+        <div class="evidence">📄 প্রমাণ: <code>PERSONAS.md</code> — "Team Heart - Jara"</div>
+      </div>
+      <div class="agent">
+        <span class="rank">৮</span>
+        <div class="name">Customer Experience Specialist</div>
+        <span class="role">customer-experience</span>
+        <p class="desc">গ্রাহক অভিজ্ঞতা বিশেষজ্ঞ। ব্যবহারকারীর অভিজ্ঞতা উন্নত করার দায়িত্বে। PERSONAS.md থেকে ডাইনামিকভাবে লোড হয়।</p>
+        <div class="evidence">📄 প্রমাণ: <code>README.md</code> — "last 3 agents load dynamically from PERSONAS.md"</div>
+      </div>
+      <div class="agent">
+        <span class="rank">৯</span>
+        <div class="name">E-Commerce Operations Analyst</div>
+        <span class="role">ecommerce-operations</span>
+        <p class="desc">ই-কমার্স অপারেশন বিশ্লেষক। অনলাইন ব্যবসার কার্যক্রম বিশ্লেষণ ও অপ্টিমাইজেশনের দায়িত্বে।</p>
+        <div class="evidence">📄 প্রমাণ: <code>README.md</code> — "E-Commerce Operations Analyst"</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ══════════ ৩-ফেজ পাইপলাইন ══════════ -->
+  <section id="pipeline">
+    <div class="section-title"><span class="icon">⚙️</span> ৩-ফেজ ডিবেট পাইপলাইন</div>
+    <p class="section-sub">ক্লায়েন্ট রিকোয়েস্ট থেকে ফাইনাল আউটপুট পর্যন্ত পুরো ফ্লো</p>
+    <div class="pipeline">
+      <div class="phase">
+        <div class="ph-num">ধাপ ০</div>
+        <h4>ক্লায়েন্ট রিকোয়েস্ট</h4>
+        <ul>
+          <li>POST /v1/chat/completions</li>
+          <li>model: "mission"</li>
+          <li>messages: [...]</li>
+        </ul>
+      </div>
+      <div class="arrow">→</div>
+      <div class="phase">
+        <div class="ph-num">ধাপ ১</div>
+        <h4>মিশন হ্যান্ডলার</h4>
+        <ul>
+          <li>classifyInput() — ইনটেন্ট ও কমপ্লেক্সিটি ডিটেক্ট</li>
+          <li>selectAgents() — প্রাসঙ্গিক এজেন্ট নির্বাচন</li>
+          <li>routeToPipeline() — ৩-ফেজ ডিবেট শুরু</li>
+        </ul>
+      </div>
+      <div class="arrow">→</div>
+      <div class="phase">
+        <div class="ph-num">ধাপ ২</div>
+        <h4>ফেজ ১: ইনিশিয়াল রেসপন্স</h4>
+        <ul>
+          <li>৯ এজেন্ট সমান্তরালভাবে উত্তর দেয়</li>
+          <li>প্রতিটি এজেন্ট নিজস্ব দক্ষতা অনুযায়ী</li>
+          <li>ওয়েব সার্চ দিয়ে তথ্য যাচাই</li>
+        </ul>
+      </div>
+      <div class="arrow">→</div>
+      <div class="phase">
+        <div class="ph-num">ধাপ ৩</div>
+        <h4>ফেজ ২ ও ৩: ক্রস-ভেরিফাই + কম্বাইন্ড</h4>
+        <ul>
+          <li>ফেজ ২: এজেন্টরা একে অপরের উত্তর যাচাই করে</li>
+          <li>ফেজ ৩: সব উত্তর একত্রিত হয়ে চূড়ান্ত আউটপুট</li>
+          <li>প্রমাণ-ভিত্তিক, যাচাইকৃত উত্তর</li>
+        </ul>
+      </div>
+    </div>
+    <div class="evidence" style="margin-top:18px">📄 প্রমাণ: <code>README.md</code> — "3-Phase Debate Pipeline — Initial Response → Cross-Verify → Combined Output", <code>api.js</code> TOC — "Full Mission Execute" (লাইন 5815)</div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ══════════ API এন্ডপয়েন্ট ══════════ -->
+  <section id="api">
+    <div class="section-title"><span class="icon">🔌</span> API এন্ডপয়েন্ট</div>
+    <p class="section-sub">API-REFERENCE.md থেকে — বেস URL: <code>http://localhost:8080</code></p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>মেথড</th><th>পাথ</th><th>কাজ কী</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>GET</code></td><td><code>/health</code></td><td>সার্ভার বেঁচে আছে কিনা চেক</td></tr>
+          <tr><td><code>GET</code></td><td><code>/identity</code></td><td>সার্ভার আইডেন্টিটি ও ভার্সন</td></tr>
+          <tr><td><code>GET</code></td><td><code>/v1/models</code></td><td>উপলব্ধ এজেন্টদের তালিকা</td></tr>
+          <tr><td><code>POST</code></td><td><code>/v1/chat/completions</code></td><td>এজেন্টকে মেসেজ পাঠানো (OpenAI-কম্প্যাটিবল)</td></tr>
+          <tr><td><code>POST</code></td><td><code>/api/mission</code></td><td>ফুল মাল্টি-এজেন্ট ডিবেট</td></tr>
+          <tr><td><code>POST</code></td><td><code>/api/v1/anti-dote</code></td><td>সেফটি-চেক করা এক্সিকিউশন</td></tr>
+          <tr><td><code>POST</code></td><td><code>/mcp</code></td><td>MCP প্রোটোকল এন্ডপয়েন্ট (JSON-RPC 2.0)</td></tr>
+          <tr><td><code>GET</code></td><td><code>/api/config</code></td><td>সার্ভার কনফিগারেশন দেখা</td></tr>
+          <tr><td><code>POST</code></td><td><code>/api/config</code></td><td>সার্ভার কনফিগারেশন আপডেট</td></tr>
+          <tr><td><code>GET</code></td><td><code>/api/domain</code></td><td>ডোমেইন ডিটেকশন তথ্য</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="evidence" style="margin-top:14px">📄 প্রমাণ: <code>doc/API interface/API-REFERENCE.md</code> — Endpoints Overview টেবিল</div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ══════════ সিস্টেম আর্কিটেকচার ══════════ -->
+  <section id="architecture">
+    <div class="section-title"><span class="icon">🏗️</span> সিস্টেম আর্কিটেকচার</div>
+    <p class="section-sub">README.md-এর প্রজেক্ট লেআউট থেকে</p>
+    <pre>
+<span class="c">sarver/</span>
+├── <span class="k">api.js</span>                  <span class="c"># Main server (zero-dep, ~16K lines)</span>
+├── <span class="k">start.js</span>                <span class="c"># Starter (CONFIG ALL / START ALL)</span>
+├── <span class="k">domain-config.js</span>        <span class="c"># Domain detection &amp; config</span>
+├── <span class="k">external-mcp.js</span>         <span class="c"># External MCP client</span>
+├── <span class="k">mcp-client.js</span>           <span class="c"># Outbound MCP client</span>
+├── <span class="k">skills.js</span>               <span class="c"># Skills loader</span>
+├── <span class="k">note-store.js</span>           <span class="c"># Notes persistence</span>
+├── <span class="k">db-bridge.php</span>           <span class="c"># PHP PDO bridge (MySQL/PG)</span>
+├── <span class="k">frontend/</span>               <span class="c"># PHP chat UI (Softaculous-style)</span>
+│   ├── <span class="k">index.php</span>           <span class="c"># Login page</span>
+│   ├── <span class="k">allindex.live.php</span>   <span class="c"># Main chat UI</span>
+│   └── <span class="k">public/</span>             <span class="c"># Static assets</span>
+├── <span class="k">external tools/</span>
+│   └── <span class="k">php-broker-server.js</span> <span class="c"># দালালি সার্ভার (port 9998)</span>
+├── <span class="k">external mcp/</span>           <span class="c"># MCP server implementations</span>
+├── <span class="k">data/</span>                   <span class="c"># Runtime data (sessions, clients)</span>
+├── <span class="k">logs/</span>                   <span class="c"># Server logs</span>
+├── <span class="k">doc/</span>                    <span class="c"># Documentation</span>
+├── <span class="k">pending/</span>                <span class="c"># Problem plans</span>
+├── <span class="k">skills/</span>                 <span class="c"># Agent skill definitions</span>
+└── <span class="k">test/</span>                   <span class="c"># Test scripts, audits</span></pre>
+    <div class="evidence" style="margin-top:14px">📄 প্রমাণ: <code>README.md</code> — "Project Layout" সেকশন</div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ══════════ নৈতিক নির্দেশিকা ══════════ -->
+  <section id="ethics">
+    <div class="section-title"><span class="icon">🛡️</span> নৈতিক নির্দেশিকা</div>
+    <p class="section-sub">Ethical.md থেকে — প্রতিটি এজেন্টকে অবশ্যই অনুসরণ করতে হবে</p>
+    <div class="grid">
+      <div class="card">
+        <h3>সত্য ও প্রমাণ</h3>
+        <ul class="checklist">
+          <li>প্রমাণ ছাড়া কোনো দাবি করা যাবে না</li>
+          <li>দাবি করার আগে ওয়েব সার্চ দিয়ে যাচাই</li>
+          <li>প্রমাণ না পেলে বলা: "আমার কাছে প্রমাণ নেই"</li>
+        </ul>
+        <div class="evidence">📄 প্রমাণ: <code>Ethical.md</code> — "Truth &amp; Evidence"</div>
+      </div>
+      <div class="card">
+        <h3>স্বচ্ছতা</h3>
+        <ul class="checklist">
+          <li>ভুল বা ব্যর্থতা কখনো লুকানো যাবে না</li>
+          <li>টুল কল ব্যর্থ হলে থামুন এবং এরর রিপোর্ট করুন</li>
+          <li>সীমাবদ্ধতা স্বীকার করুন: "এই মুহূর্তে আমার কাছে এই তথ্যগুলো নাই"</li>
+        </ul>
+        <div class="evidence">📄 প্রমাণ: <code>Ethical.md</code> — "Transparency"</div>
+      </div>
+      <div class="card">
+        <h3>আইডেন্টিটি ইন্টিগ্রিটি</h3>
+        <ul class="checklist">
+          <li>মডেল প্রোভাইডার বা এআই কোম্পানির নাম কখনো প্রকাশ করা যাবে না</li>
+          <li>পারসোনাই আইডেন্টিটি — জেনেরিক এআই নয়</li>
+          <li>মডেল নাম বা প্ল্যাটফর্ম নাম উল্লেখ করা নিষিদ্ধ</li>
+        </ul>
+        <div class="evidence">📄 প্রমাণ: <code>Ethical.md</code> — "Identity Integrity"</div>
+      </div>
+      <div class="card">
+        <h3>ইউজার প্রাইভেসি</h3>
+        <ul class="checklist">
+          <li>ইউজারদের মধ্যে সেশন ডেটা শেয়ার করা যাবে না</li>
+          <li>অভ্যন্তরীণ সিস্টেম কনফিগ প্রকাশ করা যাবে না</li>
+          <li>API কী, টোকেন বা ক্রেডেনশিয়াল কখনো লিক করা যাবে না</li>
+        </ul>
+        <div class="evidence">📄 প্রমাণ: <code>Ethical.md</code> — "User Privacy"</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ══════════ প্রমাণ ভিত্তি ══════════ -->
+  <section id="evidence">
+    <div class="section-title"><span class="icon">📚</span> প্রমাণ ভিত্তি (Evidence Base)</div>
+    <p class="section-sub">এই পেজের প্রতিটি তথ্য নিচের ফাইল থেকে সংগ্রহ করা হয়েছে</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>ফাইল</th><th>যা প্রমাণ করে</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>README.md</code></td><td>সিস্টেম ওভারভিউ, ৯ এজেন্ট, ৩-ফেজ পাইপলাইন, আর্কিটেকচার, প্রজেক্ট লেআউট</td></tr>
+          <tr><td><code>identity.json</code></td><td>ZombieCoder আইডেন্টিটি, মালিক Sahon Srabon, Developer Zone, ঢাকা</td></tr>
+          <tr><td><code>domain-config.js</code></td><td>সার্ভার নাম "Mission Barisal", ভার্সন "3.2.1", এনভ-ভ্যারিয়েবল ড্রাইভেন</td></tr>
+          <tr><td><code>PERSONAS.md</code></td><td>৯ এজেন্টের পারসোনা, ভাষা নিয়ম, আইডেন্টিটি মাস্কিং</td></tr>
+          <tr><td><code>api.js</code></td><td>১০,৩০২+ লাইন জিরো-ডিপেন্ডেন্সি কোড, সম্পূর্ণ TOC</td></tr>
+          <tr><td><code>Ethical.md</code></td><td>নৈতিক নির্দেশিকা — সত্য, স্বচ্ছতা, আইডেন্টিটি, প্রাইভেসি</td></tr>
+          <tr><td><code>skills/mission.md</code></td><td>মিশন কোঅর্ডিনেটর স্কিল, ভার্সন 3.0.0</td></tr>
+          <tr><td><code>doc/API interface/API-REFERENCE.md</code></td><td>সব API এন্ডপয়েন্ট ও বেস URL</td></tr>
+          <tr><td><code>doc/mission-barisal-docs/</code></td><td>বাংলা ডকুমেন্টেশন — ৫টি MD + ৩টি PDF</td></tr>
+          <tr><td><code>data/</code></td><td>সেশন, অটোপসি সেশন (sess-001 থেকে sess-019), মেমরি, লক</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <div class="brand">🧟 ZombieCoder — Mission Barisal v3</div>
+    <div class="meta">মালিক: Sahon Srabon · Developer Zone · ঢাকা, বাংলাদেশ</div>
+    <div class="meta">লাইসেন্স: Proprietary — Local Freedom Protocol</div>
+    <div class="meta">সার্ভার ভার্সন: 3.2.1 · MCP এন্ডপয়েন্ট: /mcp (পোর্ট 8080) · PHP ব্রোকার: পোর্ট 9998</div>
+    <div class="proof-note">এই পেজের প্রতিটি তথ্য প্রজেক্টের সোর্স ফাইল থেকে যাচাই করা হয়েছে — প্রমাণ ছাড়া কোনো তথ্য দেওয়া হয়নি।</div>
+  </div>
+</footer>
+
+</body>
+</html>

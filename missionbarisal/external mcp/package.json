@@ -1,0 +1,13 @@
+{
+  "name": "facebook-ads-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP Server for Meta Facebook Ads - Follows official MCP protocol spec",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": ["mcp", "facebook", "ads", "meta", "model-context-protocol"],
+  "license": "MIT",
+  "dependencies": {}
+}

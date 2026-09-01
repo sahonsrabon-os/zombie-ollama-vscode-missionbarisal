@@ -1,0 +1,12 @@
+{
+  "session_id": "ctx_20260831_030",
+  "created_at": "2026-08-31T17:11:56.868Z",
+  "message_count": 2,
+  "summary": "Agent bug-hunter (inline-stream): Good, `docker compose` is available. Now let me try to build and run the setup using `docker compose",
+  "key_points": [],
+  "decisions": [],
+  "files_changed": [],
+  "tags": [],
+  "prev_session": null,
+  "next_session": null
+}

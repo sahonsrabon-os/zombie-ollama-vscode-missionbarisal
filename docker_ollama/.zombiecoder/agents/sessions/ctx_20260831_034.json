@@ -1,0 +1,12 @@
+{
+  "session_id": "ctx_20260831_034",
+  "created_at": "2026-08-31T17:14:16.161Z",
+  "message_count": 2,
+  "summary": "Agent bug-hunter (inline-stream): The user is asking me to continue with the Docker setup. The Docker daemon is not running, so I need",
+  "key_points": [],
+  "decisions": [],
+  "files_changed": [],
+  "tags": [],
+  "prev_session": null,
+  "next_session": null
+}

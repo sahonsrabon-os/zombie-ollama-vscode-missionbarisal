@@ -1,0 +1,34 @@
+{
+  "name": "Mission Barisal Gateway",
+  "transport": {
+    "type": "stdio",
+    "command": "node",
+    "args": [
+      "start.js"
+    ]
+  },
+  "endpoints": {
+    "http": "http://localhost:9999",
+    "uds": "/tmp/zombiecoder/mcp.sock",
+    "ws": "ws://localhost:9999"
+  },
+  "tools": [
+    "read_file",
+    "write_file",
+    "set_working_dir",
+    "get_working_dir",
+    "list_directory",
+    "web_search",
+    "read_ssot",
+    "get_memory",
+    "agent_mission",
+    "agent_single",
+    "terminal",
+    "delete_file",
+    "rename_file",
+    "grep",
+    "glob"
+  ],
+  "timeout": 300000,
+  "lastUpdated": "2026-09-01T03:05:10.434Z"
+}

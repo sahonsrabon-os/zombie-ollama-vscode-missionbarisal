@@ -1,0 +1,12 @@
+{
+  "session_id": "ctx_20260831_027",
+  "created_at": "2026-08-31T17:09:19.132Z",
+  "message_count": 2,
+  "summary": "Agent bug-hunter (inline-stream): Good, now let me try to build and run the Docker setup. But first, I need to make sure Docker is ins",
+  "key_points": [],
+  "decisions": [],
+  "files_changed": [],
+  "tags": [],
+  "prev_session": null,
+  "next_session": null
+}
