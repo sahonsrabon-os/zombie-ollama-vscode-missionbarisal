@@ -127,7 +127,7 @@ User patches critical issues immediately
 
 ```bash
 # Install from VSIX
-code --install-extension zombiecoder-mission-barisal-1.7.1.vsix
+code --install-extension zombiecoder-mission-barisal-1.8.0.vsix
 
 # Or build from source
 cd extension/
@@ -538,7 +538,7 @@ curl http://localhost:9999/health
 ### Step 3: Install Extension (UI)
 
 ```bash
-code --install-extension "/home/sahon/Zombie family/extension/zombiecoder-mission-barisal-1.7.1.vsix"
+code --install-extension "/home/sahon/Zombie family/extension/zombiecoder-mission-barisal-1.8.0.vsix"
 ```
 
 ### Step 4: Verify Everything
@@ -635,7 +635,7 @@ Zombie family/
 │   ├── src/                           ← TypeScript source (12 modules)
 │   ├── out/                           ← Compiled JavaScript
 │   ├── package.json                   ← Build configuration
-│   ├── zombiecoder-mission-barisal-1.7.1.vsix  ← Installable package
+│   ├── zombiecoder-mission-barisal-1.8.0.vsix  ← Installable package
 │   └── README.md                      ← Extension documentation
 ├── docker_ollama/                     ← Local LLM Inference
 │   ├── app.py                         ← Flask server (1322 lines)

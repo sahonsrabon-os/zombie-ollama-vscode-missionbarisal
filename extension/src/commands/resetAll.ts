@@ -138,7 +138,7 @@ export async function resetAllCommand(deps: ResetDeps): Promise<void> {
 
       // Extract port from server URL.
       const config = vscode.workspace.getConfiguration('zombiecoder.mission-barisal');
-      const serverUrl = config.get<string>('serverUrl', 'http://localhost:9999');
+      const serverUrl = config.get<string>('serverUrl', 'http://localhost:3000');
       let port = 5000;
       try {
         const url = new URL(serverUrl);

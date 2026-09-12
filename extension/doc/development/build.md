@@ -49,7 +49,7 @@ npm run package
 ```
 
 Runs `vsce package --no-yarn` and produces
-`zombiecoder-mission-barisal-1.7.0.vsix` in the project root.
+`zombiecoder-mission-barisal-1.8.0.vsix` in the project root.
 
 `vsce` validates the manifest (name, publisher, repository, license, icon) before
 packaging. The `.vscodeignore` file excludes source, tests, scripts, and

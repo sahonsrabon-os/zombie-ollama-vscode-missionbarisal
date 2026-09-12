@@ -206,7 +206,11 @@ export async function streamResponse(params: StreamResponseParams): Promise<Stre
             // Report detected tool calls
             for (const tc of detected) {
               stats.totalToolCalls++;
-              const args = resolveToolCallArgs(tc);
+              const args = resolveToolCallArgs({
+                id: tc.id,
+                name: tc.name,
+                arguments: JSON.stringify(tc.arguments),
+              });
               reporter.reportToolCall(tc.id, tc.name, args);
             }
           }
@@ -229,7 +233,11 @@ export async function streamResponse(params: StreamResponseParams): Promise<Stre
       stats.autoToolCallsDetected = true;
       for (const tc of detected) {
         stats.totalToolCalls++;
-        const args = resolveToolCallArgs(tc);
+        const args = resolveToolCallArgs({
+          id: tc.id,
+          name: tc.name,
+          arguments: JSON.stringify(tc.arguments),
+        });
         reporter.reportToolCall(tc.id, tc.name, args);
       }
     }

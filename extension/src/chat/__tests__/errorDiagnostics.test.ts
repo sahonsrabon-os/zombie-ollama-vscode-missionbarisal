@@ -30,14 +30,14 @@ describe('diagnoseModelFetchError', () => {
 
   test('adds a DNS hint for ENOTFOUND', () => {
     const result = diagnoseModelFetchError(
-      'Failed to connect to inference server at http://my-host:42069: fetch failed: getaddrinfo ENOTFOUND my-host'
+      'Failed to connect to inference server at http://my-host:3000: fetch failed: getaddrinfo ENOTFOUND my-host'
     );
     assert.ok(result.toLowerCase().includes('dns'));
     assert.ok(result.toLowerCase().includes('dev container'));
   });
 
   test('adds a routing/timeout hint for ETIMEDOUT', () => {
-    const result = diagnoseModelFetchError('fetch failed: connect ETIMEDOUT 10.0.0.5:42069');
+    const result = diagnoseModelFetchError('fetch failed: connect ETIMEDOUT 10.0.0.5:3000');
     assert.ok(result.toLowerCase().includes('timeout') || result.toLowerCase().includes('unreachable'));
     assert.ok(result.toLowerCase().includes('firewall'));
   });

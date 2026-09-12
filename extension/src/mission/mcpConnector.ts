@@ -8,7 +8,12 @@
  *   1. `initialize`          → server announces protocolVersion + capabilities
  *   2. `notifications/initialized` → fire-and-forget handshake completion
  *   3. `tools/list`          → server returns its tool registry
- *   4. `tools/call`          → (future) invoke a tool through the server
+ *   4. `tools/call`          → invoke a tool through the server (`callTool()`):
+ *      resolves the same UDS-first transport chain as `tools/list` and sends
+ *      `{jsonrpc, id, method:'tools/call', params:{name, arguments}}` over the
+ *      socket, falling back to HTTP POST `{serverUrl}/mcp` when no socket answers.
+ *      `setWorkingDir()` is a thin wrapper around `callTool('set_working_dir')`
+ *      so the server can auto-generate `.zombiecoder/SSOT.md` + `syllabus.md`.
  *
  * The default MCP is the server's own hardcoded registry (`MCP_TOOLS` in
  * api.js — read_file, write_file, web_search, agent_mission, ...). When the
@@ -283,6 +288,117 @@ export class McpConnector {
         this.lastSyncResult = result;
         return result;
     }
+    /**
+     * Invoke an MCP tool through the server (`tools/call`). This is
+     * what lets agents call `write_file`, `read_file`, `terminal`,
+     * `set_working_dir`, etc. directly through the extension instead
+     * of falling back to a local shell.
+     *
+     * Resolves the same transport chain as `tools/list`: UDS
+     * JSON-RPC when the socket answers, otherwise HTTP POST to
+     * `{serverUrl}/mcp`.
+     */
+    public async callTool(
+        serverUrl: string,
+        name: string,
+        args: Record<string, unknown> = {},
+        timeoutMs = 30000
+    ): Promise<unknown> {
+        const base = serverUrl.replace(/\/+$/, '');
+        const mcpUrl = base.endsWith('/mcp') ? base : `${base}/mcp`;
+
+        // Prefer UDS JSON-RPC (matches how tools/list works).
+        if (this.deps.useTransport !== false) {
+            try {
+                const target = await resolveActiveTransport(serverUrl, this.deps.log, {
+                    probeTimeoutMs: 1500,
+                    customUdsPath: this.deps.udsSocketPath,
+                });
+                if (target.kind === 'uds' && target.socketPath) {
+                    try {
+                        return await this.udsMcpCall(target.socketPath, name, args, timeoutMs);
+                    } catch {
+                        // Socket call failed — fall through to HTTP.
+                    }
+                }
+            } catch {
+                // Transport probe failed — fall through to HTTP.
+            }
+            try {
+                return await this.udsMcpCall(
+                    this.deps.udsSocketPath ?? DEFAULT_UDS_PATH,
+                    name,
+                    args,
+                    timeoutMs
+                );
+            } catch {
+                // No socket answer — fall through to HTTP POST.
+            }
+        }
+        return this.httpMcpCall(mcpUrl, name, args, timeoutMs);
+    }
+
+    /**
+     * Set the Mission Barisal server's working directory so it
+     * auto-generates `.zombiecoder/SSOT.md` + `syllabus.md` inside
+     * the folder. Called when the user opens a new workspace folder.
+     */
+    public async setWorkingDir(serverUrl: string, directory: string): Promise<unknown> {
+        return this.callTool(serverUrl, 'set_working_dir', { directory });
+    }
+
+    private async udsMcpCall(
+        socketPath: string,
+        name: string,
+        args: Record<string, unknown>,
+        timeoutMs: number
+    ): Promise<unknown> {
+        const response = await udsJsonRpcRequest({
+            socketPath,
+            method: 'tools/call',
+            params: { name, arguments: args },
+            timeoutMs,
+        });
+        return response?.result;
+    }
+
+    private async httpMcpCall(
+        mcpUrl: string,
+        name: string,
+        args: Record<string, unknown>,
+        timeoutMs: number
+    ): Promise<unknown> {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), timeoutMs);
+        try {
+            const response = await this.fetchImpl(mcpUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    jsonrpc: MCP_JSON_RPC_VERSION,
+                    id: 1,
+                    method: 'tools/call',
+                    params: { name, arguments: args },
+                }),
+                signal: controller.signal,
+            });
+            if (!response.ok) {
+                throw new Error(`MCP tools/call failed with HTTP ${response.status}`);
+            }
+            const payload = (await response.json()) as {
+                result?: unknown;
+                error?: { message?: string };
+            };
+            if (payload?.error) {
+                throw new Error(`MCP tools/call error: ${payload.error.message ?? 'unknown error'}`);
+            }
+            return payload?.result;
+        } finally {
+            clearTimeout(timer);
+        }
+    }
+
+
 
     private async syncDefault(serverUrl: string): Promise<string | undefined> {
         try {
@@ -455,3 +571,4 @@ function formatToolLine(tool: McpToolDefinition): string {
     const params = paramNames.length > 0 ? ` (params: ${paramNames.join(', ')})` : '';
     return `- \`${tool.name}\`${params} — ${tool.description || 'no description'}`;
 }
+

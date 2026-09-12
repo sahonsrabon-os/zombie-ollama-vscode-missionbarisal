@@ -23,7 +23,7 @@ const DEFAULT_PERSONA =
  * Skips verbose sections like full directory trees, detailed agent roster.
  */
 function compactSSOT(ssot: string): string {
-    if (!ssot || ssot.length < 100) return ssot;
+    if (!ssot || ssot.length < 100) {return ssot;}
 
     const lines = ssot.split('\n');
     const result: string[] = [];
@@ -69,7 +69,7 @@ function compactSSOT(ssot: string): string {
  * Compact syllabus: keep only the essential rules and agent definitions.
  */
 function compactSyllabus(syllabus: string): string {
-    if (!syllabus || syllabus.length < 100) return syllabus;
+    if (!syllabus || syllabus.length < 100) {return syllabus;}
 
     const lines = syllabus.split('\n');
     const result: string[] = [];
@@ -117,7 +117,7 @@ function compactSyllabus(syllabus: string): string {
  * Compact MCP tools list: send only tool names + brief description.
  */
 function compactMcpTools(mcpTools: string): string {
-    if (!mcpTools || mcpTools.length < 20) return mcpTools;
+    if (!mcpTools || mcpTools.length < 20) {return mcpTools;}
 
     // Extract just tool names and one-line descriptions
     const lines = mcpTools.split('\n');

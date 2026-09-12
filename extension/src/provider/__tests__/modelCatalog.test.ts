@@ -17,8 +17,9 @@ function fakeToken(cancelled = false): CancellationToken {
 
 function fakeConfig(overrides: Partial<GatewayConfig> = {}): GatewayConfig {
   return {
-    serverUrl: 'http://localhost:9999',
+    serverUrl: 'http://localhost:3000',
     mcpServerUrl: '',
+    udsSocketPath: '',
     apiKey: '',
     requestTimeout: 60000,
     defaultMaxTokens: 128000,

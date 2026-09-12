@@ -229,6 +229,14 @@ export class GatewayClient {
   }
 
   /**
+   * Reset the memoized active transport so the next request re-probes
+   * the fallback chain. Used by the `resetAll` command.
+   */
+  public clearTransportCache(): void {
+    this.transportCache = undefined;
+  }
+
+  /**
    * Phase 4 — resolve the active transport for the configured server URL,
    * probing the fallback chain once per URL change (HTTP → SSE → WebSocket
    * → UDS, adapted to the URL shape). Memoized so per-request probing does

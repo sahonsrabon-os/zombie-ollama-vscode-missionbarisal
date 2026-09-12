@@ -31,9 +31,9 @@ after(() => {
 
 describe('parseServerUrl — Phase 4 URL parsing', () => {
     test('http URL', () => {
-        const t = parseServerUrl('http://localhost:9999');
+        const t = parseServerUrl('http://localhost:3000');
         assert.equal(t.kind, 'http');
-        assert.equal(t.baseUrl, 'http://localhost:9999');
+        assert.equal(t.baseUrl, 'http://localhost:3000');
     });
 
     test('https URL with trailing slash + /v1', () => {
@@ -81,10 +81,10 @@ describe('parseServerUrl — Phase 4 URL parsing', () => {
 
 describe('buildTransportChain — fallback ordering', () => {
     test('http URL → http, sse, websocket, uds', () => {
-        const chain = buildTransportChain('http://localhost:9999');
+        const chain = buildTransportChain('http://localhost:3000');
         assert.deepEqual(
             chain.map((t) => t.kind),
-            ['http', 'sse', 'websocket', 'uds']
+            ['http', 'sse', 'websocket', 'uds', 'http']
         );
         assert.equal(chain[3].socketPath, DEFAULT_UDS_PATH);
     });
@@ -93,7 +93,7 @@ describe('buildTransportChain — fallback ordering', () => {
         const chain = buildTransportChain('ws://localhost:9999');
         assert.deepEqual(
             chain.map((t) => t.kind),
-            ['websocket', 'http', 'sse']
+            ['websocket', 'http', 'sse', 'http']
         );
     });
 
@@ -101,7 +101,7 @@ describe('buildTransportChain — fallback ordering', () => {
         const chain = buildTransportChain('/zombiecoder/mcp.sock');
         assert.deepEqual(
             chain.map((t) => t.kind),
-            ['uds', 'http', 'sse']
+            ['uds', 'http', 'sse', 'http']
         );
         assert.equal(chain[0].socketPath, '/zombiecoder/mcp.sock');
     });
@@ -227,7 +227,7 @@ describe('resolveActiveTransport — picks first available', () => {
         });
         await new Promise<void>((resolve) => server.listen(sockPath, resolve));
         try {
-            const target = await resolveActiveTransport('http://localhost:9999', undefined, {
+            const target = await resolveActiveTransport('http://localhost:3000', undefined, {
                 preferUds: true,
                 probeTimeoutMs: 2000,
                 udsPath: sockPath,

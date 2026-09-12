@@ -8,7 +8,7 @@ Settings (`Ctrl+,` / `Cmd+,`) and search for **"Mission Barisal"**, or edit
 
 | Setting                        | Default                 | Description                                                    |
 | ------------------------------ | ----------------------- | -------------------------------------------------------------- |
-| `serverUrl`                    | `http://localhost:9999` | Base URL of your OpenAI-compatible server (`/v1` is optional). |
+| `serverUrl`                    | `http://localhost:3000` | Base URL of your OpenAI-compatible server (`/v1` is optional). |
 | `apiKey`                       | _(empty)_               | Key for servers that require auth (do **not** add `Bearer `).  |
 | `requestTimeout`               | `120000`                | Request timeout in ms (2 minutes). UDS falls back to HTTP/SSE on timeout. |
 | `fallbackServerUrl`            | _(empty)_               | Optional fallback URL when the primary server is unreachable.  |
@@ -63,7 +63,7 @@ per-request options from Copilot.
 
 ```jsonc
 {
-  "zombiecoder.mission-barisal.serverUrl": "http://localhost:42069",
+  "zombiecoder.mission-barisal.serverUrl": "http://localhost:3000",
   "zombiecoder.mission-barisal.requestTimeout": 120000,
   "zombiecoder.mission-barisal.modelContextWindows": {
     "qwen2.5-coder-32b": 32768,

@@ -6,7 +6,7 @@ import { TOKEN_CONSTANTS } from '../chat/tokenBudget';
 export const DEFAULT_REQUEST_TIMEOUT_MS = 120000;
 /** Maximum value for setTimeout (signed 32-bit integer). */
 export const MAX_REQUEST_TIMEOUT_MS = 2147483647;
-export const FALLBACK_SERVER_URL = 'http://localhost:9999';
+export const FALLBACK_SERVER_URL = 'http://localhost:3000';
 
 /**
  * Offline fallback URL (OpenAI-compatible) used when the Mission Barisal

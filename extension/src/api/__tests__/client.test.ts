@@ -13,17 +13,17 @@ import {
 
 describe('normalizeBaseUrl', () => {
   test('returns the URL unchanged when no normalization is needed', () => {
-    assert.equal(normalizeBaseUrl('http://localhost:9999'), 'http://localhost:9999');
+    assert.equal(normalizeBaseUrl('http://localhost:3000'), 'http://localhost:3000');
   });
 
   test('strips trailing slashes', () => {
-    assert.equal(normalizeBaseUrl('http://localhost:9999/'), 'http://localhost:9999');
-    assert.equal(normalizeBaseUrl('http://localhost:9999///'), 'http://localhost:9999');
+    assert.equal(normalizeBaseUrl('http://localhost:3000/'), 'http://localhost:3000');
+    assert.equal(normalizeBaseUrl('http://localhost:3000///'), 'http://localhost:3000');
   });
 
   test('strips a trailing /v1 (the most common user mistake)', () => {
-    assert.equal(normalizeBaseUrl('http://localhost:9999/v1'), 'http://localhost:9999');
-    assert.equal(normalizeBaseUrl('http://localhost:9999/v1/'), 'http://localhost:9999');
+    assert.equal(normalizeBaseUrl('http://localhost:3000/v1'), 'http://localhost:3000');
+    assert.equal(normalizeBaseUrl('http://localhost:3000/v1/'), 'http://localhost:3000');
   });
 
   test('strips a trailing /openai/v1 (Azure-style endpoints)', () => {
@@ -36,7 +36,7 @@ describe('normalizeBaseUrl', () => {
   });
 
   test('trims surrounding whitespace', () => {
-    assert.equal(normalizeBaseUrl('  http://localhost:9999  '), 'http://localhost:9999');
+    assert.equal(normalizeBaseUrl('  http://localhost:3000  '), 'http://localhost:3000');
   });
 });
 
@@ -196,6 +196,7 @@ describe('streamChatCompletion reasoning field handling (issue #59)', () => {
     // the test would talk to the live socket instead of the SSE mock.
     serverUrl: 'http://models.example.test:11434',
     mcpServerUrl: '',
+    udsSocketPath: '',
     requestTimeout: 5000,
     defaultMaxTokens: 4096,
     defaultMaxOutputTokens: 4096,

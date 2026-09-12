@@ -36,24 +36,11 @@ const TOOL_CALL_PATTERNS: RegExp[] = [
 ];
 
 /**
- * Tool names that are commonly available in coding assistants.
- * Used to increase confidence that a detected JSON is a tool call.
- */
-const KNOWN_TOOL_NAMES = new Set([
-    'read_file', 'write_file', 'edit_file', 'search_files', 'list_files',
-    'run_terminal', 'execute_command', 'web_search', 'browse_web',
-    'create_file', 'delete_file', 'rename_file', 'copy_file',
-    'read_directory', 'search_code', 'grep', 'glob', 'find',
-    'agent_mission', 'call_agent', 'delegate_task',
-    'memory_store', 'memory_retrieve', 'memory_search',
-]);
-
-/**
  * Detect tool calls embedded in the model's text response.
  * Returns an array of detected tool calls, or empty if none found.
  */
 export function detectToolCallsFromText(text: string): DetectedToolCall[] {
-    if (!text || text.length < 10) return [];
+    if (!text || text.length < 10) {return [];}
 
     const results: DetectedToolCall[] = [];
     const seen = new Set<string>();
@@ -67,11 +54,11 @@ export function detectToolCallsFromText(text: string): DetectedToolCall[] {
             const toolName = match[1];
             const argsJson = match[2];
 
-            if (!toolName || !argsJson) continue;
+            if (!toolName || !argsJson) {continue;}
 
             // Skip if we already detected this tool call
             const key = `${toolName}:${argsJson}`;
-            if (seen.has(key)) continue;
+            if (seen.has(key)) {continue;}
             seen.add(key);
 
             try {
@@ -100,7 +87,7 @@ export function detectToolCallsFromText(text: string): DetectedToolCall[] {
  * Quick check without full parsing.
  */
 export function looksLikeToolCall(text: string): boolean {
-    if (!text || text.length < 20) return false;
+    if (!text || text.length < 20) {return false;}
 
     // Quick heuristic: look for tool-calling JSON patterns
     const indicators = [
@@ -120,7 +107,7 @@ export function looksLikeToolCall(text: string): boolean {
     }
 
     // Need at least 2 indicators (e.g., "tool" + "args")
-    if (matches < 2) return false;
+    if (matches < 2) {return false;}
 
     // Check if it starts with { or ```json
     const trimmed = text.trim();

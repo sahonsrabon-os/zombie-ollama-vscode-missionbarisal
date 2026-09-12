@@ -54,7 +54,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     () =>
       vscode.workspace
         .getConfiguration('zombiecoder.mission-barisal')
-        .get<string>('serverUrl', 'http://localhost:9999'),
+        .get<string>('serverUrl', 'http://localhost:3000'),
     () => provider.getStatusSnapshot()
   );
   context.subscriptions.push(

@@ -2,7 +2,7 @@
   "name": "zombiecoder-mission-barisal",
   "displayName": "ZombieCoder — Mission Barisal",
   "description": "Where code and conversation meet. Connect GitHub Copilot Chat to the local 7-agent LLM server (Mission Barisal) via HTTP/SSE/WebSocket/UDS with tool-call repair, safe context budgeting and real-time streaming.",
-  "version": "1.7.1",
+  "version": "1.8.0",
   "publisher": "zombiecoder",
   "icon": "assets/icon-128.png",
   "private": true,
@@ -105,7 +105,7 @@
       "properties": {
         "zombiecoder.mission-barisal.serverUrl": {
           "type": "string",
-          "default": "http://localhost:9999",
+          "default": "http://localhost:3000",
           "description": "Inference server URL (OpenAI API compatible endpoint)",
           "order": 1
         },
@@ -252,7 +252,7 @@
         "zombiecoder.mission-barisal.mcpServerUrl": {
           "type": "string",
           "default": "",
-          "description": "External MCP server URL (Phase 5). Leave empty to use ONLY the Mission Barisal server's own MCP registry. When set (e.g. http://localhost:9999 for the combined external gateway), the extension also fetches that server's /mcp tools/list, normalizes any format into Mission Barisal's tool shape, and injects the merged tool list into every agent's system context — so agents know exactly which MCP tools exist. New external tools trigger a notification (ছটকা টান).",
+          "description": "External MCP server URL (Phase 5). Leave empty to use ONLY the Mission Barisal server's own MCP registry. When set (e.g. http://localhost:3000 for the combined external gateway), the extension also fetches that server's /mcp tools/list, normalizes any format into Mission Barisal's tool shape, and injects the merged tool list into every agent's system context — so agents know exactly which MCP tools exist. New external tools trigger a notification (ছটকা টান).",
           "order": 21
         },
         "zombiecoder.mission-barisal.udsSocketPath": {

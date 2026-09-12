@@ -42,7 +42,7 @@ describe('formatTokenCount', () => {
 
 describe('extractHost', () => {
   test('returns host:port for typical http/https URLs', () => {
-    assert.equal(extractHost('http://localhost:9999'), 'localhost:9999');
+    assert.equal(extractHost('http://localhost:3000'), 'localhost:3000');
     assert.equal(extractHost('https://api.example.com'), 'api.example.com');
     assert.equal(extractHost('http://10.0.0.1:11434/v1'), '10.0.0.1:11434');
   });

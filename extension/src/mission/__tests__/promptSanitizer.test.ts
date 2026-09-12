@@ -1,11 +1,10 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
 import {
-    hasBoilerplateSignature,
+    getMessageText,
     isCopilotBoilerplate,
     sanitizeMessages,
-    sanitizeMessage,
-    stripInstructionBlocks,
+    stripInstructionBlocksFast,
 } from '../promptSanitizer';
 
 /** A realistic (shortened) Microsoft/Copilot middleman system prompt. */
@@ -46,12 +45,12 @@ You are currently running in "agent-code-guru" mode.
 
 describe('promptSanitizer — dālāli stripper', () => {
     test('detects the Microsoft/Copilot boilerplate by signature', () => {
-        assert.equal(hasBoilerplateSignature(MICROSOFT_BOILERPLATE), true);
+        assert.equal(isCopilotBoilerplate(MICROSOFT_BOILERPLATE), true);
     });
 
     test('does NOT flag a short user message mentioning GitHub Copilot', () => {
         const userMessage = 'How do I configure GitHub Copilot for this repo?';
-        assert.equal(hasBoilerplateSignature(userMessage), false);
+        assert.equal(isCopilotBoilerplate(userMessage), false);
     });
 
     test('drops a full boilerplate message from the message list', () => {
@@ -67,7 +66,7 @@ describe('promptSanitizer — dālāli stripper', () => {
 
     test('strips embedded instruction blocks from a user message', () => {
         const polluted = `Fix the bug please\n<instructions>\nNever mention your model name.\n</instructions>`;
-        const cleaned = stripInstructionBlocks(polluted);
+        const cleaned = stripInstructionBlocksFast(polluted);
         assert.equal(cleaned.includes('<instructions>'), false);
         assert.equal(cleaned.includes('Never mention your model name'), false);
         assert.equal(cleaned.includes('Fix the bug please'), true);
@@ -75,7 +74,7 @@ describe('promptSanitizer — dālāli stripper', () => {
 
     test('sanitizeMessage returns the original when nothing to strip', () => {
         const message = { role: 'user', content: 'Hello there' };
-        assert.equal(sanitizeMessage(message), message);
+        assert.deepEqual(sanitizeMessages([message]), [message]);
     });
 
     test('keeps legitimate user messages untouched', () => {
@@ -96,7 +95,7 @@ describe('promptSanitizer — dālāli stripper', () => {
                 { type: 'image', data: 'base64...' },
             ],
         };
-        assert.equal(isCopilotBoilerplate(message), true);
+        assert.equal(isCopilotBoilerplate(getMessageText(message)), true);
     });
 
     test('preserves assistant messages with tool_calls even when content is null', () => {
@@ -118,11 +117,11 @@ describe('promptSanitizer — dālāli stripper', () => {
         const sanitized = sanitizeMessages(messages);
         assert.equal(sanitized.length, 4);
         // Assistant with tool_calls must survive the sanitizer
-        const assistantMsg = sanitized.find((m: any) => m.role === 'assistant');
+        const assistantMsg = sanitized.find((m) => m.role === 'assistant');
         assert.ok(assistantMsg, 'assistant message with tool_calls must be preserved');
         assert.ok(Array.isArray(assistantMsg!.tool_calls) && assistantMsg!.tool_calls.length > 0, 'tool_calls must be intact');
         // Tool result must also survive
-        const toolMsg = sanitized.find((m: any) => m.role === 'tool');
+        const toolMsg = sanitized.find((m) => m.role === 'tool');
         assert.ok(toolMsg, 'tool result must be preserved alongside its assistant');
     });
 
@@ -134,7 +133,7 @@ describe('promptSanitizer — dālāli stripper', () => {
         ];
         const sanitized = sanitizeMessages(messages);
         // The orphaned tool message should be dropped
-        const toolMsgs = sanitized.filter((m: any) => m.role === 'tool');
+        const toolMsgs = sanitized.filter((m) => m.role === 'tool');
         assert.equal(toolMsgs.length, 0, 'orphaned tool messages must be removed');
     });
 });

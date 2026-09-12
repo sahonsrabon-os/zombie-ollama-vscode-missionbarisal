@@ -68,7 +68,7 @@ export const OLLAMA_DIRECT_URL =
  * server's conventional default port; it is only a fallback and the actual
  * server URL is always preferred when one is configured.
  */
-export const FALLBACK_HTTP_URL = 'http://localhost:9999';
+export const FALLBACK_HTTP_URL = 'http://localhost:3000';
 
 export interface TransportProbeOptions {
     /** Timeout (ms) for a single availability probe. Default 1500. */
@@ -279,7 +279,7 @@ export async function probeTransport(
                     `transport probe: UDS ${target.socketPath} answered but had no tools`
                 );
                 return false;
-            } catch (jsonRpcError) {
+            } catch {
                 // Not a JSON-RPC socket — fall back to the HTTP-over-socket
                 // probe so servers that DO mount HTTP on the socket still work.
                 try {

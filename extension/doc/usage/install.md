@@ -2,7 +2,7 @@
 
 ## From a `.vsix` file (recommended for this release)
 
-1. Download `zombiecoder-mission-barisal-1.7.0.vsix`.
+1. Download `zombiecoder-mission-barisal-1.8.0.vsix`.
 2. Open VS Code.
 3. Open the Command Palette: `Ctrl+Shift+P` (Windows/Linux) or `Cmd+Shift+P` (macOS).
 4. Run **Extensions: Install from VSIX...**.

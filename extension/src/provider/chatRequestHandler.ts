@@ -19,7 +19,6 @@ import {
 } from '../chat/tokenBudget';
 import { tryRepairJson } from '../chat/jsonRepair';
 import { fillMissingRequiredProperties } from '../chat/toolSchema';
-import { detectToolCallsFromText, looksLikeToolCall } from '../chat/autoToolCall';
 import {
   StreamChunk,
   StreamReporter,

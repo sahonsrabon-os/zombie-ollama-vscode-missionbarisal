@@ -1,6 +1,6 @@
 # 🧟 ZombieCoder — Mission Barisal
 
-![Visual Studio Marketplace Version](https://img.shields.io/badge/version-1.7.0-7c3aed)
+![Visual Studio Marketplace Version](https://img.shields.io/badge/version-1.8.0-7c3aed)
 ![License](https://img.shields.io/badge/license-Proprietary--Local%20Freedom%20Protocol-10b981)
 ![Platform](https://img.shields.io/badge/platform-VS%20Code%201.120%2B-2563eb)
 
@@ -84,7 +84,7 @@ quirk-smoothing. Mission Barisal actively repairs the rough edges:
 | **UDS-first JSON-RPC transport** | Probes `/tmp/zombiecoder/mcp.sock` with a real JSON-RPC `tools/list` round-trip on local servers, then falls back to HTTP → SSE → WebSocket. Chat, MCP tools and missions all run over the socket — not just HTTP. |
 | **Optimized tool selection**     | Scores Copilot's catalog (~71 tools) against the user's latest message and sends only the relevant 8–40 tools — fixing empty responses on small/quantized servers. |
 | **URL normalization**            | Works whether you paste `http://host:port` **or** `http://host:port/v1` — trailing `/v1` is trimmed and re-appended correctly. |
-| **External MCP tool sync**       | Merges your server's `/mcp tools/list` (plus an optional external MCP server) into every agent's system context.               |
+| **External MCP tool sync + call** | Merges your server's `/mcp tools/list` (plus an optional external MCP server) into every agent's system context, and lets agents invoke those tools (`tools/call`) directly through the extension — over UDS JSON-RPC or HTTP POST — so `write_file`, `set_working_dir`, `web_search`, etc. run without a local shell. |
 | **Ollama model discovery**        | Reads the backend's own sampler config (`/api/show`) and forwards `top_p`/`top_k` instead of letting the server default them.  |
 
 ### The Honest Blueprint
@@ -147,24 +147,24 @@ the same architecture, see the [Mission Barisal V3 Blueprint](assets/mission-arc
 
 ## Test Commands
 
-### Local Server (`http://localhost:9999`)
+### Local Server (`http://localhost:3000`)
 
 #### Health Check
 
 ```bash
-curl http://localhost:9999/health
+curl http://localhost:3000/health
 ```
 
 #### List All Agents (OpenAI format)
 
 ```bash
-curl http://localhost:9999/v1/models
+curl http://localhost:3000/v1/models
 ```
 
 #### Chat with code-guru (Architecture)
 
 ```bash
-curl -X POST http://localhost:9999/v1/chat/completions \
+curl -X POST http://localhost:3000/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
     "model": "code-guru",
@@ -176,7 +176,7 @@ curl -X POST http://localhost:9999/v1/chat/completions \
 #### Mission Mode (Full 6-Agent Debate)
 
 ```bash
-curl -X POST http://localhost:9999/v1/chat/completions \
+curl -X POST http://localhost:3000/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
     "model": "mission",
@@ -189,6 +189,16 @@ curl -X POST http://localhost:9999/v1/chat/completions \
 
 ```bash
 printf '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}\n' \
+  | nc -U /tmp/zombiecoder/mcp.sock
+```
+
+#### UDS MCP Tool Call (`tools/call`)
+
+Invoke a server tool directly over the socket — the same call the extension's
+`McpConnector.callTool()` makes (falling back to HTTP POST `{serverUrl}/mcp`):
+
+```bash
+printf '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"set_working_dir","arguments":{"directory":"/home/user/project"}}}\n' \
   | nc -U /tmp/zombiecoder/mcp.sock
 ```
 
@@ -241,7 +251,7 @@ npm test
 
 **From a `.vsix` file** (recommended for this release):
 
-1. Download `zombiecoder-mission-barisal-1.7.0.vsix`
+1. Download `zombiecoder-mission-barisal-1.8.0.vsix`
 2. In VS Code open the Command Palette (`Ctrl+Shift+P` / `Cmd+Shift+P`)
 3. Run **Extensions: Install from VSIX...** and select the file
 4. Reload VS Code when prompted
@@ -259,13 +269,13 @@ vllm serve Qwen/Qwen3-8B \
     --max-model-len 32768 \
     --gpu-memory-utilization 0.95 \
     --host 0.0.0.0 \
-    --port 42069
+    --port 3000
 ```
 
 Verify it's running:
 
 ```bash
-curl http://localhost:42069/v1/models
+curl http://localhost:3000/v1/models
 ```
 
 Or run the **Mission Barisal 7-agent server** (`start-all.sh`) — it serves
@@ -275,8 +285,8 @@ Or run the **Mission Barisal 7-agent server** (`start-all.sh`) — it serves
 
 1. Open VS Code **Settings** (`Ctrl+,` / `Cmd+,`)
 2. Search for **"Mission Barisal"**
-3. Set **Server URL** to your server address — `http://localhost:9999` (default) or
-   `http://localhost:42069`. Adding `/v1` is optional; it is normalized automatically.
+3. Set **Server URL** to your server address — `http://localhost:3000` (default) or
+   `http://localhost:3000`. Adding `/v1` is optional; it is normalized automatically.
 4. Configure token limits, tool calling and other options as needed.
 
 ![Extension settings panel](assets/screenshot-settings.png)
@@ -351,7 +361,7 @@ Configure through VS Code Settings (`Ctrl+,` / `Cmd+,`) → search **"Mission Ba
 
 | Setting             | Default                 | Description                                                    |
 | ------------------- | ----------------------- | -------------------------------------------------------------- |
-| **Server URL**      | `http://localhost:9999` | Base URL of your OpenAI-compatible inference server (`/v1` optional) |
+| **Server URL**      | `http://localhost:3000` | Base URL of your OpenAI-compatible inference server (`/v1` optional) |
 | **API Key**         | _(empty)_               | Authentication key if your server requires one                 |
 | **Request Timeout** | `60000`                 | Request timeout in milliseconds                                |
 | **External MCP Server URL** | _(empty)_         | Optional external MCP server; when set its tool list is merged into agent context |
@@ -521,7 +531,7 @@ vllm serve Qwen/Qwen3-8B \
     --max-model-len 32768 \
     --gpu-memory-utilization 0.95 \
     --host 0.0.0.0 \
-    --port 42069
+    --port 3000
 ```
 
 **Llama 3.1 8B**:
@@ -532,7 +542,7 @@ vllm serve meta-llama/Llama-3.1-8B-Instruct \
     --tool-call-parser llama3_json \
     --max-model-len 32768 \
     --host 0.0.0.0 \
-    --port 42069
+    --port 3000
 ```
 
 **Quantized Model** (limited VRAM):
@@ -544,7 +554,7 @@ vllm serve Qwen/Qwen2.5-14B-Instruct-AWQ \
     --max-model-len 16384 \
     --gpu-memory-utilization 0.95 \
     --host 0.0.0.0 \
-    --port 42069
+    --port 3000
 ```
 
 ## Troubleshooting
@@ -649,7 +659,7 @@ github-copilot-llm-gateway/
 │   │   ├── promptSanitizer.ts#   strips Microsoft/Copilot boilerplate
 │   │   ├── evidenceGate.ts   #   blocks unproven claims
 │   │   ├── transport.ts      #   UDS → HTTP → SSE → WebSocket fallback chain
-│   │   ├── mcpConnector.ts   #   server-driven MCP tool sync
+│   │   ├── mcpConnector.ts   #   server-driven MCP tool sync + tools/call (UDS/HTTP)
 │   │   └── memoryManager.ts  #   bounded session memory
 │   ├── provider/             # VS Code language-model provider + chat handler
 │   ├── models/               # model display / catalog (persona names)

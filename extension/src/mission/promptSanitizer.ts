@@ -19,14 +19,14 @@ const BOILERPLATE_KEYWORDS = [
 /** Fast text extractor without intermediate array joining overhead */
 export function getMessageText(message: OpenAIMessage): string {
     const content = message.content;
-    if (typeof content === 'string') return content;
-    if (!content) return '';
+    if (typeof content === 'string') {return content;}
+    if (!content) {return '';}
     
     if (Array.isArray(content)) {
         let text = '';
         for (let i = 0; i < content.length; i++) {
             const part = content[i];
-            if (typeof part === 'string') text += part;
+            if (typeof part === 'string') {text += part;}
             else if (part && typeof part === 'object' && 'text' in part) {
                 text += (part as { text: string }).text;
             }
@@ -38,7 +38,7 @@ export function getMessageText(message: OpenAIMessage): string {
 
 /** Fast Boilerplate Detection — Direct String Searching without Regex Engines */
 export function isCopilotBoilerplate(text: string): boolean {
-    if (text.length < 300) return false;
+    if (text.length < 300) {return false;}
     
     let hits = 0;
     const lower = text.toLowerCase();
@@ -46,7 +46,7 @@ export function isCopilotBoilerplate(text: string): boolean {
     for (let i = 0; i < BOILERPLATE_KEYWORDS.length; i++) {
         if (lower.includes(BOILERPLATE_KEYWORDS[i].toLowerCase())) {
             hits++;
-            if (hits >= 2) return true; // Lightning Fast Early Exit!
+            if (hits >= 2) {return true;} // Lightning Fast Early Exit!
         }
     }
     return false;
@@ -54,7 +54,7 @@ export function isCopilotBoilerplate(text: string): boolean {
 
 /** Non-backtracking Fast Tag Stripper using Index Boundaries */
 export function stripInstructionBlocksFast(text: string): string {
-    if (!text || text.indexOf('<') === -1) return text; // Fast-path: Skip parsing if no XML tags exist!
+    if (!text || text.indexOf('<') === -1) {return text;} // Fast-path: Skip parsing if no XML tags exist!
 
     let result = text;
     for (const tag of INSTRUCTION_TAGS) {
@@ -72,7 +72,7 @@ export function stripInstructionBlocksFast(text: string): string {
                 const tagCloseIdx = result.indexOf('>', startIdx);
                 if (tagCloseIdx !== -1) {
                     result = result.slice(0, startIdx) + result.slice(tagCloseIdx + 1);
-                } else break;
+                } else {break;}
             }
             startIdx = result.indexOf(openTag);
         }
@@ -88,7 +88,7 @@ export function sanitizeMessages(
     log?: Logger
 ): OpenAIMessage[] {
     const len = messages.length;
-    if (len === 0) return [];
+    if (len === 0) {return [];}
 
     const out: OpenAIMessage[] = [];
     const validToolIds = new Set<string>();
@@ -113,7 +113,7 @@ export function sanitizeMessages(
         }
 
         // Create sanitized payload reference
-        let activeMsg: OpenAIMessage = (cleanedText !== text) 
+        const activeMsg: OpenAIMessage = (cleanedText !== text) 
             ? { ...msg, content: cleanedText } 
             : msg;
 
@@ -122,13 +122,13 @@ export function sanitizeMessages(
             const toolCalls = msg.tool_calls as Array<{ id?: string }>;
             for (let j = 0; j < toolCalls.length; j++) {
                 const toolCall = toolCalls[j];
-                if (toolCall && 'id' in toolCall && toolCall.id) validToolIds.add(toolCall.id);
+                if (toolCall && 'id' in toolCall && toolCall.id) {validToolIds.add(toolCall.id);}
             }
         }
 
         // 3. Orphan Tool Validation (Instant Drop)
         if (activeMsg.role === 'tool') {
-            const toolId = (activeMsg as any).tool_call_id;
+            const toolId = activeMsg.tool_call_id as string | undefined;
             if (!toolId || !validToolIds.has(toolId)) {
                 log?.(` [uds-core] Dropped orphaned tool: ${toolId}`);
                 continue;

@@ -37,6 +37,7 @@ extension. It is organized by category so you can jump straight to what you need
 | Name                      | `zombiecoder-mission-barisal`                                |
 | Display name              | ZombieCoder — Mission Barisal                                |
 | Publisher                 | `zombiecoder`                                                |
+| Version                   | 1.8.0 (VSIX: `zombiecoder-mission-barisal-1.8.0.vsix`) |
 | Config section prefix     | `zombiecoder.mission-barisal`                                |
 | Vendor (provider id)      | `zombiecoder-mission-barisal`                                |
 | Repository                | https://github.com/sahonsrabon-os/zc-extension-.git          |

@@ -41,15 +41,39 @@ alone — the socket file may exist but the server may have crashed. The probe
 also falls back to an HTTP-over-socket check if the JSON-RPC call fails (for
 servers that mount HTTP on the socket).
 
+## MCP `tools/call` over UDS
+
+Since v1.8.0 the extension can **invoke** MCP tools through the same
+UDS-first transport chain, not just list them:
+
+1. `McpConnector.callTool(serverUrl, name, args)` resolves the active
+   transport with `resolveActiveTransport()` (UDS → HTTP → SSE → WS).
+2. When the UDS socket answers, it sends a newline-delimited JSON-RPC
+   `tools/call` request over `net.createConnection(socketPath)`:
+
+   ```bash
+   printf '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"write_file","arguments":{"path":"a.txt","content":"hi"}}}\n' \
+     | nc -U /tmp/zombiecoder/mcp.sock
+   ```
+
+3. If the socket is unreachable or times out, it falls back to HTTP POST
+   `{serverUrl}/mcp` with the same JSON-RPC body (AbortController timeout).
+
+This is what lets agents run `write_file`, `read_file`, `set_working_dir`,
+`web_search`, `terminal`, etc. **directly through the extension** instead of
+falling back to a local shell. `setWorkingDir()` is a thin wrapper that calls
+`callTool('set_working_dir', { directory })` so the server auto-generates
+`.zombiecoder/SSOT.md` + `syllabus.md` inside a freshly-opened folder.
+
 ## URL normalization
 
 Pasting a server URL "just works":
 
 | You type                         | Normalized to                       |
 | -------------------------------- | ----------------------------------- |
-| `http://localhost:9999`          | `http://localhost:9999`             |
-| `http://localhost:9999/v1`       | `http://localhost:9999`             |
-| `http://localhost:9999/v1/`      | `http://localhost:9999`             |
+| `http://localhost:3000`          | `http://localhost:3000`             |
+| `http://localhost:3000/v1`       | `http://localhost:3000`             |
+| `http://localhost:3000/v1/`      | `http://localhost:3000`             |
 
 Implementation: `api/client.ts` → `normalizeBaseUrl()` trims a trailing `/v1` (and
 slash) before re-appending it, so both forms hit the correct endpoint. The same

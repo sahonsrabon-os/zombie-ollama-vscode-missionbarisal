@@ -12,8 +12,8 @@ import {
     McpToolDefinition,
 } from '../mcpConnector';
 
-const DEFAULT_URL = 'http://localhost:9999';
-const EXTERNAL_URL = 'http://localhost:9999';
+const DEFAULT_URL = 'http://localhost:3000';
+const EXTERNAL_URL = 'http://localhost:4000';
 
 function makeConnector(opts: {
     externalUrl?: string;

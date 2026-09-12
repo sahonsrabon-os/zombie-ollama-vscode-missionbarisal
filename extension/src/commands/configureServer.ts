@@ -14,13 +14,13 @@ export async function configureServerFlow(
   refreshStatusBar: () => Promise<void>
 ): Promise<void> {
   const config = vscode.workspace.getConfiguration('zombiecoder.mission-barisal');
-  const currentUrl = config.get<string>('serverUrl', 'http://localhost:9999');
+  const currentUrl = config.get<string>('serverUrl', 'http://localhost:3000');
 
   const url = await vscode.window.showInputBox({
     title: 'LLM Gateway — Server URL',
     prompt: 'Enter the inference server URL (OpenAI-compatible endpoint)',
     value: currentUrl,
-    placeHolder: 'http://localhost:9999',
+    placeHolder: 'http://localhost:3000',
     ignoreFocusOut: true,
     validateInput: (value) => {
       if (isValidServerUrl(value)) {

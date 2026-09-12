@@ -339,7 +339,7 @@ export class GatewayProvider
     this.discovery.reset();
     this.inlineCompletions.resetSuffixProbe();
     // Force the transport chain to re-probe on the next request.
-    (this.client as any).transportCache = undefined;
+    this.client.clearTransportCache();
     this.outputChannel.appendLine('All extension state cleared (resetAll)');
   }
 
