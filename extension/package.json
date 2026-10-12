@@ -98,6 +98,11 @@
         "command": "zombiecoder.mission-barisal.resetAll",
         "title": "Reset All (Kill Processes + Restart + Reconnect)",
         "category": "ZombieCoder Mission Barisal"
+      },
+      {
+        "command": "zombiecoder.mission-barisal.openWorkingDirectory",
+        "title": "Open Mission Working Directory (SSOT + Syllabus + Memory)",
+        "category": "ZombieCoder Mission Barisal"
       }
     ],
     "configuration": {

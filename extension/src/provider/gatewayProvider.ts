@@ -4,6 +4,10 @@ import { GatewayConfig } from '../config/gatewayConfig';
 import { MissionManager } from '../mission/missionManager';
 import { McpConnector } from '../mission/mcpConnector';
 import {
+  openWorkingDirectory as openWorkingDirectoryCore,
+  OpenWorkingDirectoryResult,
+} from '../mission/openWorkingDirectory';
+import {
   FrameworkConfigOverride,
   readFrameworkConfiguration,
   resolveApiKey,
@@ -301,6 +305,31 @@ export class GatewayProvider
   /** Snapshot of the cached custom headers — used by the Edit flow. */
   public getCustomHeadersSnapshot(): Record<string, string> {
     return this.secretsManager.getCustomHeadersSnapshot();
+  }
+
+  // ---------- mission working directory ----------
+
+  /**
+   * Open a folder as THE Mission working directory (command entry point).
+   *
+   * 1. Creates the local three-file layout inside the folder —
+   *    `.zombiecoder/SSOT.md` + `agents/syllabus.md` + `agents/memory.json`.
+   * 2. Calls the MCP `set_working_dir` tool so the Mission Barisal server
+   *    adopts the SAME directory (it then generates its own `.zombiecoder`
+   *    copy server-side).
+   * 3. Re-registers every open workspace folder with the server (Option A,
+   *    fire-and-forget) so session/memory stay scoped per project.
+   *
+   * Never throws: an unreachable server downgrades the result to
+   * `mcp: 'failed'` while the local files remain in place.
+   */
+  public async openWorkingDirectory(directory: string): Promise<OpenWorkingDirectoryResult> {
+    const result = await openWorkingDirectoryCore(directory, {
+      log: (m) => this.outputChannel.appendLine(m),
+      callMcpSetWorkingDir: (dir) => this.mcpConnector.setWorkingDir(this.config.serverUrl, dir),
+    });
+    void this.missionManager.notifyServerWorkspace(this.config.serverUrl);
+    return result;
   }
 
   // ---------- model list ----------

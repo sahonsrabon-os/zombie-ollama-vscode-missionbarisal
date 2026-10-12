@@ -355,20 +355,12 @@ export class GatewayClient {
       }
     }
 
-    // The Mission Barisal UDS socket speaks JSON-RPC (MCP) — it has NO HTTP
-    // /v1/models endpoint. When the socket can't serve the model list, fall
-    // back to plain HTTP against the configured server URL so model discovery
-    // still works while chat goes over the socket.
+    // Mission Barisal UDS socket speaks JSON-RPC (MCP) — it has NO HTTP
+    // /v1/models endpoint. When the socket can't serve the model list,
+    // return an empty list instead of falling back to HTTP. This prevents
+    // header polling over HTTP when UDS is the active transport.
     if (this.config.serverUrl) {
-      try {
-        const base = normalizeBaseUrl(this.config.serverUrl);
-        const url = `${base}/v1/models`;
-        this.log(`UDS cannot serve models — falling back to HTTP: ${url}`);
-        const result = await this.tryFetchModels(url, true, cancellationToken);
-        if (result) { return result; }
-      } catch (error) {
-        lastError = error instanceof Error ? error : new Error(String(error));
-      }
+      this.log(`UDS cannot serve models — returning empty list (no HTTP fallback)`);
     }
 
     const message = lastError ? describeFetchError(lastError) : 'unknown error';

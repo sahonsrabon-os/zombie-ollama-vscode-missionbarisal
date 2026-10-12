@@ -52,8 +52,11 @@ const EVIDENCE_PATTERNS: RegExp[] = [
     /\bline[s]?\s+\d+(-\d+)?\b/i,
     // test output: "424 pass", "0 fail", "# pass 424", "ok 48", "1 error"
     /\b\d+\s*(?:pass|passed|fail|failed|error|errors|tests?|ok)\b/i,
-    // "exit code 0", "exit 0", "TSC exited with code 0"
-    /\bexit(?:ed)?\s+(?:with\s+)?(?:code\s+)?0\b/i,
+    // "exit code 0", "exit 0", "TSC exited with code 0" — any exit code is
+    // proof a command actually ran (Dual Validation: exit code evidence)
+    /\bexit(?:ed)?\s+(?:with\s+)?(?:code\s+)?\d+\b/i,
+    // ratio output "424/424", "11/11 passed" (healthcheck / test suites)
+    /\b\d+\/\d+\b/,
     // inline code / quoted symbols — `foo()`, `buildFinalMessages`
     /`[^`\n]{2,}`/,
     // explicit test-run references
@@ -71,6 +74,10 @@ const TRUTH_PATTERNS: RegExp[] = [
     /এই মুহূর্তে আমার কাছে এই তথ্যগুলো নাই/,
     /ভাইয়া, এই মুহূর্তে আমার কাছে এই তথ্যগুলো নাই/,
     /no proof|no evidence|can'?t verify|cannot verify|don'?t have evidence|i don'?t know for sure/i,
+    // docs/SSOT Principles.md §1 — Hallucination Minimization Policy:
+    // no evidence → answer "Unknown" / "Unable to Verify" (honest, passes)
+    /এই তথ্য বর্তমানে SSOT এ নেই/,
+    /\bunable to verify\b|\bno verified answer\b|\b(?:status|remains|is) unknown\b/i,
 ];
 
 /**

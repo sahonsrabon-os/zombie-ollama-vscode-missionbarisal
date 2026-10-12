@@ -43,8 +43,8 @@ const MAX_TOOL_DESCRIPTION_LOG_LENGTH = 100;
  * (~50K input tokens). We cut the list to the tools relevant to the user's
  * actual request — fewer tools, same capabilities, no empty replies.
  */
-const MAX_TOOLS_PER_REQUEST = 40;
-const MIN_TOOLS_PER_REQUEST = 8;
+const MAX_TOOLS_PER_REQUEST = 12;
+const MIN_TOOLS_PER_REQUEST = 4;
 
 /**
  * Tools whose NAMES match these patterns are always kept regardless of

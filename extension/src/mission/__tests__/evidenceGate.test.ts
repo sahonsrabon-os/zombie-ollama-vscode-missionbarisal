@@ -76,6 +76,31 @@ describe('EvidenceGate — Phase 3 proof gate', () => {
         assert.equal(gate.evaluate("I can't verify this without running the tests.").passed, true);
     });
 
+    // SSOT Principles §1 — Hallucination Minimization Policy: with no
+    // evidence the agent must answer "Unknown" / "Unable to Verify".
+    test('passes honest "unable to verify / unknown" answers (SSOT Principles §1)', () => {
+        const gate = new EvidenceGate();
+        assert.equal(
+            gate.evaluate(
+                'I checked every log I could reach, but the upstream status remains unknown — ' +
+                'I am unable to verify it right now without server access.'
+            ).passed,
+            true
+        );
+        assert.equal(gate.evaluate('এই তথ্য বর্তমানে SSOT এ নেই।').passed, true);
+    });
+
+    // Dual Validation evidence markers: any exit code, "11/11" ratios.
+    test('passes claim backed by exit code and ratio output', () => {
+        const gate = new EvidenceGate();
+        assert.equal(
+            gate.evaluate(
+                'I fixed the flaky gate and re-ran the suite: exit code 1, then healthcheck 11/11 passed.'
+            ).passed,
+            true
+        );
+    });
+
     test('blocks substantive unproven claims', () => {
         const gate = new EvidenceGate();
         const verdict = gate.evaluate(

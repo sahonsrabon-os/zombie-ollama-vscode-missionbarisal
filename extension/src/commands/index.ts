@@ -3,6 +3,7 @@ import { GatewayProvider } from '../provider/gatewayProvider';
 import { StatusBarManager } from '../status/statusBarManager';
 import { configureServerFlow } from './configureServer';
 import { editCustomHeadersFlow } from './customHeaders';
+import { openWorkingDirectoryFlow } from './openWorkingDirectory';
 import { resetAllCommand } from './resetAll';
 
 /**
@@ -93,6 +94,19 @@ export function registerCommands(
         provider.invalidateModelCache();
         provider.refreshModels();
         await refreshStatusBar();
+      }
+    ),
+
+    // 🧭 Open Mission Working Directory — pick a folder, make it the working
+    // directory, create .zombiecoder (SSOT + syllabus + memory) and tell the
+    // server over MCP (`set_working_dir`) to adopt the same folder.
+    vscode.commands.registerCommand(
+      'zombiecoder.mission-barisal.openWorkingDirectory',
+      async () => {
+        await openWorkingDirectoryFlow({
+          provider,
+          log: (m) => outputChannel.appendLine(m),
+        });
       }
     ),
 
